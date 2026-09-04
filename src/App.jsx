@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, GitBranch, Home, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import LoginView from './components/LoginView';
 import HomePortal from './components/HomePortal';
 import CasesView from './components/CasesView';
@@ -139,47 +140,57 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Content Area with Silky View Transitions */}
       <main className="flex-1">
-        {activeView === 'home' && (
-          <HomePortal
-            session={session}
-            onNavigateToCases={() => setActiveView('cases')}
-            onNavigateToIntelligence={() => setActiveView('intelligence')}
-            onOpenRecentCase={(caseId) => {
-              setActiveCaseId(caseId);
-              setActiveView('case_workspace');
-            }}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeView === 'case_workspace' ? `case_${activeCaseId}` : activeView}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+          >
+            {activeView === 'home' && (
+              <HomePortal
+                session={session}
+                onNavigateToCases={() => setActiveView('cases')}
+                onNavigateToIntelligence={() => setActiveView('intelligence')}
+                onOpenRecentCase={(caseId) => {
+                  setActiveCaseId(caseId);
+                  setActiveView('case_workspace');
+                }}
+              />
+            )}
 
-        {activeView === 'cases' && (
-          <CasesView
-            session={session}
-            onOpenCase={(caseId) => {
-              setActiveCaseId(caseId);
-              setActiveView('case_workspace');
-            }}
-          />
-        )}
+            {activeView === 'cases' && (
+              <CasesView
+                session={session}
+                onOpenCase={(caseId) => {
+                  setActiveCaseId(caseId);
+                  setActiveView('case_workspace');
+                }}
+              />
+            )}
 
-        {activeView === 'case_workspace' && (
-          <CaseWorkspace
-            caseId={activeCaseId}
-            onBack={() => setActiveView('cases')}
-            onSelectEntity={setSelectedEntity}
-            onAskCopilot={(query) => {}}
-          />
-        )}
+            {activeView === 'case_workspace' && (
+              <CaseWorkspace
+                caseId={activeCaseId}
+                onBack={() => setActiveView('cases')}
+                onSelectEntity={setSelectedEntity}
+                onAskCopilot={(query) => {}}
+              />
+            )}
 
-        {activeView === 'intelligence' && (
-          <div className="max-w-6xl mx-auto py-6 px-4">
-            <NetworkIntelligenceView
-              onSelectEntity={setSelectedEntity}
-              onAskCopilot={() => {}}
-            />
-          </div>
-        )}
+            {activeView === 'intelligence' && (
+              <div className="max-w-6xl mx-auto py-6 px-4">
+                <NetworkIntelligenceView
+                  onSelectEntity={setSelectedEntity}
+                  onAskCopilot={() => {}}
+                />
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Movable Floating AI Copilot Widget */}

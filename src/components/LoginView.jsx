@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Shield, Lock, UserCheck, KeyRound, ChevronRight, Fingerprint } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Card } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 
 export default function LoginView({ onLogin }) {
   const [selectedRegion, setSelectedRegion] = useState('REG-NCR');
@@ -81,8 +85,14 @@ export default function LoginView({ onLogin }) {
 
   return (
     <div className="min-h-screen bg-[#12151B] text-[#E8EAEE] flex flex-col justify-center items-center p-4 font-sans selection:bg-[#C68A46] selection:text-[#12151B]">
-      {/* Dossier Terminal Container */}
-      <div className="w-full max-w-md bg-[#181C24] border border-[#2B313D] rounded-[5px] p-6 space-y-5 shadow-none">
+      {/* Dossier Terminal Container with smooth motion entrance */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
+        <Card className="p-6 space-y-5">
         
         {/* Header Branding */}
         <div className="flex items-center gap-3 border-b border-[#2B313D] pb-4">
@@ -217,7 +227,8 @@ export default function LoginView({ onLogin }) {
           </div>
         </div>
 
-      </div>
+        </Card>
+      </motion.div>
 
       <div className="mt-4 text-center text-[11px] text-[#6B7382] font-mono">
         CRIMENEXUS &bull; SMART INDIA HACKATHON 2026

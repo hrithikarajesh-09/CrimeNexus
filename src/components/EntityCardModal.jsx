@@ -1,5 +1,8 @@
 import React from 'react';
 import { X, ExternalLink, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import { RAW_DATASET } from '../data/dataset';
 
 export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopilot }) {
@@ -11,8 +14,19 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="bg-[#181C24] border border-[#2B313D] w-full max-w-2xl rounded-[5px] overflow-hidden max-h-[90vh] flex flex-col font-sans shadow-none">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+    >
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.15 }}
+        className="bg-[#181C24] border border-[#2B313D] w-full max-w-2xl rounded-[5px] overflow-hidden max-h-[90vh] flex flex-col font-sans shadow-none"
+      >
         {/* Modal Header */}
         <div className="bg-[#1F2430] border-b border-[#2B313D] p-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -23,18 +37,18 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[3px] bg-[#181C24] text-[#6C93B8] border border-[#2B313D]">
+                <Badge variant="steel">
                   {entity.person_id || entity.account_id || entity.phone_id || entity.case_id || entity.evidence_id || "NODE"}
-                </span>
+                </Badge>
                 {entity.is_bridge && (
-                  <span className="text-[10px] px-1.5 py-0.2 rounded-[3px] bg-[#181C24] text-[#8B81C4] border border-[#8B81C4]/40 font-mono">
+                  <Badge variant="violet">
                     BRIDGE BROKER
-                  </span>
+                  </Badge>
                 )}
                 {entity.risk_score && (
-                  <span className="text-[10px] px-1.5 py-0.2 rounded-[3px] bg-[#181C24] text-[#C1655A] border border-[#C1655A]/40 font-mono">
+                  <Badge variant="red">
                     RISK: {entity.risk_score}%
-                  </span>
+                  </Badge>
                 )}
               </div>
               <h2 className="text-base font-serif font-bold text-[#E8EAEE] mt-0.5">
@@ -51,32 +65,43 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
           </button>
         </div>
 
-        {/* Modal Scrollable Content */}
-        <div className="p-4 overflow-y-auto space-y-3.5 text-xs">
-          {/* Key Overview Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            <div className="bg-[#1F2430] p-3 rounded-[5px] border border-[#2B313D] space-y-1">
-              <span className="text-[10px] font-mono text-[#6B7382] uppercase">ROLE &amp; POSITION</span>
-              <p className="text-xs font-semibold text-[#E8EAEE]">{entity.role || entity.category || entity.type || "Extracted Criminal Entity"}</p>
-              <p className="text-[#9AA3B2] leading-relaxed">{entity.description || entity.jurisdiction || "Verified node in master investigation knowledge graph."}</p>
+        {/* Modal Body */}
+        <div className="p-4 space-y-4 overflow-y-auto text-xs text-[#9AA3B2]">
+          {/* Node Summary Details */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[#1F2430] p-3 rounded-[5px] border border-[#2B313D]">
+            <div>
+              <span className="text-[10px] text-[#6B7382] font-mono block">NODE TYPE</span>
+              <span className="font-medium text-[#E8EAEE]">{entity.role || "Target Record"}</span>
             </div>
+            <div>
+              <span className="text-[10px] text-[#6B7382] font-mono block">PRIMARY JURISDICTION</span>
+              <span className="font-medium text-[#C68A46]">{entity.location || "Inter-State"}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#6B7382] font-mono block">VERIFICATION HASH</span>
+              <span className="font-mono text-[#5FA876] text-[10px]">SHA-256 MATCH</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#6B7382] font-mono block">GROUND TRUTH TAG</span>
+              <span className="font-medium text-[#8B81C4]">{entity.is_bridge ? "Cross-Case Bridge" : "Intra-Case"}</span>
+            </div>
+          </div>
 
-            <div className="bg-[#1F2430] p-3 rounded-[5px] border border-[#2B313D] space-y-1">
-              <span className="text-[10px] font-mono text-[#6B7382] uppercase">ASSOCIATED FILE</span>
-              <div className="flex items-center justify-between">
-                <span className="text-[#6C93B8] font-mono font-semibold">{entity.primary_case_id || entity.case_id || "Cross-Case Linked"}</span>
-                {entity.primary_case_id && (
-                  <button
-                    onClick={() => onOpenCase(entity.primary_case_id)}
-                    className="text-xs text-[#C68A46] hover:underline flex items-center gap-1 font-medium"
-                  >
-                    Open Case <ExternalLink className="w-3 h-3" />
-                  </button>
-                )}
-              </div>
-              <p className="text-[#6B7382]">Location: <strong className="text-[#E8EAEE]">{entity.location || entity.bank_name || "NCR / Mumbai Subnet"}</strong></p>
-              {entity.pan && <p className="text-[#6B7382] font-mono">PAN: <span className="text-[#E8EAEE]">{entity.pan}</span></p>}
+          {/* Primary Case Associated */}
+          <div className="bg-[#1F2430] border border-[#2B313D] rounded-[5px] p-3 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] text-[#6B7382] font-mono block">ANCHOR INVESTIGATION</span>
+              <span className="font-serif font-bold text-[#E8EAEE] text-sm">CASE-018: Operation PhishNet</span>
+              <p className="text-[11px] text-[#6B7382]">NCR Cyber PS &bull; INR 1.0 Cr RTGS Heist</p>
             </div>
+            <Button
+              onClick={() => onOpenCase('CASE-018')}
+              variant="brass"
+              size="sm"
+            >
+              <span>Open Case</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </Button>
           </div>
 
           {/* Supporting Evidence Confidence Panel */}
@@ -85,9 +110,9 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
               <span className="font-semibold text-[#E8EAEE] flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#5FA876]" /> Evidence Support &amp; Verification
               </span>
-              <span className="text-[10px] font-mono font-medium text-[#5FA876] bg-[#181C24] px-1.5 py-0.2 rounded-[3px] border border-[#2B313D]">
+              <Badge variant="green">
                 Confidence: 96.4%
-              </span>
+              </Badge>
             </div>
             <p className="text-[#9AA3B2] leading-relaxed">
               Relationship extracted from verified source record <strong className="text-[#E8EAEE]">EVD-001 (FIR 0018/2026)</strong> and <strong className="text-[#E8EAEE]">EVD-002 (STR-88912)</strong>. Corroborated by 14 CDR call logs and 12 core banking transaction records.
@@ -112,15 +137,16 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
 
           {/* Footer Actions */}
           <div className="pt-2 flex items-center justify-end">
-            <button
+            <Button
               onClick={onClose}
-              className="px-3 py-1.5 bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[#E8EAEE] rounded-[4px] text-xs font-medium transition"
+              variant="secondary"
+              size="default"
             >
               Close Dossier
-            </button>
+            </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

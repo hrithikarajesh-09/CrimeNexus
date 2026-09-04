@@ -4,6 +4,11 @@ import {
   Play, Pause, RotateCcw, Volume2, VolumeX, Scale, Sparkles, X, Info,
   CheckCircle2, AlertTriangle, Film
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from './ui/table';
 import { RAW_DATASET } from '../data/dataset';
 
 export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCopilot }) {
@@ -336,41 +341,45 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     <div className="max-w-7xl mx-auto py-5 px-4 space-y-5 font-sans">
       
       {/* Top Header Card (Shadcn-style unopinionated dossier container) */}
-      <div className="dossier-card p-4 space-y-3">
+      <Card className="p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <button
+            <Button
               onClick={onBack}
-              className="p-1.5 rounded-[5px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[#9AA3B2] hover:text-[#E8EAEE] transition flex items-center gap-1 text-xs font-medium"
+              variant="secondary"
+              size="sm"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-[#C68A46]" />
               <span>Back</span>
-            </button>
+            </Button>
             <div className="h-4 w-px bg-[#2B313D]" />
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-[4px] bg-[#1F2430] text-[#C68A46] border border-[#2B313D]">
+            <Badge variant="brass">
               {caseData.case_id}
-            </span>
+            </Badge>
             <span className="text-xs font-mono text-[#6B7382]">
               {caseData.case_number}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            <Button
               onClick={() => setIsBsaModalOpen(true)}
-              className="px-3 py-1.5 rounded-[5px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[#5FA876] text-xs font-medium transition flex items-center gap-1.5"
+              variant="secondary"
+              size="default"
+              className="text-[#5FA876] hover:text-[#5FA876]"
             >
               <Scale className="w-3.5 h-3.5" />
               <span>Sec 63B BSA Certificate</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={() => onAskCopilot(`Provide a complete executive summary of ${caseData.case_id}`)}
-              className="px-3 py-1.5 rounded-[5px] bg-[#C68A46] hover:bg-[#D49855] text-[#12151B] text-xs font-semibold transition flex items-center gap-1.5 shadow-none"
+              variant="brass"
+              size="default"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Ask Copilot</span>
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -400,12 +409,12 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             <span className="font-medium text-[#8B81C4] mt-0.5 block">Bridge to CASE-041 (TXN_552)</span>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* ========================================================= */}
       {/* SECTION 1: INVESTIGATION SUMMARY (CLEAN UNBOXED POINTS)   */}
       {/* ========================================================= */}
-      <div className="dossier-card p-5 space-y-3 relative">
+      <Card className="p-5 space-y-3 relative">
         <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-[#C68A46]" />
@@ -535,43 +544,49 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           </div>
         </div>
 
-        {/* Minimal Dossier Popover Tooltip */}
-        {activeTooltip && (
-          <div 
-            style={{ top: `${tooltipPos.y}px`, left: `${Math.min(tooltipPos.x, window.innerWidth - 380)}px` }}
-            className="fixed z-50 w-80 bg-[#181C24] border border-[#2B313D] rounded-[5px] p-3.5 space-y-2 text-xs animate-in fade-in duration-100 pointer-events-none shadow-none"
-          >
-            <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
-              <span className="text-[10px] font-mono font-semibold text-[#C68A46]">
-                {activeTooltip.type}
-              </span>
-              <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" />
-                {activeTooltip.status}
-              </span>
-            </div>
+        {/* Minimal Dossier Popover Tooltip with Framer Motion */}
+        <AnimatePresence>
+          {activeTooltip && (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.96, y: 4 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.12 }}
+              style={{ top: `${tooltipPos.y}px`, left: `${Math.min(tooltipPos.x, window.innerWidth - 380)}px` }}
+              className="fixed z-50 w-80 bg-[#181C24] border border-[#2B313D] rounded-[5px] p-3.5 space-y-2 text-xs pointer-events-none shadow-none"
+            >
+              <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
+                <Badge variant="brass">
+                  {activeTooltip.type}
+                </Badge>
+                <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" />
+                  {activeTooltip.status}
+                </span>
+              </div>
 
-            <div>
-              <h4 className="font-serif font-bold text-[#E8EAEE] text-sm">{activeTooltip.title}</h4>
-              <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">{activeTooltip.docId}</p>
-            </div>
+              <div>
+                <h4 className="font-serif font-bold text-[#E8EAEE] text-sm">{activeTooltip.title}</h4>
+                <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">{activeTooltip.docId}</p>
+              </div>
 
-            <p className="text-[11px] text-[#9AA3B2] leading-snug bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
-              "{activeTooltip.snippet}"
-            </p>
+              <p className="text-[11px] text-[#9AA3B2] leading-snug bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
+                "{activeTooltip.snippet}"
+              </p>
 
-            <div className="pt-1 text-[10px] font-mono text-[#6B7382] flex items-center justify-between">
-              <span>SHA-256:</span>
-              <span className="text-[#C68A46] truncate max-w-[190px]">{activeTooltip.hash}</span>
-            </div>
-          </div>
-        )}
-      </div>
+              <div className="pt-1 text-[10px] font-mono text-[#6B7382] flex items-center justify-between">
+                <span>SHA-256:</span>
+                <span className="text-[#C68A46] truncate max-w-[190px]">{activeTooltip.hash}</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Card>
 
       {/* ========================================================= */}
       {/* SECTION 2: AESTHETIC KNOWLEDGE GRAPH (ENTITIES & LINES)   */}
       {/* ========================================================= */}
-      <div className="dossier-card p-5 space-y-3">
+      <Card className="p-5 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
           <div>
             <div className="flex items-center gap-2">
@@ -694,12 +709,12 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             })}
           </svg>
         </div>
-      </div>
+      </Card>
 
       {/* ========================================================= */}
       {/* SECTION 3: LIVE RECONSTRUCTION (DYNAMIC GRAPH GENERATION) */}
       {/* ========================================================= */}
-      <div className="dossier-card p-5 space-y-4">
+      <Card className="p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
           <div>
             <div className="flex items-center gap-2">
@@ -899,12 +914,12 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             })}
           </svg>
         </div>
-      </div>
+      </Card>
 
       {/* ========================================================= */}
       {/* SECTION 4: SUSPECTS ROSTER (CLEAN MINIMAL LIST TABLE)      */}
       {/* ========================================================= */}
-      <div className="dossier-card p-5 space-y-3">
+      <Card className="p-5 space-y-3">
         <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4 text-[#C68A46]" />
@@ -915,84 +930,83 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="border-b border-[#2B313D] text-[#6B7382] font-mono text-[11px]">
-                <th className="py-2 px-3">SUSPECT IDENTITY</th>
-                <th className="py-2 px-3">ALIAS</th>
-                <th className="py-2 px-3">OPERATIONAL ROLE</th>
-                <th className="py-2 px-3">PHONE &amp; LOCATION</th>
-                <th className="py-2 px-3">PAN</th>
-                <th className="py-2 px-3">RISK INDEX</th>
-                <th className="py-2 px-3 text-right">ACTION</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#2B313D] text-[#9AA3B2]">
-              {primeSuspects.map((suspect) => (
-                <tr key={suspect.person_id} className="hover:bg-[#1F2430]/60 transition">
-                  <td className="py-2.5 px-3 font-medium text-[#E8EAEE]">
-                    {suspect.name}
-                  </td>
-                  <td className="py-2.5 px-3 font-mono text-[#C68A46]">
-                    "{suspect.alias}"
-                  </td>
-                  <td className="py-2.5 px-3">
-                    {suspect.is_bridge ? (
-                      <span className="text-[#8B81C4] font-semibold font-mono">
-                        {suspect.role} (Bridge Broker)
-                      </span>
-                    ) : (
-                      suspect.role
-                    )}
-                  </td>
-                  <td className="py-2.5 px-3 font-mono text-[11px]">
-                    <span className="text-[#E8EAEE] block">{suspect.phone}</span>
-                    <span className="text-[#6B7382]">{suspect.location}</span>
-                  </td>
-                  <td className="py-2.5 px-3 font-mono text-[11px]">
-                    {suspect.pan || 'N/A'}
-                  </td>
-                  <td className="py-2.5 px-3">
-                    <div className="flex items-center gap-2">
-                      <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
-                        {suspect.risk_score}%
-                      </span>
-                      <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
-                        <div 
-                          className={`h-full ${suspect.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
-                          style={{ width: `${suspect.risk_score}%` }}
-                        />
-                      </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>SUSPECT IDENTITY</TableHead>
+              <TableHead>ALIAS</TableHead>
+              <TableHead>OPERATIONAL ROLE</TableHead>
+              <TableHead>PHONE &amp; LOCATION</TableHead>
+              <TableHead>PAN</TableHead>
+              <TableHead>RISK INDEX</TableHead>
+              <TableHead className="text-right">ACTION</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {primeSuspects.map((suspect) => (
+              <TableRow key={suspect.person_id}>
+                <TableCell className="font-medium text-[#E8EAEE]">
+                  {suspect.name}
+                </TableCell>
+                <TableCell className="font-mono text-[#C68A46]">
+                  "{suspect.alias}"
+                </TableCell>
+                <TableCell>
+                  {suspect.is_bridge ? (
+                    <Badge variant="violet">
+                      {suspect.role} (Bridge Broker)
+                    </Badge>
+                  ) : (
+                    suspect.role
+                  )}
+                </TableCell>
+                <TableCell className="font-mono text-[11px]">
+                  <span className="text-[#E8EAEE] block">{suspect.phone}</span>
+                  <span className="text-[#6B7382]">{suspect.location}</span>
+                </TableCell>
+                <TableCell className="font-mono text-[11px]">
+                  {suspect.pan || 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
+                      {suspect.risk_score}%
+                    </span>
+                    <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
+                      <div 
+                        className={`h-full ${suspect.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
+                        style={{ width: `${suspect.risk_score}%` }}
+                      />
                     </div>
-                  </td>
-                  <td className="py-2.5 px-3 text-right">
-                    <button
-                      onClick={() => onSelectEntity(suspect)}
-                      className="px-2.5 py-1 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[#E8EAEE] text-[11px] font-medium transition"
-                    >
-                      Inspect
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    onClick={() => onSelectEntity(suspect)}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    Inspect
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
 
       {/* ========================================================= */}
       {/* SECTION 5: STATUTORY VIOLATIONS & LAWS BROKEN             */}
       {/* ========================================================= */}
-      <div className="dossier-card p-5 space-y-3">
+      <Card className="p-5 space-y-3">
         <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
           <div className="flex items-center gap-2">
             <Scale className="w-4 h-4 text-[#5FA876]" />
             <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Statutory Criminal Law Violations</h2>
           </div>
-          <span className="text-xs font-mono text-[#5FA876] font-semibold">
+          <Badge variant="green">
             {lawsBroken.length} Substantiated Sections
-          </span>
+          </Badge>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
@@ -1002,9 +1016,9 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               className="bg-[#1F2430] border border-[#2B313D] rounded-[5px] p-3.5 space-y-1.5 text-xs"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-semibold px-1.5 py-0.2 rounded-[3px] bg-[#181C24] text-[#C68A46] border border-[#2B313D]">
+                <Badge variant="brass">
                   {law.act}
-                </span>
+                </Badge>
                 <span className="text-[10px] font-mono text-[#5FA876]">
                   {law.penalty}
                 </span>
@@ -1017,87 +1031,102 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             </div>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* ========================================================= */}
       {/* SECTION 63B BSA CERTIFICATE MODAL                         */}
       {/* ========================================================= */}
-      {isBsaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-[#181C24] border border-[#2B313D] w-full max-w-2xl rounded-[5px] shadow-none p-5 space-y-4 max-h-[90vh] overflow-y-auto text-xs">
-            <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
-              <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-[#5FA876]" />
-                <h3 className="text-base font-serif font-bold text-[#E8EAEE]">Section 63B BSA Certificate of Electronic Evidence</h3>
+      <AnimatePresence>
+        {isBsaModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.15 }}
+              className="bg-[#181C24] border border-[#2B313D] w-full max-w-2xl rounded-[5px] shadow-none p-5 space-y-4 max-h-[90vh] overflow-y-auto text-xs"
+            >
+              <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+                <div className="flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-[#5FA876]" />
+                  <h3 className="text-base font-serif font-bold text-[#E8EAEE]">Section 63B BSA Certificate of Electronic Evidence</h3>
+                </div>
+                <button 
+                  onClick={() => setIsBsaModalOpen(false)}
+                  className="p-1 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-              <button 
-                onClick={() => setIsBsaModalOpen(false)}
-                className="p-1 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE]"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
 
-            <div className="space-y-3 text-[#9AA3B2] leading-relaxed font-serif text-[13px] bg-[#1F2430] p-4 rounded-[5px] border border-[#2B313D]">
-              <p className="text-center font-bold text-[#E8EAEE] uppercase tracking-wider text-sm">
-                IN THE COURT OF THE PRINCIPAL DISTRICT &amp; SESSIONS JUDGE<br />
-                CYBER JURISDICTION &amp; COMMERCIAL OFFENCES
-              </p>
-              <p className="text-center text-xs text-[#6B7382] font-mono">
-                CERTIFICATE UNDER SECTION 63B OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023
-              </p>
-              <hr className="border-[#2B313D] my-2.5" />
-              <p>
-                I, <strong className="text-[#E8EAEE]">{caseData.investigator_name}</strong>, holding Badge ID <strong className="text-[#E8EAEE]">{caseData.investigator_badge}</strong>, Lead Investigating Officer at <strong className="text-[#E8EAEE]">{caseData.region_name}</strong>, hereby certify under Section 63B of the Bharatiya Sakshya Adhiniyam, 2023 that:
-              </p>
-              <ol className="list-decimal pl-5 space-y-1.5 font-sans text-xs">
-                <li>
-                  The digital evidence records associated with <strong className="text-[#E8EAEE]">{caseData.case_id} ({caseData.title})</strong> were lawfully extracted, cryptographically hashed at the time of seizure, and preserved on the Hyperledger immutable evidence registry.
-                </li>
-                <li>
-                  The computer systems and cloud capture gateways were operating normally during the extraction window and no unauthorized alterations occurred.
-                </li>
-                <li>
-                  Hash verification check against SHA-256 baseline confirmed zero tampering:
-                  <div className="bg-[#12151B] p-2 rounded-[4px] font-mono text-[10px] mt-1 text-[#5FA876] border border-[#2B313D]">
-                    EVD-001 (FIR 0018/2026): d4c56ad10356cf2cc8ddfdc26fd4c04f... [MATCH]<br />
-                    EVD-002 (STR-88912): afeb4ed06feb8f55c8a7028172dec410... [MATCH]<br />
-                    EVD-003 (CDR Tower T-4401): ccfb08874fc7038d541678894b70eee7... [MATCH]
+              <div className="space-y-3 text-[#9AA3B2] leading-relaxed font-serif text-[13px] bg-[#1F2430] p-4 rounded-[5px] border border-[#2B313D]">
+                <p className="text-center font-bold text-[#E8EAEE] uppercase tracking-wider text-sm">
+                  IN THE COURT OF THE PRINCIPAL DISTRICT &amp; SESSIONS JUDGE<br />
+                  CYBER JURISDICTION &amp; COMMERCIAL OFFENCES
+                </p>
+                <p className="text-center text-xs text-[#6B7382] font-mono">
+                  CERTIFICATE UNDER SECTION 63B OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023
+                </p>
+                <hr className="border-[#2B313D] my-2.5" />
+                <p>
+                  I, <strong className="text-[#E8EAEE]">{caseData.investigator_name}</strong>, holding Badge ID <strong className="text-[#E8EAEE]">{caseData.investigator_badge}</strong>, Lead Investigating Officer at <strong className="text-[#E8EAEE]">{caseData.region_name}</strong>, hereby certify under Section 63B of the Bharatiya Sakshya Adhiniyam, 2023 that:
+                </p>
+                <ol className="list-decimal pl-5 space-y-1.5 font-sans text-xs">
+                  <li>
+                    The digital evidence records associated with <strong className="text-[#E8EAEE]">{caseData.case_id} ({caseData.title})</strong> were lawfully extracted, cryptographically hashed at the time of seizure, and preserved on the Hyperledger immutable evidence registry.
+                  </li>
+                  <li>
+                    The computer systems and cloud capture gateways were operating normally during the extraction window and no unauthorized alterations occurred.
+                  </li>
+                  <li>
+                    Hash verification check against SHA-256 baseline confirmed zero tampering:
+                    <div className="bg-[#12151B] p-2 rounded-[4px] font-mono text-[10px] mt-1 text-[#5FA876] border border-[#2B313D]">
+                      EVD-001 (FIR 0018/2026): d4c56ad10356cf2cc8ddfdc26fd4c04f... [MATCH]<br />
+                      EVD-002 (STR-88912): afeb4ed06feb8f55c8a7028172dec410... [MATCH]<br />
+                      EVD-003 (CDR Tower T-4401): ccfb08874fc7038d541678894b70eee7... [MATCH]
+                    </div>
+                  </li>
+                </ol>
+                <p className="pt-1">
+                  Executed under my hand and digital signature on this 5th day of September, 2026.
+                </p>
+                <div className="flex justify-between pt-3 border-t border-[#2B313D] font-sans text-xs">
+                  <div>
+                    <span className="text-[#6B7382] block text-[10px] font-mono">REGISTRY DIGEST</span>
+                    <span className="font-mono text-[#C68A46]">FABRIC-BLOCK-992144</span>
                   </div>
-                </li>
-              </ol>
-              <p className="pt-1">
-                Executed under my hand and digital signature on this 5th day of September, 2026.
-              </p>
-              <div className="flex justify-between pt-3 border-t border-[#2B313D] font-sans text-xs">
-                <div>
-                  <span className="text-[#6B7382] block text-[10px] font-mono">REGISTRY DIGEST</span>
-                  <span className="font-mono text-[#C68A46]">FABRIC-BLOCK-992144</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-[#E8EAEE] font-bold block">{caseData.investigator_name}</span>
-                  <span className="text-[#6B7382] text-[10px]">Lead Cyber Investigator, NCR Cyber PS</span>
+                  <div className="text-right">
+                    <span className="text-[#E8EAEE] font-bold block">{caseData.investigator_name}</span>
+                    <span className="text-[#6B7382] text-[10px]">Lead Cyber Investigator, NCR Cyber PS</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-end gap-2 pt-1">
-              <button
-                onClick={() => window.print()}
-                className="px-3 py-1.5 bg-[#1F2430] hover:bg-[#282F3F] text-[#E8EAEE] rounded-[4px] text-xs font-medium border border-[#2B313D]"
-              >
-                Print Certificate
-              </button>
-              <button
-                onClick={() => setIsBsaModalOpen(false)}
-                className="px-3.5 py-1.5 bg-[#C68A46] text-[#12151B] font-semibold rounded-[4px] text-xs"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+              <div className="flex items-center justify-end gap-2 pt-1">
+                <Button
+                  onClick={() => window.print()}
+                  variant="secondary"
+                  size="default"
+                >
+                  Print Certificate
+                </Button>
+                <Button
+                  onClick={() => setIsBsaModalOpen(false)}
+                  variant="brass"
+                  size="default"
+                >
+                  Done
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
