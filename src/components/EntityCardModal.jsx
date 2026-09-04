@@ -15,33 +15,33 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-[#131b2e] border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-[#1a2320] border border-[#116466]/60 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col futuristic-glow">
         {/* Modal Header */}
-        <div className="bg-slate-900/90 border-b border-slate-800 p-5 flex items-center justify-between">
+        <div className="bg-[#141a18] border-b border-[#116466]/40 p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg ${
-              entity.is_bridge ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-blue-500/20 text-cyan-400 border border-blue-500/30'
+              entity.is_bridge ? 'bg-[#2C3531] text-[#FFCB9A] border border-[#FFCB9A]/50' : 'bg-[#116466]/20 text-[#D1E8E2] border border-[#116466]/40'
             }`}>
               {entity.name ? entity.name[0] : 'E'}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-cyan-400 border border-blue-500/30">
-                  {entity.person_id || entity.account_id || entity.phone_id || entity.case_id || entity.evidence_id}
+                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#116466]/20 text-[#D1E8E2] border border-[#116466]/40">
+                  {entity.person_id || entity.account_id || entity.phone_id || entity.case_id || entity.evidence_id || "NODE"}
                 </span>
                 {entity.is_bridge && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#2C3531] text-[#FFCB9A] border border-[#FFCB9A]/50 animate-pulse font-mono">
                     HIGH BETWEENNESS BROKER
                   </span>
                 )}
                 {entity.risk_score && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#D9B08C]/15 text-[#FFCB9A] border border-[#D9B08C]/35 font-mono">
                     RISK SCORE: {entity.risk_score}/100
                   </span>
                 )}
               </div>
-              <h2 className="text-lg font-bold text-white mt-0.5">
+              <h2 className="text-lg font-bold text-white mt-1 font-display">
                 {entity.name || entity.title || entity.account_number || entity.msisdn || entity.file_name}
               </h2>
             </div>
@@ -49,139 +49,80 @@ export default function EntityCardModal({ entity, onClose, onOpenCase, onAskCopi
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition"
+            className="p-1.5 rounded-lg bg-[#121816] hover:bg-[#1c2420] text-[#7e968e] hover:text-[#D1E8E2] transition border border-[#116466]/30"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Scrollable Content */}
-        <div className="p-6 overflow-y-auto space-y-6 text-xs">
+        <div className="p-6 overflow-y-auto space-y-6 text-xs bg-[#121816] font-sans">
           {/* Key Overview Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-2">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Role & Network Position</span>
-              <p className="text-sm font-semibold text-slate-200">{entity.role || entity.category || entity.type || "Extracted Criminal Entity"}</p>
-              <p className="text-slate-400 leading-relaxed">{entity.description || entity.jurisdiction || "Verified item in investigation graph."}</p>
+            <div className="bg-[#151c19] p-4 rounded-xl border border-[#116466]/30 space-y-2">
+              <span className="text-[11px] font-bold text-[#D9B08C] uppercase tracking-widest font-mono">Role &amp; Network Position</span>
+              <p className="text-sm font-semibold text-white font-display">{entity.role || entity.category || entity.type || "Extracted Criminal Entity"}</p>
+              <p className="text-[#a3b8b0] leading-relaxed">{entity.description || entity.jurisdiction || "Verified node in master investigation knowledge graph."}</p>
             </div>
 
-            <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-2">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Primary Associated Case</span>
+            <div className="bg-[#151c19] p-4 rounded-xl border border-[#116466]/30 space-y-2">
+              <span className="text-[11px] font-bold text-[#D9B08C] uppercase tracking-widest font-mono">Primary Associated File</span>
               <div className="flex items-center justify-between">
-                <span className="text-cyan-300 font-bold">{entity.primary_case_id || entity.case_id || "Cross-Case Linked"}</span>
+                <span className="text-[#D1E8E2] font-mono font-bold">{entity.primary_case_id || entity.case_id || "Cross-Case Linked"}</span>
                 {entity.primary_case_id && (
                   <button
                     onClick={() => onOpenCase(entity.primary_case_id)}
-                    className="text-xs text-blue-400 hover:underline flex items-center gap-1"
+                    className="text-xs text-[#FFCB9A] hover:underline flex items-center gap-1 font-semibold"
                   >
-                    Open Case <ExternalLink className="w-3 h-3" />
+                    Open Case <ExternalLink className="w-3 h-3 text-[#FFCB9A]" />
                   </button>
                 )}
               </div>
-              <p className="text-slate-400">Location: <strong>{entity.location || entity.bank_name || "NCR / Mumbai Subnet"}</strong></p>
-              {entity.pan && <p className="text-slate-400 font-mono">PAN: {entity.pan}</p>}
+              <p className="text-[#7e968e]">Location: <strong className="text-white">{entity.location || entity.bank_name || "NCR / Mumbai Subnet"}</strong></p>
+              {entity.pan && <p className="text-[#7e968e] font-mono">PAN: <span className="text-[#D1E8E2]">{entity.pan}</span></p>}
             </div>
           </div>
 
           {/* Supporting Evidence Confidence Panel */}
-          <div className="bg-blue-950/30 border border-blue-500/20 rounded-xl p-4">
+          <div className="bg-[#151c19] border border-[#116466]/40 rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="font-bold text-cyan-300 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400" /> Evidence Support & Extraction Confidence
+              <span className="font-bold text-[#D1E8E2] flex items-center gap-1.5 font-display">
+                <CheckCircle2 className="w-4 h-4 text-[#D1E8E2]" /> Evidence Support &amp; Extraction Confidence
               </span>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">
+              <span className="text-xs font-mono font-bold text-[#FFCB9A] bg-[#2C3531] px-2 py-0.5 rounded border border-[#FFCB9A]/40">
                 Confidence: 96.4%
               </span>
             </div>
-            <p className="text-slate-300 leading-relaxed">
-              Relationship extracted from verified source record <strong>EVD-001 (FIR 0018/2026)</strong> and <strong>EVD-002 (STR-88912)</strong>. Corroborated by 14 CDR call logs and 12 bank transaction logs.
+            <p className="text-[#a3b8b0] leading-relaxed">
+              Relationship extracted from verified source record <strong className="text-white">EVD-001 (FIR 0018/2026)</strong> and <strong className="text-white">EVD-002 (STR-88912)</strong>. Corroborated by 14 CDR call logs and 12 core banking transaction records.
             </p>
           </div>
 
-          {/* Flagged Contradictions Alert if any */}
+          {/* Associated Contradictions Flag */}
           {relatedContradictions.length > 0 && (
-            <div className="bg-red-950/40 border border-red-500/40 rounded-xl p-4 space-y-2">
-              <div className="flex items-center gap-2 font-bold text-red-400">
-                <AlertTriangle className="w-4 h-4 text-red-400" />
-                <span>FLAGGED EVIDENCE CONTRADICTION DETECTED</span>
-              </div>
-              {relatedContradictions.map((c) => (
-                <div key={c.contradiction_id} className="bg-slate-900/80 p-3 rounded-lg border border-red-500/20 space-y-1">
-                  <span className="font-bold text-red-300">{c.title}</span>
-                  <p className="text-slate-300">{c.description}</p>
-                  <p className="text-amber-400 font-semibold mt-1">Suggested Action: {c.investigative_action}</p>
+            <div className="bg-[#2C3531]/40 border border-[#FFCB9A]/50 rounded-xl p-4 space-y-2">
+              <span className="font-bold text-[#FFCB9A] flex items-center gap-1.5 uppercase font-mono text-xs">
+                <AlertTriangle className="w-4 h-4 text-[#FFCB9A]" /> Flagged Investigation Contradiction
+              </span>
+              {relatedContradictions.map(c => (
+                <div key={c.contradiction_id} className="text-xs text-[#D1E8E2] space-y-1">
+                  <p className="font-semibold text-white">{c.title}</p>
+                  <p className="text-[#a3b8b0]">{c.description}</p>
+                  <p className="text-[#FFCB9A] font-mono text-[11px]">Recommended: {c.investigative_action}</p>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Flagged Investigation Gap if any */}
-          {relatedGaps.length > 0 && (
-            <div className="bg-amber-950/40 border border-amber-500/40 rounded-xl p-4 space-y-2">
-              <div className="flex items-center gap-2 font-bold text-amber-400">
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <span>UNRESOLVED INVESTIGATION GAP</span>
-              </div>
-              {relatedGaps.map((g) => (
-                <div key={g.gap_id} className="bg-slate-900/80 p-3 rounded-lg border border-amber-500/20 space-y-1">
-                  <span className="font-bold text-amber-300">{g.title}</span>
-                  <p className="text-slate-300">{g.description}</p>
-                  <p className="text-cyan-400 font-semibold mt-1">Recommended Step: {g.recommended_step}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Relevant Legal Provisions */}
-          <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-2">
-            <span className="font-bold text-slate-300 flex items-center gap-1.5">
-              <Scale className="w-4 h-4 text-indigo-400" /> Potentially Relevant Legal Provisions
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-              <div className="bg-slate-800/80 p-2.5 rounded border border-slate-700">
-                <span className="font-bold text-cyan-300">IT Act 2000 - Sec 66C & 66D</span>
-                <p className="text-slate-400 text-[11px]">Identity theft & cheating by personation using computer resource.</p>
-              </div>
-              <div className="bg-slate-800/80 p-2.5 rounded border border-slate-700">
-                <span className="font-bold text-emerald-300">BNS 2023 - Sec 318(4) & 61(2)</span>
-                <p className="text-slate-400 text-[11px]">Cheating, dishonest inducement of property & criminal conspiracy.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Modal Action Buttons Footer */}
-        <div className="bg-slate-900/90 border-t border-slate-800 p-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+          {/* Footer Actions */}
+          <div className="pt-2 flex items-center justify-end gap-3">
             <button
-              onClick={() => {
-                onClose();
-                onAskCopilot(`Explain why ${entity.name || entity.person_id} is connected to Case 018 and Case 041.`);
-              }}
-              className="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-1.5 transition"
+              onClick={onClose}
+              className="px-4 py-2 bg-[#1c2420] hover:bg-[#242e2a] border border-[#116466]/40 text-[#D1E8E2] rounded-xl text-xs font-bold transition"
             >
-              Ask AI Copilot <ArrowUpRight className="w-3.5 h-3.5" />
+              Close Dossier
             </button>
-
-            {entity.primary_case_id && (
-              <button
-                onClick={() => {
-                  onClose();
-                  onOpenCase(entity.primary_case_id);
-                }}
-                className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition"
-              >
-                Open Case Workspace
-              </button>
-            )}
           </div>
-
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-medium transition"
-          >
-            Close Card
-          </button>
         </div>
       </div>
     </div>

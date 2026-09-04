@@ -2,31 +2,74 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-}
-code, pre {
-  font-family: 'JetBrains Mono', monospace;
+@layer base {
+  body {
+    background-color: #121816;
+    color: #D1E8E2;
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #116466;
+    color: #FFFFFF;
+  }
 }
 
-/* Custom scrollbar */
+/* Futuristic Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #121816;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #2C3531;
+  border-radius: 3px;
+  border: 1px solid rgba(17, 100, 102, 0.4);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #116466;
 }
 
-.glass-panel {
-  background: rgba(19, 27, 46, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Futuristic HUD Panel & Crosshairs */
+.futuristic-panel {
+  background: rgba(28, 36, 33, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(17, 100, 102, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.futuristic-panel:hover {
+  border-color: rgba(17, 100, 102, 0.6);
+}
+
+.futuristic-glow {
+  box-shadow: 0 0 25px -5px rgba(17, 100, 102, 0.3);
+}
+
+.futuristic-border {
+  border-color: rgba(17, 100, 102, 0.35);
+}
+
+.futuristic-tag {
+  background: rgba(17, 100, 102, 0.18);
+  color: #D1E8E2;
+  border: 1px solid rgba(17, 100, 102, 0.45);
+}
+
+.futuristic-badge-warm {
+  background: rgba(217, 176, 140, 0.12);
+  color: #FFCB9A;
+  border: 1px solid rgba(217, 176, 140, 0.3);
+}
+
+/* Subtle background tech grid */
+.tech-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(17, 100, 102, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(17, 100, 102, 0.04) 1px, transparent 1px);
+  background-size: 36px 36px;
 }
