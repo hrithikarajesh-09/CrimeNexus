@@ -1,0 +1,7 @@
+vehicle_id,registration_number,make,model,color,vehicle_type,owner_id,last_seen_location_id,last_seen_timestamp
+VEH-101,HR26-DK-9011,Hyundai,Creta,Phantom Black,SUV,PER-101,LOC-101,2026-06-09 17:00:00
+VEH-102,DL01-CS-4421,Honda,City,White Orchid,Sedan,PER-102,LOC-102,2026-06-09 16:30:00
+VEH-103,MH02-FJ-3301,Toyota,Fortuner,Silver Metallic,SUV,PER-103,LOC-202,2026-08-07 18:00:00
+VEH-104,MH01-CD-7788,Mercedes-Benz,E-Class,Obsidian Black,Sedan,PER-105,LOC-201,2026-08-07 19:30:00
+VEH-105,MH03-BW-5512,Maruti Suzuki,Ertiga,Grey,MUV,PER-106,LOC-203,2026-08-07 17:45:00
+VEH-106,MH01-TR-9122,Mahindra,Bolero Maxi Truck,White,Cash Van,PER-113,LOC-204,2026-08-08 04:30:00

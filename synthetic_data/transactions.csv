@@ -1,0 +1,15 @@
+transaction_id,sender_account_id,receiver_account_id,amount,currency,transaction_type,channel,timestamp,reference_narration,evidence_id
+TXN-1001,ACC-1001,ACC-2201,10000000.00,INR,RTGS,Corporate NetBanking,2026-06-09 14:10:00,Vendor Invoice Clearance Ref ZEN-9981,EVD-001
+TXN-1002,ACC-2201,ACC-3301,2000000.00,INR,IMPS,Mobile Banking,2026-06-09 14:35:00,Sub-disbursement Batch A1,EVD-001
+TXN-1003,ACC-2201,ACC-3302,2000000.00,INR,IMPS,Mobile Banking,2026-06-09 14:40:00,Sub-disbursement Batch A2,EVD-001
+TXN-1004,ACC-2201,ACC-3303,2000000.00,INR,NEFT,Mobile Banking,2026-06-09 14:45:00,Sub-disbursement Batch A3,EVD-001
+TXN-1005,ACC-2201,ACC-3304,1500000.00,INR,IMPS,Mobile Banking,2026-06-09 14:50:00,Sub-disbursement Batch A4,EVD-001
+TXN-1006,ACC-2201,ACC-8809,2500000.00,INR,RTGS,NetBanking,2026-06-09 14:55:00,Consulting settlement,EVD-001
+TXN-1007,ACC-3301,ACC-7702,1800000.00,INR,NEFT,Internet Banking,2026-06-11 10:15:00,Advisory commission trf,EVD-003
+TXN-1008,ACC-3302,ACC-7702,1900000.00,INR,NEFT,Internet Banking,2026-06-11 10:25:00,Professional fees clearing,EVD-003
+TXN-1009,ACC-3303,ACC-7702,1900000.00,INR,RTGS,Corporate Banking,2026-06-11 10:40:00,Investment return tranche 1,EVD-003
+TXN-1010,ACC-3304,ACC-7702,1400000.00,INR,IMPS,Mobile Banking,2026-06-11 11:00:00,Settlement dev,EVD-003
+TXN-1011,ACC-7702,ACC-7701,5000000.00,INR,RTGS,NetBanking,2026-08-07 15:30:00,Trade advances Apex Trade Ref TXN_552,EVD-002
+TXN-1012,ACC-7701,ACC-7703,4500000.00,INR,RTGS,Corporate Banking,2026-08-07 17:15:00,Logistics settlement invoice 8891,EVD-002
+TXN-1013,ACC-7703,ACC-7705,100000000.00,INR,SWIFT,Treasury Wire,2026-08-10 12:00:00,Bullion import LC 44102 Dubai,EVD-002
+TXN-1014,ACC-7703,ACC-7704,800000.00,INR,IMPS,Mobile Banking,2026-08-10 14:20:00,Local operational disbursement,EVD-002

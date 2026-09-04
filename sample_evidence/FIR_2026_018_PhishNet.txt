@@ -1,0 +1,47 @@
+================================================================================
+FIRST INFORMATION REPORT (Under Section 154 Cr.P.C. / Section 173 BNSS)
+CRIME / INCIDENT REPORT - REGION A (NCR JURISDICTION)
+CYBER CRIME POLICE STATION, GURUGRAM
+================================================================================
+
+1. District: Gurugram Commissionerate
+   Police Station: Cyber Crime Police Station (Region Code: REG-NCR)
+   FIR No: 0018/2026
+   Date & Time of FIR: 09-JUN-2026 18:30:00 IST
+   Acts & Sections: IT Act 2000 (Sec 66C, 66D) r/w BNS 2023 (Sec 318(4), 61(2))
+
+2. Complainant / Informant Details:
+   Name: Vikramaditya Rathore (PER-108)
+   Designation: Chief Financial Officer, Zenith Technologies Ltd.
+   Office Address: Cyber City Phase II, Tower C, Gurugram, Haryana - 122002
+   Contact Phone: +919810011808
+
+3. Occurrence of Offence:
+   Day & Date: Tuesday, 09-JUN-2026
+   Time: Between 11:15:00 IST and 14:30:00 IST
+   Place of Occurrence: Virtual / Electronic Domain & Zenith Corporate Banking Portal
+
+4. Details of Suspects / Accused (As per preliminary cyber inquiry):
+   - Unknown operator claiming to be 'Audit Desk' / alias 'Viper'
+   - Registered Caller MSISDN: +919811002233
+   - Primary Beneficiary: Suman Roy (PER-104) holding Account #9988220144 at Royal Crest Bank
+   - Intermediary Coordinator: Contact identified as 'Broker D' / Devrat Sharma (PER-103)
+
+5. Incident Narrative / Statement of Complainant:
+   "On 09 June 2026 at approximately 11:15 IST, our finance treasury desk received a spear-phishing email ostensibly from our Managing Director requesting urgent authorization for an offshore vendor clearance. The link directed our accounts manager to a replica portal hosted on 'secure-zenithcorp-auth.com'. Upon credential entry, unauthorized two-factor tokens were intercepted.
+   At 14:10 IST, an unauthorized RTGS transfer of INR 1,00,00,000 (One Crore Indian Rupees) was executed from our Zenith Corporate Current Account (ACC-1001 at Apex Global Bank) to beneficiary account ACC-2201 (Royal Crest Bank, Cyber Hub Branch, A/C: 9988220144, Holder: Suman Roy).
+   When our finance team detected the discrepancy and attempted a recall, the funds were already subdivided and moved across multiple secondary accounts within minutes. We request immediate freeze, tracing of digital footprints, and strict legal action against the syndicate."
+
+6. Digital Indicators & Technical Artifacts Extracted:
+   - Malicious Domain: secure-zenithcorp-auth.com
+   - Associated Command IP: 198.51.100.45 (Originating ASN: 45102 CloudHost VPS)
+   - Secondary Webhook IP: 203.0.113.88
+   - Spoofed Header Sender: ceo-office@zenithcorp-internal.com
+   - Intercepted Calling Number: +919811002233 (IMSI: 404450198234222)
+   - Initial Destination Account: ACC-2201 (IFSC: RCBL0001042)
+
+7. Investigating Officer:
+   Inspector Amitav Sen (Badge: NCR-CYBER-044)
+   Lead Case Officer: Inspector Vikram Batra (INV-NCR-101)
+   Signature / Electronic Dispatch Seal: [VERIFIED DIGITAL DISPATCH REG-NCR-2026-0906]
+================================================================================

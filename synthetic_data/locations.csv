@@ -1,0 +1,11 @@
+location_id,label,address,city,state,country,latitude,longitude
+LOC-101,Syndicate Safehouse NCR,"Flat 402, Neelkanth Heights, Sector 56",Gurugram,Haryana,India,28.4312,77.0984
+LOC-102,Tech Server Hideout,"House 112, Block B, Sushant Lok",Gurugram,Haryana,India,28.4601,77.0725
+LOC-103,Mule Drop Location,"Room 14, Chawl No 3, Mahipalpur",New Delhi,Delhi,India,28.5492,77.1213
+LOC-104,Illegal SIM Box Facility,"Plot 88, Udyog Vihar Phase 4",Gurugram,Haryana,India,28.5021,77.0811
+LOC-105,Zenith Corp Headquarters,"Tower C, Cyber City Phase II",Gurugram,Haryana,India,28.4952,77.0891
+LOC-201,Hawala Operations Head Office,"Penthouse 22, Ocean Crest, Worli",Mumbai,Maharashtra,India,19.0144,72.8179
+LOC-202,Broker Financial Suite,"Flat 1204, Sea Breeze Towers, Bandra West",Mumbai,Maharashtra,India,19.0596,72.8295
+LOC-203,Apex Trade Shell Office,"Unit 412, Nariman Bhavan, Nariman Point",Mumbai,Maharashtra,India,18.9281,72.8228
+LOC-204,Cash Transshipment Godown,"Plot 14B, Kurla Industrial Estate",Mumbai,Maharashtra,India,19.0726,72.8845
+LOC-301,Overseas Bullion Clearing,"Al-Rigga Tower 8, Deira",Dubai,Dubai,UAE,25.2631,55.3214

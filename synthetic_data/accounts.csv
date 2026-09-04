@@ -1,0 +1,13 @@
+account_id,account_number,bank_name,branch,ifsc_code,account_holder_id,account_type,balance,status,opened_date
+ACC-1001,1009823411,Apex Global Bank,Cyber City Gurugram,AGBL0001092,PER-108,Current,45230000.00,Active,2021-04-10
+ACC-2201,9988220144,Royal Crest Bank,Cyber Hub Gurugram,RCBL0001042,PER-104,Savings,150000.00,Frozen,2026-02-15
+ACC-3301,2233440112,State Bank of Commerce,Nehru Place New Delhi,SBOC0002104,PER-112,Savings,42000.00,Active,2026-01-20
+ACC-3302,2233440223,State Bank of Commerce,Sector 18 Noida,SBOC0003310,PER-114,Savings,12500.00,Frozen,2026-03-05
+ACC-3303,5544110334,Hindustan Mercantile Bank,Sector 29 Gurugram,HMBL0004501,PER-101,Current,320000.00,Frozen,2025-11-12
+ACC-3304,5544110445,Hindustan Mercantile Bank,MI Road Jaipur,HMBL0008802,PER-104,Savings,84000.00,Active,2026-04-10
+ACC-7701,4455770199,Imperial Trust Bank,Nariman Point Mumbai,ITBL0005511,PER-107,Current,18450000.00,Under_Investigation,2025-08-20
+ACC-7702,4455770288,Imperial Trust Bank,Bandra West Mumbai,ITBL0005544,PER-103,Current,7620000.00,Active,2024-10-15
+ACC-7703,6677880199,Western Coastal Bank,Fort Mumbai,WCBL0007812,PER-105,Current,39400000.00,Active,2023-05-18
+ACC-7704,6677880288,Western Coastal Bank,Crawford Market Mumbai,WCBL0007815,PER-106,Savings,540000.00,Active,2025-02-11
+ACC-7705,9911220033,Emirates Gulf National Bank,Deira Dubai,EGNB0009911,PER-111,Offshore,124000000.00,Active,2022-09-01
+ACC-8809,7788990011,Federal Union Bank,Chandni Chowk Delhi,FUBL0003019,,Savings,2500000.00,Frozen,2026-05-01

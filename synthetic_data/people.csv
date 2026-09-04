@@ -1,0 +1,16 @@
+person_id,full_name,aliases,role_designation,dob,gender,nationality,id_document_type,id_document_number,address,primary_case_id,region_id,risk_level
+PER-101,Rajesh Verma,Viper; Rajan,Syndicate Leader / Phishing Boss,1987-04-12,Male,Indian,AADHAAR,XXXX-XXXX-4912,"Flat 402, Neelkanth Heights, Sector 56, Gurugram, Haryana",CASE-018,REG-NCR,High
+PER-102,Kunal Malhotra,Proxy; NullPtr,Technical Infrastructure Admin,1994-09-23,Male,Indian,PAN,ABCPM1294K,"House 112, Block B, Sushant Lok, Gurugram, Haryana",CASE-018,REG-NCR,High
+PER-103,Devrat Sharma,The Accountant; Broker D,Financial Broker & Mule Coordinator (Bridge),1982-11-05,Male,Indian,PAN,BKDPS9921E,"Flat 1204, Sea Breeze Towers, Bandra West, Mumbai, Maharashtra",CASE-018,REG-NCR,Critical
+PER-104,Suman Roy,Mule One; Sunny,Mule Account Holder,2001-03-14,Male,Indian,AADHAAR,XXXX-XXXX-8821,"Room 14, Chawl No 3, Mahipalpur, New Delhi",CASE-018,REG-NCR,Medium
+PER-105,Tariq Merchant,Al-Miraj; Merchant Saab,Hawala Kingpin & Financier,1975-08-19,Male,Indian,PASSPORT,Z4819201,"Penthouse 22, Ocean Crest, Worli, Mumbai, Maharashtra",CASE-041,REG-MUM,Critical
+PER-106,Sameer Khan,Falcon; Sam,Hawala Courier & Logistics Coordinator,1990-01-28,Male,Indian,AADHAAR,XXXX-XXXX-3341,"Flat 301, Al-Noor Apt, Dongri, Mumbai, Maharashtra",CASE-041,REG-MUM,High
+PER-107,Anita D'Souza,Director Anita,Shell Company Director (Apex Trade),1985-06-17,Female,Indian,PAN,CKSPD5541L,"Flat 702, Marina Bay View, Colaba, Mumbai, Maharashtra",CASE-041,REG-MUM,High
+PER-108,Vikramaditya Rathore,,Victim - CFO Zenith Tech,1973-12-01,Male,Indian,PAN,AAAPR7890M,"Villa 19, Magnolia Greens, Golf Course Rd, Gurugram, Haryana",CASE-018,REG-NCR,Low
+PER-109,Priya Menon,,Witness / Whistleblower (Accounts Manager),1992-05-15,Female,Indian,AADHAAR,XXXX-XXXX-5521,"Apt 501, Silver Oaks, DLF Phase 1, Gurugram, Haryana",CASE-018,REG-NCR,Low
+PER-110,Gaurav Shinde,Volt; SIM-Babu,SIM Box Operator & Fraudulent Activator,1996-10-30,Male,Indian,AADHAAR,XXXX-XXXX-9912,"Plot 88, Udyog Vihar Phase 4, Gurugram, Haryana",CASE-059,REG-NCR,High
+PER-111,Farooq Sheikh,Caspian,Cross-Border Settlement Contact,1979-02-11,Male,Indian,PASSPORT,A8892104,"Al-Rigga Tower 8, Deira, Dubai, UAE",CASE-041,REG-MUM,High
+PER-112,Meera Joshi,Meera M,Mule Recruiter & Campus Agent,2000-07-09,Female,Indian,AADHAAR,XXXX-XXXX-1172,"Hostel Block 4, North Campus, New Delhi",CASE-018,REG-NCR,Medium
+PER-113,Imran Qureshi,Driver Imran,Cash Courier & Vehicle Driver,1993-04-03,Male,Indian,DRIVING_LICENSE,MH01-2018-00912,"Chawl 9, Kurla West, Mumbai, Maharashtra",CASE-041,REG-MUM,Medium
+PER-114,Ramesh Chandra,,Dormant Account Holder / ID Theft Victim,1968-11-22,Male,Indian,VOTER_ID,DL/04/052/190822,"Village Kheri, Jhajjar, Haryana",CASE-018,REG-NCR,Low
+PER-115,Sunita Rao,,Nominee Director / Shell Strawperson,1989-08-14,Female,Indian,AADHAAR,XXXX-XXXX-4432,"Room 10, Ganesh Nagar, Wadala, Mumbai, Maharashtra",CASE-041,REG-MUM,Medium

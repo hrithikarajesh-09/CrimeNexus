@@ -1,0 +1,7 @@
+device_id,device_type,make_model,os,mac_address,imei,owner_id,last_ip,status
+DEV-101,Laptop,Lenovo ThinkPad X1 Carbon,Ubuntu 24.04 LTS,00:1A:2B:3C:4D:5E,,PER-102,198.51.100.45,Seized
+DEV-102,Smartphone,Apple iPhone 15 Pro,iOS 17.5,A4:83:E7:12:34:56,358941098234111,PER-101,203.0.113.88,Active
+DEV-103,Smartphone,Samsung Galaxy S24 Ultra,Android 14,3C:52:82:78:90:12,358941098234333,PER-103,198.51.100.89,Active
+DEV-104,Laptop,Apple MacBook Pro 16,macOS Sonoma,F0:18:98:AA:BB:CC,,PER-107,198.51.100.99,Active
+DEV-105,SIM Box Gateway,Dinstar UC2000-VG 32Port,Embedded Linux,00:26:8B:11:22:33,,PER-110,192.0.2.77,Seized
+DEV-106,Smartphone,OnePlus 12,OxygenOS 14,70:28:8B:55:66:77,358941098234555,PER-105,203.0.113.150,Active

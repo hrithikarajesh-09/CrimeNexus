@@ -1,0 +1,239 @@
+{
+  "project": "CrimeNexus (SIH26189)",
+  "version": "1.0.0",
+  "description": "Master investigation ground truth mapping synthetic criminal network, hidden cross-case links, bridge brokers, contradictions, and gaps.",
+  "cases_overview": [
+    {
+      "case_id": "CASE-018",
+      "name": "Operation PhishNet",
+      "jurisdiction": "REG-NCR (Gurugram / Delhi)",
+      "primary_focus": "Spear-phishing credential harvesting, corporate CEO fraud, mule account dispersal."
+    },
+    {
+      "case_id": "CASE-041",
+      "name": "Operation ShadowLedge",
+      "jurisdiction": "REG-MUM (Mumbai)",
+      "primary_focus": "Hawala layering, trade-based money laundering (TBML), shell companies, offshore UAE transfers."
+    },
+    {
+      "case_id": "CASE-059",
+      "name": "Operation DarkSIM",
+      "jurisdiction": "REG-NCR (Gurugram)",
+      "primary_focus": "SIM box gateways, automated SMS spoofing, fraudulent identity pre-activated SIM lines."
+    }
+  ],
+  "network_communities": {
+    "community_1_cyber_phishing": {
+      "name": "NCR Cyber Phishing Syndicate",
+      "primary_case": "CASE-018",
+      "members": [
+        "PER-101",
+        "PER-102",
+        "PER-104",
+        "PER-112",
+        "PER-114"
+      ],
+      "description": "Orchestrates technical infrastructure (Kunal DEV-101), impersonation calls, and campus student mule recruitment (Meera PER-112)."
+    },
+    "community_2_hawala_laundering": {
+      "name": "Mumbai Trade & Hawala Ring",
+      "primary_case": "CASE-041",
+      "members": [
+        "PER-105",
+        "PER-106",
+        "PER-107",
+        "PER-111",
+        "PER-113",
+        "PER-115"
+      ],
+      "description": "Operates front company Apex Trade Solutions (Anita PER-107), cash logistics couriers (Sameer PER-106, Imran PER-113), and Dubai bullion conduit (Farooq PER-111)."
+    },
+    "community_3_telecom_infrastructure": {
+      "name": "NCR Rogue Telecom Hub",
+      "primary_case": "CASE-059",
+      "members": [
+        "PER-110"
+      ],
+      "description": "Operates multi-port SIM box equipment supplying burner MSISDNs like PH-9908 to cyber operatives."
+    }
+  },
+  "bridge_nodes": [
+    {
+      "person_id": "PER-103",
+      "name": "Devrat Sharma",
+      "alias": "The Accountant / Broker D",
+      "role": "Strategic Money Broker & Mule Manager",
+      "centrality_role": "High betweenness centrality broker bridging NCR cyber syndicate (Case 018) with Mumbai hawala ring (Case 041).",
+      "bridge_evidence": [
+        {
+          "relationship": "Collects funds from Case 018 mule accounts (TXN-1007, 1008, 1009, 1010) on 11-JUN-2026 into ACC-7702.",
+          "cross_case_bridge_transfer": "Transfers INR 50,00,000 via TXN_552 (TXN-1011) on 07-AUG-2026 into Apex Trade Solutions ACC-7701 (Case 041).",
+          "telephony_bridge": "Calls Tariq Merchant PH-1005 (CDR-1008) and Anita D'Souza PH-1007 (CDR-1010)."
+        }
+      ]
+    }
+  ],
+  "chronological_reconstruction_events": [
+    {
+      "event_number": 1,
+      "timestamp": "2026-06-09 14:10:00",
+      "case_id": "CASE-018",
+      "narration": "Unauthorized spear-phishing RTGS transfer: Zenith Corporate account ACC-1001 debited for INR 1,00,00,000 into Suman Roy mule account ACC-2201.",
+      "evidence_reference": "EVD-001 (Record #1 / TXN-1001)",
+      "graph_delta": [
+        "Node: PER-108",
+        "Node: ACC-1001",
+        "Node: PER-104",
+        "Node: ACC-2201",
+        "Edge: ACC-1001 -[TRANSFERRED]-> ACC-2201"
+      ]
+    },
+    {
+      "event_number": 2,
+      "timestamp": "2026-06-09 14:35:00 - 14:55:00",
+      "case_id": "CASE-018",
+      "narration": "Layering tranche: Account ACC-2201 disperses INR 1.0 Crore across five secondary accounts (ACC-3301, ACC-3302, ACC-3303, ACC-3304, ACC-8809).",
+      "evidence_reference": "EVD-001 (TXN-1002 through TXN-1006)",
+      "graph_delta": [
+        "Nodes: ACC-3301..ACC-8809",
+        "Edges: TRANSFERRED to all 5 mule accounts"
+      ]
+    },
+    {
+      "event_number": 3,
+      "timestamp": "2026-06-11 10:15:00 - 11:00:00",
+      "case_id": "CASE-018",
+      "narration": "Aggregation: Mule accounts transfer INR 70,00,000 into Broker Devrat Sharma's account ACC-7702.",
+      "evidence_reference": "EVD-003 (TXN-1007 through TXN-1010)",
+      "graph_delta": [
+        "Node: PER-103",
+        "Node: ACC-7702",
+        "Edges: Mule accounts -[TRANSFERRED]-> ACC-7702"
+      ]
+    },
+    {
+      "event_number": 4,
+      "timestamp": "2026-06-11 12:00:00",
+      "case_id": "CASE-018 / CASE-041",
+      "narration": "Telephony cross-connect: Devrat Sharma (Gurugram/Mumbai) coordinates with Hawala operative Tariq Merchant in Mumbai.",
+      "evidence_reference": "EVD-003 (CDR-1008)",
+      "graph_delta": [
+        "Edge: PH-1003 -[CALLED]-> PH-1005"
+      ]
+    },
+    {
+      "event_number": 5,
+      "timestamp": "2026-08-07 15:30:00",
+      "case_id": "CASE-018 -> CASE-041",
+      "narration": "Signature Cross-Case Link: Devrat Sharma executes TXN_552 sending INR 50,00,000 to shell company Apex Trade Solutions (ACC-7701).",
+      "evidence_reference": "EVD-002 (TXN-1011 / Record #552)",
+      "graph_delta": [
+        "Edge: ACC-7702 -[TRANSFERRED]-> ACC-7701 (Crosses Case 018 to Case 041)"
+      ]
+    },
+    {
+      "event_number": 6,
+      "timestamp": "2026-08-07 17:15:00",
+      "case_id": "CASE-041",
+      "narration": "Rapid shell dissipation: Anita D'Souza routes INR 45,00,000 from Apex Trade ACC-7701 to Tariq Merchant ACC-7703.",
+      "evidence_reference": "EVD-002 (TXN-1012)",
+      "graph_delta": [
+        "Edge: ACC-7701 -[TRANSFERRED]-> ACC-7703"
+      ]
+    },
+    {
+      "event_number": 7,
+      "timestamp": "2026-08-10 12:00:00",
+      "case_id": "CASE-041",
+      "narration": "Offshore Hawala exit: Tariq Merchant transfers INR 10,00,00,000 via SWIFT wire to Farooq Sheikh in Dubai for bullion clearing.",
+      "evidence_reference": "EVD-002 (TXN-1013)",
+      "graph_delta": [
+        "Node: PER-111",
+        "Node: ACC-7705",
+        "Edge: ACC-7703 -[TRANSFERRED]-> ACC-7705"
+      ]
+    }
+  ],
+  "intentional_contradictions": [
+    {
+      "contradiction_id": "CONTRA-01",
+      "title": "Alibi Contradiction - Rajesh Verma Physical Location",
+      "entity_id": "PER-101",
+      "description": "In written police interrogation statement, suspect Rajesh Verma stated he was in Mumbai attending a wedding during the heist on 09-JUN-2026. However, CDR-1002 and CDR-1007 record his phone PH-1001 connected to Cell Tower T-4401 in Gurugram Sector 44 during the exact commission of the wire fraud.",
+      "conflicting_sources": [
+        {
+          "source": "Interrogation Statement",
+          "claim": "Present in Mumbai, Maharashtra"
+        },
+        {
+          "source": "CDR Extraction EVD-003 / Record CDR-1002",
+          "claim": "Active on Tower T-4401 Sector 44 Gurugram at 11:20:00 IST"
+        }
+      ],
+      "investigative_action": "Issue formal request for cell tower triangulation and CCTV retrieval at Sector 44 intersection."
+    },
+    {
+      "contradiction_id": "CONTRA-02",
+      "title": "Beneficiary Account KYC vs. NetBanking Login IP",
+      "entity_id": "ACC-3304",
+      "description": "Beneficiary account ACC-3304 is registered under branch MI Road Jaipur with residential address in Rajasthan. However, web transaction authentication IP 203.0.113.88 maps directly to cyber hideout LOC-101 / LOC-102 in Gurugram/Noida.",
+      "conflicting_sources": [
+        {
+          "source": "Bank KYC Record",
+          "claim": "Resident in Jaipur, Rajasthan"
+        },
+        {
+          "source": "Cyber Indicator IND-104 & Core Banking Session Log",
+          "claim": "Originating IP 203.0.113.88 (Noida / NCR subnet)"
+        }
+      ],
+      "investigative_action": "Subpoena ISP session logs and examine remote desktop / proxy tool usage on DEV-102."
+    }
+  ],
+  "investigation_gaps": [
+    {
+      "gap_id": "GAP-01",
+      "title": "Unidentified Beneficiary Account Owner",
+      "entity_id": "ACC-8809",
+      "description": "Account ACC-8809 at Federal Union Bank received INR 25,00,000 from the initial heist proceeds (TXN-1006). The account_holder_id is NULL as the account was opened using forged voter identification that does not correspond to any verified national identity.",
+      "status": "Unresolved Missing Link",
+      "recommended_step": "Issue Section 91 CrPC / Section 94 BNSS notice to Federal Union Bank for branch video CCTV and account opening biometric logs."
+    },
+    {
+      "gap_id": "GAP-02",
+      "title": "Unattributed Burner Phone Number in Heist Coordination",
+      "entity_id": "PH-9908",
+      "description": "MSISDN +919811009988 had multiple short-duration calls with broker Devrat Sharma (CDR-1005) immediately after fund transfers, and received activation SMS from SIM box DEV-105 (CDR-1014). The registered_owner_id is NULL.",
+      "status": "Unresolved Link to SIM Box Ring",
+      "recommended_step": "Cross-reference IMEI 358941098239908 against seized inventory in Case 059 (Operation DarkSIM)."
+    }
+  ],
+  "legal_provisions_mapping": {
+    "IT_Act_2000": [
+      {
+        "section": "Section 66C",
+        "description": "Identity theft - unauthorized use of electronic signature, password, or unique identification feature."
+      },
+      {
+        "section": "Section 66D",
+        "description": "Cheating by personation by using computer resource or communication device."
+      }
+    ],
+    "Bharatiya_Nyaya_Sanhita_2023": [
+      {
+        "section": "Section 318(4)",
+        "description": "Cheating and dishonestly inducing delivery of property (formerly IPC Section 420)."
+      },
+      {
+        "section": "Section 61(2)",
+        "description": "Criminal conspiracy to commit punishable offences (formerly IPC Section 120B)."
+      }
+    ],
+    "PMLA_2002": [
+      {
+        "section": "Section 3 & Section 4",
+        "description": "Offence of money-laundering and punishment - projection of tainted property and proceeds of crime as untainted property through layering."
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+================================================================================
+FINANCIAL INTELLIGENCE UNIT (FIU-IND) / SUSPICIOUS TRANSACTION REPORT (STR)
+CONFIDENTIAL INVESTIGATIVE ADVISORY - ECONOMIC OFFENCES WING
+REGION CODE: REG-MUM (WESTERN REGION, MUMBAI)
+================================================================================
+
+1. Reference ID: STR-2026-MUM-88912
+   Reporting Entity: Imperial Trust Bank, Nariman Point Branch, Mumbai
+   Date of Advisory: 08-AUG-2026 11:00:00 IST
+   Case Reference: Operation ShadowLedge / Case #CR-2026-MUM-041
+
+2. Subject Account Under Review:
+   Account Name: Apex Trade Solutions Pvt Ltd
+   Account Number: 4455770199 (System ID: ACC-7701)
+   Account Type: Corporate Current Account
+   IFSC: ITBL0005511
+   Date of Incorporation / Onboarding: 20-AUG-2025
+   Registered Director: Anita D'Souza (PER-107, PAN: CKSPD5541L)
+   Registered Address: Unit 412, Nariman Bhavan, Nariman Point, Mumbai - 400021
+
+3. Transactional Alert & Anomaly Trigger:
+   On 07-AUG-2026 at 15:30:00 IST, Account 4455770199 received a single high-value RTGS credit:
+   - Inward RTGS Amount: INR 50,00,000.00 (Fifty Lakhs)
+   - Transaction Reference: TXN_552 (Core Banking UTR: ITBL2026080700552)
+   - Originating Account: ACC-7702 (Imperial Trust Bank, Bandra West, A/C: 4455770288)
+   - Remitter: Devrat Sharma (PER-103)
+   - Narration: 'Trade advances Apex Trade Ref TXN_552'
+
+4. Immediate Rapid Dissipation Pattern:
+   Within 105 minutes of receipt (at 17:15:00 IST), Account 4455770199 initiated an outward RTGS transfer:
+   - Outward Amount: INR 45,00,000.00 (TXN-1012)
+   - Beneficiary Account: ACC-7703 (Western Coastal Bank, Fort Branch)
+   - Beneficiary Name: Tariq Merchant (PER-105, Hawala operative)
+   - Narration: 'Logistics settlement invoice 8891'
+   Subsequently on 10-AUG-2026, Account ACC-7703 routed INR 10,00,00,000 via SWIFT (TXN-1013) to offshore entity in Deira, Dubai (ACC-7705, Farooq Sheikh).
+
+5. Red Flags & Investigative Observations:
+   - Pass-through Velocity: 90% of funds transferred out within 2 hours.
+   - Physical Site Inspection: Physical inspection of Unit 412 Nariman Bhavan conducted on 08-AUG-2026 revealed the office space locked with no physical trading goods, inventory, or employees.
+   - Cross-Jurisdiction Link: Originating remitter Devrat Sharma is currently flagged as a high-interest person of interest in NCR Cyber Crime Case #CR-2026-NCR-018 (Operation PhishNet).
+   - Flagged under PMLA 2002 Sections 3 and 4 for systematic layering of fraudulent proceeds.
+
+6. Reporting Nodal Officer:
+   Rajendra Prasad, Chief Anti-Money Laundering Officer (CAMLO)
+   Imperial Trust Bank Financial Crime Division, Mumbai
+================================================================================
