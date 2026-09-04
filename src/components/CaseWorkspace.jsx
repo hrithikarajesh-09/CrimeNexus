@@ -106,6 +106,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   }, [activeTab]);
 
   const handleGraphMouseDown = (e) => {
+    setHoveredNode(null);
     if (e.target.tagName === 'circle' || e.target.tagName === 'text' || e.target.tagName === 'path') {
       return;
     }
@@ -132,11 +133,51 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     setIsDraggingGraph(false);
   };
 
-  const handleZoomIn = () => setGraphZoom(z => Math.min(3.5, +(z + 0.15).toFixed(2)));
-  const handleZoomOut = () => setGraphZoom(z => Math.max(0.5, +(z - 0.15).toFixed(2)));
+  const handleZoomIn = () => {
+    setHoveredNode(null);
+    setGraphZoom(z => Math.min(3.5, +(z + 0.15).toFixed(2)));
+  };
+  const handleZoomOut = () => {
+    setHoveredNode(null);
+    setGraphZoom(z => Math.max(0.5, +(z - 0.15).toFixed(2)));
+  };
   const handleResetZoom = () => {
+    setHoveredNode(null);
     setGraphZoom(1);
     setGraphPan({ x: 0, y: 0 });
+  };
+
+  // Spatial Hover Popover state for graph nodes
+  const [hoveredNode, setHoveredNode] = useState(null);
+  const [nodeHoverPos, setNodeHoverPos] = useState({ x: 0, y: 0, flipY: false });
+
+  const handleNodeHover = (e, node) => {
+    if (isDraggingGraph) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const popoverWidth = 350;
+    const popoverHeight = 250;
+
+    // Viewport spatial awareness & boundary detection (flips upwards if near bottom of screen)
+    const flipY = rect.bottom + popoverHeight + 15 > window.innerHeight;
+
+    let x = rect.left + rect.width / 2 - popoverWidth / 2;
+    if (x + popoverWidth > window.innerWidth - 16) {
+      x = window.innerWidth - popoverWidth - 16;
+    }
+    if (x < 16) {
+      x = 16;
+    }
+
+    let y = flipY 
+      ? Math.max(12, rect.top - popoverHeight - 10) 
+      : rect.bottom + 10;
+
+    setNodeHoverPos({ x, y, flipY });
+    setHoveredNode(node);
+  };
+
+  const handleNodeLeave = () => {
+    setHoveredNode(null);
   };
 
   // Wikipedia-style tooltip hover state
@@ -337,12 +378,35 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       date: 'Registered 20-MAY-2026',
       snippet: 'Lookalike corporate credential harvesting site used to intercept 2FA tokens from CFO Vikramaditya Rathore.',
       status: 'SEIZED BY POLICE'
+    },
+    'PER-108': {
+      title: 'Vikramaditya Rathore (CFO / Complainant)',
+      type: 'Complainant & Corporate Signatory',
+      docId: 'PAN: VRTPR8821Z • DLF Phase 5 Gurugram',
+      hash: 'EVD-001: Complainant Incident Report',
+      date: '09-JUN-2026 14:00:00 IST',
+      snippet: 'Chief Financial Officer targeted by executive spoofing email. Filed formal FIR 0018/2026 after discovering unauthorized ₹1.0 Cr RTGS debit.',
+      status: 'VERIFIED COMPLAINANT'
     }
   };
 
   const handleWikiHover = (e, key) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setTooltipPos({ x: rect.left, y: rect.bottom + window.scrollY + 6 });
+    const tooltipWidth = 320;
+    const tooltipHeight = 210;
+
+    // Viewport spatial awareness (flips upwards if near bottom of screen/taskbar)
+    let y = rect.bottom + 8;
+    if (rect.bottom + tooltipHeight > window.innerHeight - 10) {
+      y = Math.max(10, rect.top - tooltipHeight - 8);
+    }
+
+    let x = rect.left;
+    if (x + tooltipWidth > window.innerWidth - 16) {
+      x = Math.max(16, window.innerWidth - tooltipWidth - 16);
+    }
+
+    setTooltipPos({ x, y });
     setActiveTooltip(evidenceEntities[key]);
   };
 
@@ -949,6 +1013,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             e.stopPropagation();
                             setSelectedMapNode(selectedMapNode === node.id ? null : node.id);
                           }}
+                          onMouseEnter={(e) => handleNodeHover(e, node)}
+                          onMouseLeave={handleNodeLeave}
                           className="cursor-pointer group"
                         >
                           {/* Halo ring for clicked / expanded entity */}
@@ -1017,6 +1083,92 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                   </g>
                 </svg>
               </div>
+
+              {/* Spatial Floating Node Popover on Hover (with Boundary Flipping) */}
+              <AnimatePresence>
+                {hoveredNode && (() => {
+                  const dossier = entityDossierDetails[hoveredNode.id] || {
+                    name: hoveredNode.label,
+                    alias: hoveredNode.id,
+                    category: hoveredNode.type.toUpperCase(),
+                    categoryVariant: hoveredNode.isBridge ? 'violet' : 'steel',
+                    status: 'Network Node',
+                    role: hoveredNode.sub,
+                    location: 'NCR Cyber Jurisdiction',
+                    phone: 'N/A',
+                    idNumber: hoveredNode.id,
+                    riskScore: 50,
+                    whatHappened: `Topological entity in ${caseData.case_id}.`
+                  };
+
+                  return (
+                    <motion.div
+                      key={hoveredNode.id}
+                      initial={{ opacity: 0, y: nodeHoverPos.flipY ? 8 : -8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.12 }}
+                      style={{ top: `${nodeHoverPos.y}px`, left: `${nodeHoverPos.x}px` }}
+                      className="fixed z-50 w-[350px] bg-[#181C24] border border-[#C68A46] rounded-[6px] p-3.5 space-y-2.5 text-xs shadow-2xl pointer-events-none"
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
+                        <Badge variant={dossier.categoryVariant || 'brass'} className="text-[10px] px-1.5 py-0.5">
+                          {dossier.category}
+                        </Badge>
+                        <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1 font-medium">
+                          <CheckCircle2 className="w-3 h-3 text-[#5FA876]" />
+                          {dossier.status}
+                        </span>
+                      </div>
+
+                      {/* Name & Role */}
+                      <div>
+                        <div className="flex items-baseline justify-between gap-1">
+                          <h4 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight">
+                            {dossier.name}
+                          </h4>
+                          <span className="text-[11px] font-mono text-[#C68A46]">
+                            "{dossier.alias}"
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">
+                          {dossier.role}
+                        </p>
+                      </div>
+
+                      {/* 2-Column Meta Grid */}
+                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#12151B] p-2 rounded-[4px] border border-[#2B313D]">
+                        <div>
+                          <span className="text-[#6B7382] block text-[9px] font-mono uppercase">LOCATION</span>
+                          <span className="text-[#E8EAEE] block truncate">{dossier.location}</span>
+                        </div>
+                        <div>
+                          <span className="text-[#6B7382] block text-[9px] font-mono uppercase">IDENTIFIER</span>
+                          <span className="text-[#6C93B8] font-mono block truncate">{dossier.idNumber}</span>
+                        </div>
+                      </div>
+
+                      {/* Incident Narrative / What Happened snippet */}
+                      <div className="bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D] space-y-1">
+                        <span className="text-[10px] font-mono text-[#C68A46] font-semibold flex items-center gap-1">
+                          <Info className="w-3 h-3 text-[#C68A46]" />
+                          WHAT HAPPENED
+                        </span>
+                        <p className="text-[11px] text-[#E8EAEE] leading-snug line-clamp-4">
+                          {dossier.whatHappened}
+                        </p>
+                      </div>
+
+                      {/* Footer info strip */}
+                      <div className="flex items-center justify-between text-[10px] font-mono text-[#6B7382] pt-0.5 border-t border-[#2B313D]">
+                        <span>Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}>{dossier.riskScore}%</strong></span>
+                        <span className="text-[#C68A46]">Click node to pin &amp; view full dossier</span>
+                      </div>
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
             </Card>
 
             {/* Click-to-Expand Entity Inspector Drawer (Stays Expanded!) */}
@@ -1193,12 +1345,26 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 Hover over highlighted tokens for instant evidence preview
               </p>
 
-              {/* Point-wise natural readable dossier flow */}
+              {/* Point-wise natural readable chronological flow */}
               <div className="space-y-3 text-xs text-[#9AA3B2] leading-relaxed">
                 <div className="flex items-start gap-2.5">
                   <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
-                    Corporate finance treasury received an executive spoofing email prompting urgent vendor clearance via duplicate portal{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'PER-108')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#6C93B8] font-semibold hover:underline cursor-pointer border-b border-[#6C93B8]/50"
+                    >
+                      CFO Vikramaditya Rathore
+                    </span>{' '}
+                    received an executive spoofing email on June 9, 2026 at 11:30 IST, purportedly from Zenith CEO Rajiv Singhania instructing urgent vendor clearance.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Then he was directed to duplicate phishing portal{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'DOMAIN-AUTH')}
                       onMouseLeave={handleWikiLeave}
@@ -1206,14 +1372,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     >
                       secure-zenithcorp-auth.com
                     </span>
-                    . Rogue 2FA token intercepted by IP 198.51.100.45.
+                    , where rogue reverse proxy IP 198.51.100.45 intercepted his corporate 2FA authentication token.
                   </p>
                 </div>
 
                 <div className="flex items-start gap-2.5">
                   <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
-                    Unauthorized RTGS debit of{' '}
+                    Then an unauthorized RTGS debit of{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
                       onMouseLeave={handleWikiLeave}
@@ -1221,7 +1387,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     >
                       ₹1,00,00,000 (One Crore INR)
                     </span>{' '}
-                    executed from{' '}
+                    was executed from{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
                       onMouseLeave={handleWikiLeave}
@@ -1229,7 +1395,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     >
                       Zenith Corporate Account ACC-1001
                     </span>{' '}
-                    into primary mule account{' '}
+                    directly into primary mule account{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-2201')}
                       onMouseLeave={handleWikiLeave}
@@ -1237,7 +1403,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     >
                       ACC-2201 (Suman Roy)
                     </span>
-                    , registered under{' '}
+                    , registered under police{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'EVD-001')}
                       onMouseLeave={handleWikiLeave}
@@ -1252,14 +1418,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 <div className="flex items-start gap-2.5">
                   <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
-                    Within 25 minutes, Account ACC-2201 split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
+                    Then within 25 minutes, Suman Roy rapidly split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
                   </p>
                 </div>
 
                 <div className="flex items-start gap-2.5">
                   <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
-                    Mule accounts funneled ₹70,00,000 into broker account ACC-7702 controlled by{' '}
+                    Then ₹70,00,000 was funneled into broker account ACC-7702 controlled by{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'PER-103')}
                       onMouseLeave={handleWikiLeave}
@@ -1267,7 +1433,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     >
                       Devrat Sharma (PER-103, alias Broker D)
                     </span>
-                    . Cell Tower Dump{' '}
+                    , while Cell Tower Dump{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'EVD-003')}
                       onMouseLeave={handleWikiLeave}
@@ -1282,7 +1448,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 <div className="flex items-start gap-2.5">
                   <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
-                    Broker Devrat Sharma executed crucial transfer{' '}
+                    Then Devrat Sharma executed cross-case bridge transfer{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'TXN_552')}
                       onMouseLeave={handleWikiLeave}
@@ -1298,7 +1464,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     >
                       Apex Trade Solutions (ACC-7701)
                     </span>
-                    , directly bridging Case #018 with Mumbai Operation ShadowLedge under{' '}
+                    , directly linking Case #018 with Case #041 under{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'EVD-002')}
                       onMouseLeave={handleWikiLeave}
@@ -1307,6 +1473,13 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       FIU Advisory STR-88912 (EVD-002)
                     </span>
                     .
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Then Apex Trade Solutions cashed out ₹45,00,000 to hawala operator Tariq Merchant, who wired the proceeds via international SWIFT transfer into Dubai Bullion Account ACC-7705.
                   </p>
                 </div>
               </div>
@@ -1335,7 +1508,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.96 }}
                     transition={{ duration: 0.12 }}
-                    style={{ top: `${tooltipPos.y}px`, left: `${Math.min(tooltipPos.x, window.innerWidth - 380)}px` }}
+                    style={{ top: `${tooltipPos.y}px`, left: `${tooltipPos.x}px` }}
                     className="fixed z-50 w-80 bg-[#181C24] border border-[#2B313D] rounded-[5px] p-3.5 space-y-2 text-xs pointer-events-none shadow-none"
                   >
                     <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
