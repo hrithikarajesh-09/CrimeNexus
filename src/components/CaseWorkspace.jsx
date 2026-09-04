@@ -18,6 +18,8 @@ import {
   playStageChime, 
   speakNarration, 
   stopNarration, 
+  pauseNarration,
+  resumeNarration,
   unlockAudio,
   getActiveVoiceDescription
 } from '../lib/soundEngine';
@@ -341,6 +343,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
   // Live Graph Video Reconstruction Player state (Starts at Stage 0 = Empty Board)
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [voiceAudio, setVoiceAudio] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
@@ -503,24 +506,46 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const handleStartVideo = () => {
     unlockAudio();
     clearAdvanceTimer();
+    setIsPaused(false);
     let startStep = currentStep;
     if (currentStep === 0 || currentStep >= reconstructionStages.length - 1) {
       startStep = 1;
       setCurrentStep(1);
     }
+    isPlayingRef.current = true;
     setIsPlaying(true);
     triggerStagePlayback(startStep);
   };
 
   const handlePauseVideo = () => {
     setIsPlaying(false);
+    isPlayingRef.current = false;
+    setIsPaused(true);
     clearAdvanceTimer();
-    stopNarration();
-    setIsSpeaking(false);
+    pauseNarration();
+  };
+
+  const handleResumeVideo = () => {
+    unlockAudio();
+    clearAdvanceTimer();
+    setIsPaused(false);
+    isPlayingRef.current = true;
+    setIsPlaying(true);
+
+    if (voiceAudio && isSpeaking) {
+      const didResume = resumeNarration();
+      if (!didResume) {
+        triggerStagePlayback(currentStep || 1);
+      }
+    } else {
+      scheduleNextStage(900);
+    }
   };
 
   const handleResetVideo = () => {
     setIsPlaying(false);
+    isPlayingRef.current = false;
+    setIsPaused(false);
     clearAdvanceTimer();
     stopNarration();
     setIsSpeaking(false);
@@ -530,6 +555,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
   const handleScrub = (index) => {
     setIsPlaying(false);
+    isPlayingRef.current = false;
+    setIsPaused(false);
     clearAdvanceTimer();
     stopNarration();
     unlockAudio();
@@ -1882,15 +1909,17 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             {/* Player Controls Bar */}
             <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
               <button
-                onClick={isPlaying ? handlePauseVideo : handleStartVideo}
+                onClick={isPlaying ? handlePauseVideo : isPaused ? handleResumeVideo : handleStartVideo}
                 className={`px-3 py-1 rounded-[4px] font-semibold text-xs transition flex items-center gap-1.5 ${
                   isPlaying
                     ? 'bg-[#C68A46] text-[#12151B]'
+                    : isPaused
+                    ? 'bg-[#8B2626] text-[#F4EFE6] hover:bg-[#A32E2E]'
                     : 'bg-[#C68A46] text-[#12151B] hover:bg-[#D49855]'
                 }`}
               >
                 {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                <span>{isPlaying ? 'Pause' : currentStep === 0 ? 'Play Reconstruction' : 'Resume'}</span>
+                <span>{isPlaying ? 'Pause' : isPaused ? 'Resume' : currentStep === 0 ? 'Play Reconstruction' : 'Resume'}</span>
               </button>
 
               <button
@@ -2011,7 +2040,12 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <Sparkles className="w-3 h-3 text-[#C68A46]" />
                     {getActiveVoiceDescription()}
                   </span>
-                  {isSpeaking && (
+                  {isPaused ? (
+                    <span className="text-[#C1655A] bg-[#8B2626]/20 px-2 py-0.5 rounded border border-[#8B2626]/40 flex items-center gap-1 font-mono text-[10px]">
+                      <Pause className="w-3 h-3 text-[#C1655A]" />
+                      Paused
+                    </span>
+                  ) : isSpeaking && (
                     <span className="text-[#5FA876] flex items-center gap-1 font-mono text-[10px]">
                       <Volume2 className="w-3 h-3 animate-pulse" />
                       Speaking

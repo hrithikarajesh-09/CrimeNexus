@@ -247,12 +247,20 @@ export function getActiveVoiceDescription() {
   return v.name.replace(/(Microsoft|Google)\s*/i, '').trim();
 }
 
+let isVoicePaused = false;
+let lastSpokenText = '';
+let lastSpokenOptions = null;
+
 // Speech Synthesis Manager with Chromium safety & full sentence completion guarantee
 export function speakNarration(text, { speed = 1, onStart, onEnd, onError } = {}) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
     if (onError) onError(new Error('SpeechSynthesis not supported'));
     return;
   }
+
+  isVoicePaused = false;
+  lastSpokenText = text;
+  lastSpokenOptions = { speed, onStart, onEnd, onError };
 
   // Clear previous heartbeat timer
   if (voiceHeartbeatTimer) {
@@ -301,9 +309,9 @@ export function speakNarration(text, { speed = 1, onStart, onEnd, onError } = {}
         // Chromium heartbeat fix: call resume() periodically WITHOUT pausing to prevent Chrome thread sleep
         voiceHeartbeatTimer = setInterval(() => {
           if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-            if (window.speechSynthesis.speaking) {
+            if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
               window.speechSynthesis.resume();
-            } else {
+            } else if (!window.speechSynthesis.speaking) {
               clearInterval(voiceHeartbeatTimer);
               voiceHeartbeatTimer = null;
             }
@@ -321,6 +329,7 @@ export function speakNarration(text, { speed = 1, onStart, onEnd, onError } = {}
           voiceHeartbeatTimer = null;
         }
         activeUtterance = null;
+        isVoicePaused = false;
         if (onEnd) onEnd();
       };
 
@@ -332,6 +341,7 @@ export function speakNarration(text, { speed = 1, onStart, onEnd, onError } = {}
           voiceHeartbeatTimer = null;
         }
         activeUtterance = null;
+        isVoicePaused = false;
         // If canceled explicitly, don't trigger error
         if (err && err.error === 'canceled') {
           return;
@@ -356,7 +366,59 @@ export function speakNarration(text, { speed = 1, onStart, onEnd, onError } = {}
   }, 60);
 }
 
+export function pauseNarration() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  isVoicePaused = true;
+  if (voiceHeartbeatTimer) {
+    clearInterval(voiceHeartbeatTimer);
+    voiceHeartbeatTimer = null;
+  }
+  try {
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
+    }
+  } catch (e) {}
+}
+
+export function resumeNarration() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return false;
+  isVoicePaused = false;
+
+  try {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      // Restart heartbeat
+      voiceHeartbeatTimer = setInterval(() => {
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+          } else if (!window.speechSynthesis.speaking) {
+            clearInterval(voiceHeartbeatTimer);
+            voiceHeartbeatTimer = null;
+          }
+        }
+      }, 5000);
+      return true;
+    }
+  } catch (e) {}
+
+  // Fallback: If synthesis was dropped or ended while paused, restart with last spoken text
+  if (lastSpokenText && lastSpokenOptions) {
+    speakNarration(lastSpokenText, lastSpokenOptions);
+    return true;
+  }
+  return false;
+}
+
+export function isNarrationPaused() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return false;
+  return isVoicePaused || window.speechSynthesis.paused;
+}
+
 export function stopNarration() {
+  isVoicePaused = false;
+  lastSpokenText = '';
+  lastSpokenOptions = null;
   if (voiceHeartbeatTimer) {
     clearInterval(voiceHeartbeatTimer);
     voiceHeartbeatTimer = null;
