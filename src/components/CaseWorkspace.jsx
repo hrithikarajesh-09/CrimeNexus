@@ -566,207 +566,207 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const entityDossierDetails = {
     'PER-108': {
       name: 'Vikramaditya Rathore',
-      alias: 'Complainant CFO',
-      category: 'Victim / Complainant',
+      alias: 'Victim CFO',
+      category: 'Victim',
       categoryVariant: 'green',
-      status: 'Verified Complainant & Corporate Signatory',
-      role: 'Chief Financial Officer (CFO) — Zenith Technologies Ltd',
-      location: 'DLF Phase 5 / Sector 29, Gurugram, Haryana',
-      phone: '+91 98100 11808 (Airtel Corporate Postpaid)',
-      idNumber: 'PAN: VRTPR8821Z • Employee ID: ZEN-EXEC-004',
-      deviceIp: 'MacBook Pro (M2, macOS 15.4) • IP: 10.0.4.12 (Zenith HQ)',
-      riskLevel: '10% (Zero Culpability — Targeted Victim)',
+      status: 'Verified Victim',
+      role: 'Chief Financial Officer (CFO) at Zenith Technologies',
+      location: 'DLF Phase 5, Gurugram, Haryana',
+      phone: '+91 98100 11808',
+      idNumber: 'PAN: VRTPR8821Z • Laptop IP: 10.0.4.12',
+      deviceIp: 'Corporate Laptop (MacBook Pro)',
+      riskLevel: '0% (Victim — No Blame)',
       riskScore: 10,
-      whatHappened: 'On June 9, 2026 at 11:30 IST, CFO Vikramaditya Rathore received an urgent executive spoofing email ostensibly from Zenith CEO Rajiv Singhania directing emergency vendor clearance. Rathore navigated to duplicate phishing portal secure-zenithcorp-auth.com and entered corporate banking credentials. Rogue proxy IP 198.51.100.45 intercepted his multi-factor authentication (2FA) token, executing an unauthorized RTGS debit of ₹1,00,00,000 from Zenith Corporate Account ACC-1001 into primary mule account ACC-2201 (Suman Roy). Rathore discovered the fraudulent debit during 14:00 bank reconciliation and promptly registered FIR 0018/2026 at Gurugram Cyber PS.',
-      legalEvidence: 'EVD-001 (FIR 0018/2026 & Phishing Email Headers), RTGS Transaction Slip TXN-1001',
-      actionTaken: 'Complainant statement recorded under Sec 180 BNS; corporate email headers cryptographically preserved under Sec 63B BSA; forensic image of CFO workstation seized.'
+      whatHappened: 'Received a fake email pretending to be from his CEO Rajiv Singhania asking to approve an urgent vendor bill. When he clicked the link to clear the payment, hackers stole his password and OTP, and immediately transferred ₹1 Crore out of Zenith\'s bank account.',
+      legalEvidence: 'Police FIR 0018/2026 & Email Headers',
+      actionTaken: 'Reported to police immediately. Statement recorded and computer checked by forensics.'
     },
     'ACC-1001': {
-      name: 'Zenith Corporate Current Account',
-      alias: 'Corporate ACC-1001',
-      category: 'Target Corporate Account',
+      name: 'Zenith Tech Bank Account',
+      alias: 'Victim Company Account',
+      category: 'Target Account',
       categoryVariant: 'teal',
-      status: 'Debited (Audit Freeze / Lien Active)',
-      role: 'Primary Corporate Treasury Account — Zenith Technologies Ltd',
-      location: 'Apex Global Bank, Cyber City Branch, Gurugram',
-      phone: 'Authorized Signatory: Vikramaditya Rathore',
-      idNumber: 'Account No: 001199884401 • IFSC: APEX0001044',
-      deviceIp: 'NetBanking Gateway IP: 10.0.4.12',
-      riskLevel: 'Targeted Institutional Infrastructure',
+      status: '₹1 Crore Stolen',
+      role: 'Official Company Account of Zenith Technologies',
+      location: 'Apex Global Bank, Cyber City, Gurugram',
+      phone: 'Signatory: Vikramaditya Rathore',
+      idNumber: 'A/C: 001199884401 • IFSC: APEX0001044',
+      deviceIp: 'NetBanking Gateway',
+      riskLevel: 'Company Account (Victim)',
       riskScore: 15,
-      whatHappened: 'Unauthorized single RTGS debit of ₹1,00,00,000 (One Crore INR) was cleared on June 9, 2026 at 14:10:00 IST using intercepted session tokens and forged payment voucher PV-2026-992. The entire balance was drained into mule account ACC-2201 within seconds, triggering bank AML alarm 25 minutes after execution.',
-      legalEvidence: 'TXN-1001 RTGS Core Banking Ledger, Apex Global Bank UTR APEX202606090011',
-      actionTaken: 'Audit logs exported; reverse RTGS recall request submitted to RBI Clearing Cell; internal audit initiated.'
+      whatHappened: '₹1,00,00,000 (One Crore) was stolen directly from this account on June 9, 2026 at 2:10 PM. Hackers used the stolen OTP to send the entire sum to Suman Roy\'s bank account.',
+      legalEvidence: 'Bank transfer slip TXN-1001 (UTR: APEX202606090011)',
+      actionTaken: 'Recall request submitted to RBI to stop and recover the stolen money.'
     },
     'ACC-2201': {
-      name: 'Suman Roy Primary Mule Account',
-      alias: 'Primary Mule ACC-2201',
-      category: 'Primary Beneficiary Mule',
+      name: 'Suman Roy Bank Account',
+      alias: 'First Mule Account',
+      category: 'Mule Account',
       categoryVariant: 'red',
-      status: 'Frozen by Cyber Police',
-      role: 'First-Tier Inward Mule Account for Syndicate Cyber Proceeds',
-      location: 'Royal Crest Bank, Sector 14 Branch, Gurugram',
-      phone: 'Registered Mobile: +91 98110 04455',
-      idNumber: 'Account No: 9988220144 • IFSC: RCST0002201',
-      deviceIp: 'Mobile Banking IP 198.51.100.45 (Tor Exit Node)',
-      riskLevel: 'Direct Instrument of Cyber Heist (92% Risk Index)',
+      status: 'Frozen by Police',
+      role: 'First bank account where the stolen ₹1 Crore landed',
+      location: 'Royal Crest Bank, Sector 14, Gurugram',
+      phone: 'Linked Mobile: +91 98110 04455',
+      idNumber: 'A/C: 9988220144 • Registered to: Suman Roy',
+      deviceIp: 'Mobile Banking (IP: 198.51.100.45)',
+      riskLevel: 'Crime Account (92% Risk)',
       riskScore: 92,
-      whatHappened: 'Received full ₹1,00,00,000 heist tranche from Zenith Technologies. Within 25 minutes of credit, account automated scripts rapidly partitioned ₹1,00,00,000 into five ₹20,00,000 tranches across secondary mule accounts (ACC-3301 to ACC-8809) to deliberately dodge automated ₹25L AML freeze algorithms.',
-      legalEvidence: 'EVD-001 Bank Records, STR Alert 44102, Sec 63B BSA Hashed Transaction Slip',
-      actionTaken: 'PMLA debit freeze issued; ₹1,20,000 remaining balance attached; KYC voter ID identified as forged identity document.'
+      whatHappened: 'The stolen ₹1 Crore arrived here first from Zenith. Within 25 minutes, this account quickly split the ₹1 Crore into 5 smaller transfers of ₹20 Lakhs each so the bank wouldn\'t detect fraud or freeze the funds.',
+      legalEvidence: 'Bank statement & transfer alert STR-44102',
+      actionTaken: 'Frozen by cyber police. Remaining balance of ₹1.2 Lakhs seized.'
     },
     'PER-104': {
       name: 'Suman Roy',
-      alias: 'Mule Alpha',
-      category: 'Primary Mule Suspect',
+      alias: 'Mule Accountholder',
+      category: 'Mule Suspect',
       categoryVariant: 'brass',
-      status: 'In Police Custody (7-Day Remand)',
-      role: 'Recruited Primary Mule Accountholder & Local Cash Handler',
-      location: 'House No. 44, Old Railway Road, Gurugram, Haryana',
+      status: 'Arrested (In Police Custody)',
+      role: 'Rented his bank account to the gang for ₹50,000',
+      location: 'Old Railway Road, Gurugram, Haryana',
       phone: '+91 98110 04455 (Vi Prepaid)',
-      idNumber: 'PAN: SMRPS1122M • Aadhaar: XXXX-XXXX-9921',
-      deviceIp: 'Redmi Note 11 • IMEI: 867452039182744',
-      riskLevel: 'High Operational Risk (75% Risk Index)',
+      idNumber: 'PAN: SMRPS1122M • Redmi Note 11',
+      deviceIp: 'Phone: Redmi Note 11',
+      riskLevel: 'High Risk (75%)',
       riskScore: 75,
-      whatHappened: 'Opened multiple zero-balance accounts in exchange for a ₹50,000 commission from Rajesh Verma. Handled NetBanking login kits and handed over OTP forwarding SIM cards to syndicate technical operator Kunal Shah. Mobile phone was pinged at Sector 44 tower receiving call from Rajesh Verma 10 minutes prior to fund transfer.',
-      legalEvidence: 'CDR-1002 (Tower T-4401 call dump), Signed account opening forms, Seized SIM card',
-      actionTaken: 'Arrested on June 12, 2026 under Sec 318(4) BNS & Sec 66D IT Act; currently in 7-day police custody remand.'
+      whatHappened: 'Agreed to rent out his bank account to Rajesh Verma in exchange for ₹50,000. Handed over his debit card, net banking login, and SIM card to the gang so they could receive and move the stolen money.',
+      legalEvidence: 'Confession, signed bank opening forms, seized SIM card',
+      actionTaken: 'Arrested on June 12, 2026. Currently in 7-day police custody.'
     },
     'ACC-MULES': {
-      name: 'Secondary Mule Accounts Cluster',
-      alias: '5 Layering Accounts (ACC-3301 to ACC-8809)',
-      category: 'Layering Tier Network',
+      name: '5 Secondary Mule Accounts',
+      alias: '5 Layering Accounts',
+      category: 'Mule Accounts',
       categoryVariant: 'teal',
-      status: '3 Frozen / 2 Layered',
-      role: 'Secondary Fan-Out Layering Mesh to Break Forensic Audit Trails',
-      location: 'Faridabad, Noida, and South Delhi Branches',
+      status: '3 Frozen / 2 Emptied',
+      role: '5 bank accounts used to split and hide the ₹1 Crore',
+      location: 'Banks in Faridabad, Noida, and South Delhi',
       phone: 'Managed by sub-mule network (Meera Nair & others)',
-      idNumber: 'Cluster IDs: ACC-3301, ACC-4402, ACC-5503, ACC-6604, ACC-8809',
-      deviceIp: 'Layering IPs routed through Gurugram SIM box gateway',
-      riskLevel: 'Organized AML Layering Conduit (84% Risk Index)',
+      idNumber: 'Accounts: ACC-3301, 4402, 5503, 6604, 8809',
+      deviceIp: 'Layering IPs routed through Gurugram SIM box',
+      riskLevel: 'High Risk (84%)',
       riskScore: 84,
-      whatHappened: 'Received 5x ₹20,00,000 IMPS/NEFT tranches from primary mule ACC-2201. Within 48 hours, these accounts funneled ₹70,00,000 onwards into broker Devrat Sharma account (ACC-7702), while withdrawing ₹10,00,000 via micro-ATM cash withdrawals in Faridabad and Noida.',
-      legalEvidence: 'TXN-1002, TXN-1007 NEFT Slips, Micro-ATM CCTV footage (ATM-ND-441)',
-      actionTaken: 'Notices issued under Sec 94 BNSS to 3 commercial banks; 3 accounts frozen with ₹18.5L recovered.'
+      whatHappened: 'Received ₹20 Lakhs each from Suman Roy. They quickly sent ₹70 Lakhs to broker Devrat Sharma, and withdrew ₹10 Lakhs in cash from ATMs in Faridabad and Noida.',
+      legalEvidence: 'Bank transfer slips TXN-1002 to 1007 & ATM CCTV footage',
+      actionTaken: '3 accounts frozen by police. ₹18.5 Lakhs recovered.'
     },
     'PER-101': {
       name: 'Rajesh Verma',
-      alias: 'Viper / Cyber Lead',
-      category: 'Syndicate Chief / Mastermind',
+      alias: 'Gang Leader ("Viper")',
+      category: 'Mastermind',
       categoryVariant: 'red',
-      status: 'Non-Bailable Warrant Issued (Absconding)',
-      role: 'Mastermind & Syndicate Chief of Operation PhishNet',
-      location: 'Villa 12, Greenwood City, Sector 45, Gurugram, Haryana (Last Known)',
-      phone: '+91 98110 01122 (Airtel NCR Postpaid)',
-      idNumber: 'PAN: ABCPV9012K • Passport: Z-9921404',
-      deviceIp: 'ThinkPad X1 Carbon • ProtonVPN & Tor Exit Nodes',
-      riskLevel: 'Extreme Threat (94% Risk Index — Interpol Notice Candidate)',
+      status: 'Wanted (Arrest Warrant Issued)',
+      role: 'Planned and ran the entire scam gang',
+      location: 'Sector 45, Gurugram (Currently on the run)',
+      phone: '+91 98110 01122 • PAN: ABCPV9012K',
+      idNumber: 'Passport: Z-9921404 • Laptop: ThinkPad X1',
+      deviceIp: 'ProtonVPN & Tor Exit Nodes',
+      riskLevel: 'Critical Threat (94%)',
       riskScore: 94,
-      whatHappened: 'Masterminded the entire spear-phishing campaign against Zenith Technologies. Commissioned Kunal Shah to clone the Zenith vendor clearance portal, coordinated mule accounts with Suman Roy, and directed Devrat Sharma to route proceeds into the Mumbai hawala corridor. Cell tower dump T-4401 disproved his fake Jaipur travel alibi.',
-      legalEvidence: 'CDR-1001, CDR-1002, Seized Telegram chat logs "Operation PhishNet", Phishing server hosting invoices',
-      actionTaken: 'NBW issued by CJM Court Gurugram; Look Out Circular (LOC) opened at all international airports; assets under provisional attachment.'
+      whatHappened: 'The mastermind of the entire scam. Hired Kunal Shah to build the fake website, arranged mule accounts through Suman Roy, and told broker Devrat Sharma where to send the money. Mobile tower data caught him coordinating the theft in Gurugram.',
+      legalEvidence: 'Telegram chats, phone records & mobile tower dump T-4401',
+      actionTaken: 'Arrest warrant issued by court. Airport lookout notices issued to stop him leaving India.'
     },
     'LOC-101': {
-      name: 'Nodal Cell Tower T-4401',
-      alias: 'Sector 44 Telephony Hub',
-      category: 'Telecommunication Infrastructure',
+      name: 'Cell Tower T-4401',
+      alias: 'Sector 44 Mobile Tower',
+      category: 'Cell Tower',
       categoryVariant: 'violet',
-      status: 'Forensic Triangulation Verified',
-      role: 'Nodal Cellular Tower Station Covering Sector 44 Cyber Hotspot',
-      location: 'Sector 44 Institutional Area, Gurugram (Lat: 28.4595° N, Long: 77.0725° E)',
-      phone: 'Carrier Sector: Airtel, Jio, and Vi Macro Cell Sites',
-      idNumber: 'Tower ID: DEL-GUR-T4401 • Cell Global ID: 404-45-8812-4401',
-      deviceIp: 'Telecom Switching Center BSC-NCR-04',
-      riskLevel: 'Forensic Triangulation Anchor (60% Evidence Weight)',
+      status: 'Call Records Verified',
+      role: 'Mobile phone tower in Sector 44, Gurugram',
+      location: 'Sector 44, Gurugram (Near Cyber Hub)',
+      phone: 'Carriers: Airtel, Jio, and Vi',
+      idNumber: 'Tower ID: DEL-GUR-T4401',
+      deviceIp: 'Telecom Nodal Switch',
+      riskLevel: 'Key Evidence Location',
       riskScore: 60,
-      whatHappened: 'Cell tower records captured 14 critical calls and data handshakes between Rajesh Verma, Kunal Shah, and mule Suman Roy between 11:00 and 12:30 on heist day. Provided definitive triangulation proving co-location and telephony conspiracy, shattering alibis.',
-      legalEvidence: 'EVD-003 (Carrier-certified CDR dump signed under Sec 63B BSA by Nodal Officer)',
-      actionTaken: 'Call detail records and IPDR dumps cryptographically anchored on hyperledger; azimuth sectors mapped.'
+      whatHappened: 'Captured 14 phone calls between gang leader Rajesh Verma, coder Kunal Shah, and mule Suman Roy right when the ₹1 Crore was stolen, proving they were working together.',
+      legalEvidence: 'Official telecom call dump logs (EVD-003)',
+      actionTaken: 'Call records verified by telecom company and submitted as court evidence.'
     },
     'PER-102': {
       name: 'Kunal Shah',
-      alias: 'Coder K',
-      category: 'Technical Specialist',
+      alias: 'The Coder ("Coder K")',
+      category: 'Hacker',
       categoryVariant: 'red',
-      status: 'Arrested & In Judicial Custody',
-      role: 'Cyber Technical Specialist & Phishing Infrastructure Developer',
-      location: 'Flat 402, Prateek Fedora, Sector 62, Noida, Uttar Pradesh',
-      phone: '+91 98110 02233 (Jio NCR)',
-      idNumber: 'PAN: KSHPK4410P • GitHub: dev-kunal-ops (Seized)',
-      deviceIp: 'VPS Reverse Proxy IP 198.51.100.45 • NGINX Gateway',
-      riskLevel: 'High Technical Threat (88% Risk Index)',
+      status: 'Arrested (In Jail)',
+      role: 'Built the fake login website to steal passwords',
+      location: 'Sector 62, Noida, Uttar Pradesh',
+      phone: '+91 98110 02233 • PAN: KSHPK4410P',
+      idNumber: 'Server IP: 198.51.100.45 • GitHub dev-kunal-ops',
+      deviceIp: 'Phishing Server IP 198.51.100.45',
+      riskLevel: 'High Risk (88%)',
       riskScore: 88,
-      whatHappened: 'Developed and hosted the clone credential harvester secure-zenithcorp-auth.com. Configured automated real-time reverse proxy to harvest session cookies and bypass 2FA OTP tokens. Maintained active development logs matching server IP 198.51.100.45.',
-      legalEvidence: 'Forensic clone of VPS server, SSH key pairs matching seized MacBook Pro, Domain purchase Bitcoin TXN',
-      actionTaken: 'Arrested at Noida residence on June 15, 2026; 2 laptops, 3 hardware crypto wallets, and 6 phones recovered.'
+      whatHappened: 'Created the fake website secure-zenithcorp-auth.com that copied Zenith\'s real login page. His computer code captured the CFO\'s password and OTP in real time.',
+      legalEvidence: 'Website code, server files, 2 seized laptops and crypto wallets',
+      actionTaken: 'Arrested at his Noida flat on June 15, 2026. Currently in jail.'
     },
     'PER-103': {
       name: 'Devrat Sharma',
-      alias: 'The Accountant / Broker D',
-      category: 'Cross-Case Money Broker (Bridge Node)',
+      alias: 'Broker D / The Accountant',
+      category: 'Money Broker (Bridge)',
       categoryVariant: 'violet',
-      status: 'Key Target (24/7 Surveillance Active)',
-      role: 'Central Cross-Jurisdiction Hawala Broker & Syndicate Financial Conduit',
-      location: 'Panchsheel Enclave, New Delhi & Nariman Point, Mumbai',
-      phone: '+91 98110 03344 (Airtel NCR/MUM Dual SIM)',
-      idNumber: 'PAN: DSRPS3311L • DIN: 08821904',
-      deviceIp: 'Encrypted Signal / Wickr Handle @broker_d',
-      riskLevel: 'Critical Centrality Node (96% Risk Index)',
+      status: 'Prime Target (Under Police Watch)',
+      role: 'Money broker connecting North India scam to Mumbai hawala',
+      location: 'Panchsheel Enclave, Delhi & Nariman Point, Mumbai',
+      phone: '+91 98110 03344 • PAN: DSRPS3311L',
+      idNumber: 'Broker Account: ACC-7702',
+      deviceIp: 'Encrypted Signal App @broker_d',
+      riskLevel: 'Critical Link (96%)',
       riskScore: 96,
-      whatHappened: 'The vital linchpin connecting North Indian cyber criminals with Western Indian money launderers. Collected ₹70,00,000 from NCR secondary mule accounts into account ACC-7702. On August 7, 2026, executed the cross-case bridge transaction TXN_552 (₹50,00,000) into Mumbai front company Apex Trade Solutions (ACC-7701), linking Case 018 directly with Mumbai Operation ShadowLedge.',
-      legalEvidence: 'TXN_552 RTGS Advice (EVD-002), FIU STR-88912 Advisory, CDR-1008 (telephony link to Tariq Merchant)',
-      actionTaken: 'Bank accounts placed under PMLA attachment; 24/7 technical surveillance placed on communication nodes; ED referral initiated.'
+      whatHappened: 'The vital link between the cyber gang and hawala money launderers. Collected ₹70 Lakhs from the mule accounts, and sent ₹50 Lakhs directly to Mumbai company Apex Trade Solutions (TXN_552), linking this case to Mumbai Case 041.',
+      legalEvidence: 'Bank transfer slip TXN_552 & financial intelligence report STR-88912',
+      actionTaken: 'Bank accounts frozen. Put under 24/7 technical surveillance.'
     },
     'ACC-7701': {
-      name: 'Apex Trade Solutions Pvt Ltd Account',
-      alias: 'Mumbai Shell Front (Case 041 Bridge)',
-      category: 'Corporate Front Entity',
+      name: 'Apex Trade Solutions Pvt Ltd',
+      alias: 'Mumbai Fake Company Account',
+      category: 'Front Company',
       categoryVariant: 'violet',
-      status: 'Under PMLA Freeze (ED / Mumbai PS)',
-      role: 'Trade-Based Money Laundering Shell Front Company Account',
-      location: 'Mittal Towers, Nariman Point, Mumbai, Maharashtra',
+      status: 'Company Raided & Frozen',
+      role: 'Fake company used to wash stolen money in Mumbai',
+      location: 'Mittal Towers, Nariman Point, Mumbai',
       phone: 'Director: Anita D\'Souza (+91 98220 07788)',
-      idNumber: 'CIN: U51909MH2024PTC99214 • Account No: 4455770199',
-      deviceIp: 'Corporate Office IP 203.0.113.88 (Nariman Point)',
-      riskLevel: 'Severe Institutional Laundering Nexus (90% Risk Index)',
+      idNumber: 'A/C: 4455770199 • CIN: U51909MH2024PTC99214',
+      deviceIp: 'Office IP: 203.0.113.88',
+      riskLevel: 'High Risk (90%)',
       riskScore: 90,
-      whatHappened: 'Purported textile import-export front with zero genuine commercial shipments. Received ₹50,00,000 from Devrat Sharma via TXN_552 on August 7, 2026. Disbursed ₹45,00,000 within 1 hour 45 minutes to hawala operator Tariq Merchant (ACC-7703) disguised as raw silk advance invoice.',
-      legalEvidence: 'EVD-002 (STR-88912), Forged import invoices, FIU-IND red-flag alert',
-      actionTaken: 'Offices raided by Mumbai Economic Offences Wing (EOW); statutory bank books seized; corporate registration suspended.'
+      whatHappened: 'A fake company with no real business. Received ₹50 Lakhs from Devrat Sharma, and sent ₹45 Lakhs to hawala cash operator Tariq Merchant within 2 hours disguised as a payment for raw silk.',
+      legalEvidence: 'Fake silk bills & financial report STR-88912',
+      actionTaken: 'Office raided by Mumbai police. Bank accounts frozen and company license suspended.'
     },
     'PER-105': {
       name: 'Tariq Merchant',
       alias: 'Goldman',
-      category: 'Hawala Syndicate Operator',
+      category: 'Hawala Operator',
       categoryVariant: 'red',
-      status: 'Named in Interpol Red Notice Referral',
-      role: 'Mumbai Bullion Market Hawala Operator & Offshore Remitter',
-      location: 'Waterfield Road, Bandra West & Zaveri Bazaar, Mumbai, Maharashtra',
-      phone: '+91 98220 05566 (Jio Mumbai)',
-      idNumber: 'PAN: TMKPM9901A • UAE Trade License: DXB-2024-8812',
-      deviceIp: 'BlackBerry SecuSUITE / Dubai Roaming IP',
-      riskLevel: 'Critical International Laundering Target (92% Risk)',
+      status: 'Wanted (Arrest Warrant Issued)',
+      role: 'Hawala cash broker who sends money overseas',
+      location: 'Zaveri Bazaar & Bandra West, Mumbai',
+      phone: '+91 98220 05566 • PAN: TMKPM9901A',
+      idNumber: 'UAE Trade Reg: DXB-2024-8812',
+      deviceIp: 'Encrypted phone on Dubai roaming',
+      riskLevel: 'Critical Target (92%)',
       riskScore: 92,
-      whatHappened: 'Specializes in converting domestic cyber heist proceeds into offshore bullion credits. Received ₹45,00,000 from Apex Trade Solutions, converted funds into overseas gold consignment credits, and initiated SWIFT international wires to Dubai Bullion A/C (ACC-7705) in Deira, Dubai.',
-      legalEvidence: 'Hawala chit ledger seized in Zaveri Bazaar raid, Swift MT-103 confirmations, CDR-1008',
-      actionTaken: 'Non-bailable arrest warrant executed in Mumbai; overseas travel alert active; Enforcement Directorate prosecution complaint filed.'
+      whatHappened: 'Took ₹45 Lakhs from Apex Trade Solutions, bought gold credits, and wired the money overseas through SWIFT to an offshore bullion account in Dubai.',
+      legalEvidence: 'Cash chits from Zaveri Bazaar raid & SWIFT foreign wire receipts',
+      actionTaken: 'Arrest warrant issued by Mumbai court. Overseas travel alert active.'
     },
     'ACC-7705': {
       name: 'Dubai Bullion Trading Account',
-      alias: 'Offshore Terminal Account',
-      category: 'Offshore Hawala Terminal',
+      alias: 'Overseas Account',
+      category: 'Offshore Account',
       categoryVariant: 'teal',
-      status: 'International MLAT Freeze Requested',
-      role: 'Offshore Bullion Trade & Capital Flight Terminal Account',
+      status: 'Overseas Freeze Requested',
+      role: 'Final bank account in Dubai where the stolen money ended up',
       location: 'Emirates National Bank, Deira Branch, Dubai, UAE',
-      phone: 'Clearing Agent: Farooq Sheikh (+971 50 123 4567)',
+      phone: 'Agent: Farooq Sheikh (+971 50 123 4567)',
       idNumber: 'IBAN: AE982001190244109822 • SWIFT: EBILAEAD',
-      deviceIp: 'Foreign Financial Gateway (Dubai International Financial Centre)',
-      riskLevel: 'Offshore Capital Flight Destination (86% Risk Index)',
+      deviceIp: 'Dubai Financial Gateway',
+      riskLevel: 'Offshore Destination (86%)',
       riskScore: 86,
-      whatHappened: 'Terminal foreign account used to permanently wash stolen funds beyond Indian jurisdiction. Proceeds from Operation PhishNet and Operation ShadowLedge were commingled and settled against precious metal bullion contracts, obscuring ultimate beneficial ownership.',
-      legalEvidence: 'SWIFT wire trace MT-103, FIU International Exchange Dossier IND-UAE-2026-88',
-      actionTaken: 'Mutual Legal Assistance Treaty (MLAT) request routed via Ministry of Home Affairs to UAE Central Bank.'
+      whatHappened: 'The final destination outside India. Money was converted into gold bullion contracts to hide who truly owns it and prevent Indian police from recovering it.',
+      legalEvidence: 'SWIFT wire confirmation MT-103',
+      actionTaken: 'Govt sent formal international request (MLAT) to UAE authorities to freeze funds.'
     }
   };
 
@@ -1271,23 +1271,23 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       </div>
                     </div>
 
-                    {/* Profile & Metadata 4-Column Strip */}
+                    {/* Simple, Readable 4-Column Strip */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs bg-[#12151B] p-3 rounded-[4px] border border-[#2B313D]">
                       <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DESIGNATION / ROLE</span>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">ROLE</span>
                         <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.role}</span>
                       </div>
                       <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LOCATION / ADDRESS</span>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LOCATION</span>
                         <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.location}</span>
                       </div>
                       <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">CONTACT &amp; IDENTIFIERS</span>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DETAILS</span>
                         <span className="text-[#6C93B8] font-mono block mt-0.5">{dossier.phone}</span>
                         <span className="text-[#6B7382] font-mono text-[10px] block">{dossier.idNumber}</span>
                       </div>
                       <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">RISK INDEX &amp; STATUS</span>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">RISK LEVEL</span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className={`font-mono font-bold ${dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}`}>
                             {dossier.riskScore}%
@@ -1303,11 +1303,11 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       </div>
                     </div>
 
-                    {/* "WHAT HAPPENED" SECTION (Requested by User) */}
+                    {/* "WHAT HAPPENED" SECTION */}
                     <div className="space-y-1 bg-[#1F2430] p-3 rounded-[4px] border border-[#2B313D]">
                       <div className="flex items-center gap-1.5 text-xs font-mono text-[#C68A46] font-semibold">
                         <Info className="w-3.5 h-3.5" />
-                        <span>WHAT HAPPENED (INCIDENT &amp; FORENSIC NARRATIVE)</span>
+                        <span>WHAT HAPPENED</span>
                       </div>
                       <p className="text-xs text-[#E8EAEE] leading-relaxed font-sans font-normal">
                         {dossier.whatHappened}
@@ -1317,7 +1317,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     {/* Evidence & Connected Conduits Strip */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-0.5">
                       <div className="space-y-1">
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LEGAL EVIDENCE &amp; ACTIONS TAKEN</span>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">EVIDENCE &amp; STATUS</span>
                         <p className="text-[#9AA3B2] leading-snug">
                           <strong className="text-[#E8EAEE] font-mono">{dossier.legalEvidence}</strong>
                         </p>
@@ -1327,7 +1327,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DIRECT CONDUIT LINKS ({directConduits.length})</span>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">CONNECTED TO ({directConduits.length})</span>
                         <div className="flex flex-wrap gap-1.5 pt-0.5">
                           {directConduits.map((edge, idx) => {
                             const isOutgoing = edge.from === selectedNodeData.id;
