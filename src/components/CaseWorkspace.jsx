@@ -25,7 +25,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [activeTab, setActiveTab] = useState('summary');
 
   // Zoom and pan state for the Interactive Entity Graph
-  const [graphZoom, setGraphZoom] = useState(1.05);
+  const [graphZoom, setGraphZoom] = useState(1);
   const [graphPan, setGraphPan] = useState({ x: 0, y: 0 });
   const [isDraggingGraph, setIsDraggingGraph] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
@@ -135,7 +135,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const handleZoomIn = () => setGraphZoom(z => Math.min(3.5, +(z + 0.15).toFixed(2)));
   const handleZoomOut = () => setGraphZoom(z => Math.max(0.5, +(z - 0.15).toFixed(2)));
   const handleResetZoom = () => {
-    setGraphZoom(1.05);
+    setGraphZoom(1);
     setGraphPan({ x: 0, y: 0 });
   };
 
@@ -403,18 +403,18 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   // GRAPH NODES (Semantic Dossier Tokens: steel = person/info, teal = account)
   // =========================================================================
   const allGraphNodes = [
-    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 80, y: 150, icon: User, color: '#6C93B8' },
-    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 210, y: 150, icon: CreditCard, color: '#4E9C93' },
-    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 350, y: 150, icon: CreditCard, color: '#4E9C93', isFraud: true },
-    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 350, y: 250, icon: User, color: '#6C93B8' },
-    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 490, y: 250, icon: CreditCard, color: '#4E9C93' },
-    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 350, y: 50, icon: User, color: '#6C93B8' },
-    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 490, y: 50, icon: Radio, color: '#6C93B8' },
-    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 630, y: 50, icon: Laptop, color: '#6C93B8' },
-    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 520, y: 150, icon: User, color: '#8B81C4', isBridge: true },
-    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 690, y: 150, icon: Building2, color: '#8B81C4', isBridge: true },
-    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 840, y: 150, icon: User, color: '#6C93B8' },
-    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 840, y: 250, icon: CreditCard, color: '#4E9C93' }
+    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 90, y: 220, icon: User, color: '#6C93B8' },
+    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 285, y: 220, icon: CreditCard, color: '#4E9C93' },
+    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 485, y: 220, icon: CreditCard, color: '#4E9C93', isFraud: true },
+    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 385, y: 365, icon: User, color: '#6C93B8' },
+    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 590, y: 365, icon: CreditCard, color: '#4E9C93' },
+    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 510, y: 75, icon: User, color: '#6C93B8' },
+    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 695, y: 75, icon: Radio, color: '#6C93B8' },
+    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 880, y: 75, icon: Laptop, color: '#6C93B8' },
+    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 695, y: 220, icon: User, color: '#8B81C4', isBridge: true },
+    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 900, y: 220, icon: Building2, color: '#8B81C4', isBridge: true },
+    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 1090, y: 220, icon: User, color: '#6C93B8' },
+    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 1090, y: 365, icon: CreditCard, color: '#4E9C93' }
   ];
 
   // =========================================================================
@@ -429,7 +429,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     { from: 'PER-102', to: 'LOC-101', label: 'IP / Dev Logs', color: '#6B7382' },
     { from: 'ACC-MULES', to: 'PER-103', label: '₹70L Aggregated', color: '#C68A46', animated: true },
     { from: 'LOC-101', to: 'PER-103', label: 'Voice Call', color: '#6B7382' },
-    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (₹50L Bridge)', color: '#8B81C4', strokeWidth: 2.5, animated: true, isBridge: true },
+    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (Bridge)', color: '#8B81C4', strokeWidth: 2.5, animated: true, isBridge: true },
     { from: 'ACC-7701', to: 'PER-105', label: '₹45L Cash Out', color: '#C1655A' },
     { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#4E9C93', animated: true }
   ];
@@ -667,15 +667,15 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 onMouseUp={handleGraphMouseUp}
                 onMouseLeave={handleGraphMouseUp}
               >
-                <svg className="w-full h-full" viewBox="20 15 880 290" preserveAspectRatio="xMidYMid meet">
+                <svg className="w-full h-full" viewBox="0 0 1180 440" preserveAspectRatio="xMidYMid meet">
                   <g 
                     transform={`translate(${graphPan.x}, ${graphPan.y}) scale(${graphZoom})`}
                     style={{ 
-                      transformOrigin: '460px 150px', 
+                      transformOrigin: '590px 220px', 
                       transition: isDraggingGraph ? 'none' : 'transform 0.1s ease-out' 
                     }}
                   >
-                    {/* Render Connecting Lines with Anti-Collision Mid-Stroke Labels */}
+                    {/* Render Connecting Lines with Anti-Collision Mid-Stroke Badges */}
                     {allGraphEdges.map((edge, i) => {
                       const srcNode = allGraphNodes.find(n => n.id === edge.from);
                       const tgtNode = allGraphNodes.find(n => n.id === edge.to);
@@ -687,6 +687,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       const opacity = isHighlighted ? 1 : 0.22;
                       const midX = (srcNode.x + tgtNode.x) / 2;
                       const midY = (srcNode.y + tgtNode.y) / 2;
+                      const labelWidth = Math.max(54, edge.label.length * 6.2 + 14);
 
                       return (
                         <g key={i} style={{ opacity, transition: 'opacity 0.2s' }}>
@@ -700,25 +701,25 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             strokeOpacity={0.75}
                             className={edge.animated ? 'animated-stream' : ''}
                           />
-                          {/* Label Backdrop Pill so text never clashes with lines */}
+                          {/* Dedicated opaque badge so lines and background never clash with text */}
                           <rect
-                            x={midX - 34}
-                            y={midY - 14}
-                            width="68"
-                            height="13"
-                            rx="2"
+                            x={midX - labelWidth / 2}
+                            y={midY - 8}
+                            width={labelWidth}
+                            height={16}
+                            rx={3}
                             fill="#12151B"
-                            fillOpacity="0.9"
+                            stroke="#2B313D"
+                            strokeWidth="0.75"
                           />
                           <text
                             x={midX}
-                            y={midY - 4}
+                            y={midY + 3.5}
                             textAnchor="middle"
                             fill={edge.color}
                             fontSize="8.5"
                             fontFamily="IBM Plex Mono, monospace"
                             fontWeight="500"
-                            opacity={0.95}
                           >
                             {edge.label}
                           </text>
@@ -731,6 +732,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       const isSelected = selectedMapNode === node.id;
                       const NodeIcon = node.icon;
                       const r = isSelected ? (node.isBridge ? 22 : 18) : (node.isBridge ? 19 : 15);
+                      const boxWidth = node.isBridge ? 112 : 98;
 
                       return (
                         <g 
@@ -773,22 +775,21 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
                           {/* Opaque backdrop pill behind text to ensure zero overwritten or obscured text */}
                           <rect
-                            x="-60"
-                            y={r + 4}
-                            width="120"
-                            height="25"
-                            rx="3"
+                            x={-boxWidth / 2}
+                            y={r + 3}
+                            width={boxWidth}
+                            height={24}
+                            rx={3}
                             fill="#12151B"
-                            fillOpacity="0.94"
                             stroke={isSelected ? "#C68A46" : "#2B313D"}
                             strokeWidth={isSelected ? "1" : "0.5"}
                           />
 
                           <text
                             textAnchor="middle"
-                            y={r + 15}
+                            y={r + 13.5}
                             fill="#E8EAEE"
-                            fontSize="10"
+                            fontSize="9.5"
                             fontWeight="600"
                             fontFamily="IBM Plex Sans, sans-serif"
                           >
@@ -796,7 +797,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                           </text>
                           <text
                             textAnchor="middle"
-                            y={r + 25}
+                            y={r + 23}
                             fill={isSelected ? "#C68A46" : "#6B7382"}
                             fontSize="8"
                             fontFamily="IBM Plex Mono, monospace"
@@ -1297,7 +1298,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               Materialized Graph: {activeReplayNodes.length} Nodes &bull; {activeReplayEdges.length} Conduits Active
             </div>
 
-            <svg className="w-full min-w-[940px] h-[330px]" viewBox="0 0 940 330">
+            <svg className="w-full min-w-[940px] h-[390px]" viewBox="0 0 1180 440">
               {/* Render Active Edges that have been built so far */}
               {allGraphEdges.map((edge, i) => {
                 const isActive = activeReplayEdges.some(e => e.from === edge.from && e.to === edge.to);
@@ -1309,6 +1310,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
                 const midX = (srcNode.x + tgtNode.x) / 2;
                 const midY = (srcNode.y + tgtNode.y) / 2;
+                const labelWidth = Math.max(54, edge.label.length * 6.2 + 14);
 
                 return (
                   <g key={i}>
@@ -1323,20 +1325,21 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       className="line-draw-anim"
                     />
                     <rect
-                      x={midX - 34}
-                      y={midY - 14}
-                      width="68"
-                      height="13"
-                      rx="2"
+                      x={midX - labelWidth / 2}
+                      y={midY - 8}
+                      width={labelWidth}
+                      height={16}
+                      rx={3}
                       fill="#12151B"
-                      fillOpacity="0.9"
+                      stroke="#2B313D"
+                      strokeWidth="0.75"
                     />
                     <text
                       x={midX}
-                      y={midY - 4}
+                      y={midY + 3.5}
                       textAnchor="middle"
                       fill={edge.color}
-                      fontSize="9"
+                      fontSize="8.5"
                       fontFamily="IBM Plex Mono, monospace"
                       fontWeight="500"
                       className="animate-in fade-in duration-300"
@@ -1354,6 +1357,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
                 const NodeIcon = node.icon;
                 const r = node.isBridge ? 20 : 16;
+                const boxWidth = node.isBridge ? 112 : 98;
                 return (
                   <g 
                     key={node.id}
@@ -1378,22 +1382,21 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     </foreignObject>
 
                     <rect
-                      x="-60"
-                      y={r + 4}
-                      width="120"
-                      height="25"
-                      rx="3"
+                      x={-boxWidth / 2}
+                      y={r + 3}
+                      width={boxWidth}
+                      height={24}
+                      rx={3}
                       fill="#12151B"
-                      fillOpacity="0.94"
                       stroke="#2B313D"
                       strokeWidth="0.5"
                     />
 
                     <text
                       textAnchor="middle"
-                      y={r + 15}
+                      y={r + 13.5}
                       fill="#E8EAEE"
-                      fontSize="10"
+                      fontSize="9.5"
                       fontWeight="600"
                       fontFamily="IBM Plex Sans, sans-serif"
                     >
@@ -1401,7 +1404,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     </text>
                     <text
                       textAnchor="middle"
-                      y={r + 25}
+                      y={r + 23}
                       fill="#6B7382"
                       fontSize="8"
                       fontFamily="IBM Plex Mono, monospace"
