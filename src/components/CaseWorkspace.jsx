@@ -25,10 +25,85 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [activeTab, setActiveTab] = useState('summary');
 
   // Zoom and pan state for the Interactive Entity Graph
-  const [graphZoom, setGraphZoom] = useState(1);
+  const [graphZoom, setGraphZoom] = useState(1.05);
   const [graphPan, setGraphPan] = useState({ x: 0, y: 0 });
   const [isDraggingGraph, setIsDraggingGraph] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const graphContainerRef = useRef(null);
+  const touchDistRef = useRef(null);
+
+  // Native non-passive event listener: PREVENTS THE WHOLE WEBPAGE FROM ZOOMING
+  // when the user pinches or scrolls with 2 fingers on the graph canvas.
+  useEffect(() => {
+    const container = graphContainerRef.current;
+    if (!container) return;
+
+    const handleWheelNative = (e) => {
+      // Crucial: stops the browser from zooming the entire page/window
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (e.ctrlKey) {
+        // Trackpad pinch-to-zoom gesture
+        const factor = -e.deltaY * 0.008;
+        setGraphZoom((prev) => Math.max(0.5, Math.min(3.5, +(prev + factor).toFixed(2))));
+      } else {
+        // Mouse wheel or 2-finger scroll
+        const delta = e.deltaY < 0 ? 0.09 : -0.09;
+        setGraphZoom((prev) => Math.max(0.5, Math.min(3.5, +(prev + delta).toFixed(2))));
+      }
+    };
+
+    // Safari/macOS trackpad gesture prevention
+    const handleGesture = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    // Touchscreen multi-touch pinch prevention & handling
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchDistRef.current = Math.hypot(dx, dy);
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches.length === 2 && touchDistRef.current) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.hypot(dx, dy);
+        const scaleChange = dist / touchDistRef.current;
+        touchDistRef.current = dist;
+        setGraphZoom((prev) => Math.max(0.5, Math.min(3.5, +(prev * scaleChange).toFixed(2))));
+      }
+    };
+
+    const handleTouchEnd = () => {
+      touchDistRef.current = null;
+    };
+
+    container.addEventListener('wheel', handleWheelNative, { passive: false });
+    container.addEventListener('gesturestart', handleGesture, { passive: false });
+    container.addEventListener('gesturechange', handleGesture, { passive: false });
+    container.addEventListener('gestureend', handleGesture, { passive: false });
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheelNative);
+      container.removeEventListener('gesturestart', handleGesture);
+      container.removeEventListener('gesturechange', handleGesture);
+      container.removeEventListener('gestureend', handleGesture);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [activeTab]);
 
   const handleGraphMouseDown = (e) => {
     if (e.target.tagName === 'circle' || e.target.tagName === 'text' || e.target.tagName === 'path') {
@@ -57,10 +132,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     setIsDraggingGraph(false);
   };
 
-  const handleZoomIn = () => setGraphZoom(z => Math.min(2.5, +(z + 0.15).toFixed(2)));
+  const handleZoomIn = () => setGraphZoom(z => Math.min(3.5, +(z + 0.15).toFixed(2)));
   const handleZoomOut = () => setGraphZoom(z => Math.max(0.5, +(z - 0.15).toFixed(2)));
   const handleResetZoom = () => {
-    setGraphZoom(1);
+    setGraphZoom(1.05);
     setGraphPan({ x: 0, y: 0 });
   };
 
@@ -584,23 +659,20 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
               {/* Zoomable / Pannable SVG Canvas Container */}
               <div 
-                className="bg-[#12151B] border border-[#2B313D] rounded-[5px] h-[390px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
+                ref={graphContainerRef}
+                className="bg-[#12151B] border border-[#2B313D] rounded-[5px] h-[400px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
+                style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
                 onMouseDown={handleGraphMouseDown}
                 onMouseMove={handleGraphMouseMove}
                 onMouseUp={handleGraphMouseUp}
                 onMouseLeave={handleGraphMouseUp}
-                onWheel={(e) => {
-                  e.preventDefault();
-                  if (e.deltaY < 0) handleZoomIn();
-                  else handleZoomOut();
-                }}
               >
-                <svg className="w-full h-full" viewBox="0 0 940 330">
+                <svg className="w-full h-full" viewBox="20 15 880 290" preserveAspectRatio="xMidYMid meet">
                   <g 
                     transform={`translate(${graphPan.x}, ${graphPan.y}) scale(${graphZoom})`}
                     style={{ 
-                      transformOrigin: 'center center', 
-                      transition: isDraggingGraph ? 'none' : 'transform 0.15s ease-out' 
+                      transformOrigin: '460px 150px', 
+                      transition: isDraggingGraph ? 'none' : 'transform 0.1s ease-out' 
                     }}
                   >
                     {/* Render Connecting Lines with Anti-Collision Mid-Stroke Labels */}
