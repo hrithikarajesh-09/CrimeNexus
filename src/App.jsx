@@ -217,10 +217,6 @@ export default function App() {
         />
       )}
 
-      {/* Dossier Footer */}
-      <footer className="border-t border-[#2B313D] bg-[#181C24] py-3 text-center text-xs text-[#6B7382] font-mono">
-        CRIMENEXUS // SIH26189 &bull; ROW-LEVEL SECURITY ENFORCED &bull; SHA-256 FABRIC REGISTRY VERIFIED
-      </footer>
     </div>
   );
 }

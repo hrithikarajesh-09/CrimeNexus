@@ -342,94 +342,74 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   // Wikipedia hover helper dictionary
   const evidenceEntities = {
     'EVD-001': {
-      title: 'Police FIR 0018/2026 (NCR Cyber Crime PS)',
-      type: 'Police FIR & Incident Report',
-      docId: 'EVD-001',
-      hash: 'd4c56ad10356cf2cc8ddfdc26fd4c04ff6ca07f586a8acf970c43731c169c142',
-      date: '09-JUN-2026 18:30:00 IST',
-      snippet: 'Formal complaint filed by CFO Vikramaditya Rathore detailing unauthorized spear-phishing attack and ₹1.0 Cr RTGS debit.',
-      status: 'VERIFIED ON FABRIC LEDGER'
+      title: 'Police FIR 0018/2026',
+      type: 'Police Complaint',
+      docId: 'Cyber Crime Police Station',
+      snippet: 'Official police complaint filed by CFO Vikramaditya Rathore after ₹1 Crore was stolen via a fake CEO email.',
+      status: 'Official Record'
     },
     'EVD-002': {
-      title: 'FIU-IND Suspicious Transaction Report STR-88912',
-      type: 'FIU-IND Banking Advisory',
-      docId: 'EVD-002',
-      hash: 'afeb4ed06feb8f55c8a7028172dec41070be605e4508ba3ea0f7dc6b4e9cbcae',
-      date: '08-AUG-2026 11:00:00 IST',
-      snippet: 'Banking advisory detailing ₹50 Lakhs transfer (TXN_552) from Devrat Sharma into shell firm Apex Trade Solutions and immediate cash layering.',
-      status: 'VERIFIED ON FABRIC LEDGER'
+      title: 'Bank Alert Report STR-88912',
+      type: 'Bank Alert',
+      docId: 'Financial Intelligence Unit',
+      snippet: 'Bank alert showing ₹50 Lakhs moved from broker Devrat Sharma to Mumbai shell company Apex Trade Solutions.',
+      status: 'Verified Transfer'
     },
     'EVD-003': {
-      title: 'Sector 44 Gurugram Cell Tower Dump T-4401',
-      type: 'Telephony Regulatory Extraction',
-      docId: 'EVD-003',
-      hash: 'ccfb08874fc7038d541678894b70eee79265d68d8a5c65adf5187c5d4e45f91e',
-      date: '10-JUN-2026 09:15:00 IST',
-      snippet: 'Nodal tower dump confirming suspect telephony interactions and contradicting suspect Rajesh Verma alibi at the time of the heist.',
-      status: 'VERIFIED ON FABRIC LEDGER'
+      title: 'Tower 4401 Phone Location Records',
+      type: 'Phone Records',
+      docId: 'Sector 44, Gurugram',
+      snippet: 'Mobile tower records proving Rajesh Verma was near the crime location at the time of the heist.',
+      status: 'Location Proved'
     },
     'ACC-1001': {
-      title: 'Zenith Corporate Current Account (ACC-1001)',
-      type: 'Victim Bank Account',
-      docId: 'Apex Global Bank #001199884401',
-      hash: 'ACC-VERIFIED-4401',
-      date: '09-JUN-2026 14:10:00 IST',
-      snippet: 'Target corporate account held by Zenith Technologies Ltd debited for ₹1,00,00,000 via fraudulent RTGS authorization.',
-      status: 'DEBIT CONFIRMED'
+      title: 'Zenith Tech Bank Account',
+      type: 'Victim Account',
+      docId: 'Apex Global Bank',
+      snippet: 'Company account from which ₹1 Crore was stolen using the fake approval link.',
+      status: '₹1 Crore Stolen'
     },
     'ACC-2201': {
-      title: 'Suman Roy Primary Mule Account (ACC-2201)',
-      type: 'Primary Mule Account',
-      docId: 'Royal Crest Bank #9988220144',
-      hash: 'ACC-VERIFIED-2201',
-      date: '09-JUN-2026 14:10:00 IST',
-      snippet: 'Beneficiary account belonging to Suman Roy (PER-104) receiving initial ₹1.0 Cr heist tranche, subdivided within 25 minutes.',
-      status: 'FROZEN BY CYBER CELL'
+      title: 'Suman Roy Bank Account',
+      type: 'Mule Account',
+      docId: 'Royal Crest Bank',
+      snippet: 'The first account that received the stolen ₹1 Crore before splitting it into 5 smaller accounts.',
+      status: 'Frozen by Police'
     },
     'ACC-7701': {
-      title: 'Apex Trade Solutions Shell Account (ACC-7701)',
-      type: 'Corporate Front Company Account',
-      docId: 'Imperial Trust Bank #4455770199',
-      hash: 'ACC-VERIFIED-7701',
-      date: '07-AUG-2026 15:30:00 IST',
-      snippet: 'Shell company account in Nariman Point, Mumbai. Received ₹50,00,000 from Devrat Sharma (TXN_552) with rapid outward transfer.',
-      status: 'UNDER PMLA FREEZE'
+      title: 'Apex Trade Solutions Account',
+      type: 'Fake Company Account',
+      docId: 'Nariman Point, Mumbai',
+      snippet: 'Fake company account in Mumbai that received ₹50 Lakhs and links this case to the Mumbai investigation.',
+      status: 'Account Frozen'
     },
     'PER-103': {
-      title: 'Devrat Sharma (Broker D / The Accountant)',
-      type: 'Cross-Jurisdiction Money Broker',
-      docId: 'PAN: DSRPS3311L',
-      hash: 'BROKER-BRIDGE-NODE',
-      date: 'Active NCR & Mumbai',
-      snippet: 'Strategic money broker connecting NCR cyber syndicate with Mumbai hawala ring. Ranked #1 in network betweenness centrality.',
-      status: 'HIGH-PRIORITY TARGET'
+      title: 'Devrat Sharma',
+      type: 'Money Broker',
+      docId: 'Alias: Broker D',
+      snippet: 'The money broker who transferred cash from Delhi to Mumbai to help hide the stolen money.',
+      status: 'Prime Suspect'
     },
     'TXN_552': {
-      title: 'Transaction TXN_552 (Core UTR: ITBL2026080700552)',
-      type: 'Cross-Case Financial Bridge',
-      docId: 'RTGS UTR Reference 552',
-      hash: 'EVD-002: Record #552',
-      date: '07-AUG-2026 15:30:00 IST',
-      snippet: 'Crucial ₹50,00,000 RTGS transaction from Devrat Sharma (ACC-7702) into Apex Trade Solutions (ACC-7701), linking Case 018 with Case 041.',
-      status: 'EVIDENCE BRIDGE CONFIRMED'
+      title: 'Transfer TXN_552 (₹50 Lakhs)',
+      type: 'Bank Transfer',
+      docId: 'RTGS Transfer #552',
+      snippet: '₹50 Lakhs transferred from Devrat Sharma to Apex Trade Solutions, linking Case 018 to Case 041.',
+      status: 'Cross-Case Link'
     },
     'DOMAIN-AUTH': {
-      title: 'Phishing Domain: secure-zenithcorp-auth.com',
-      type: 'Malicious Cyber Infrastructure',
-      docId: 'Associated IP: 198.51.100.45',
-      hash: 'IND-102 (Threat Score: 98/100)',
-      date: 'Registered 20-MAY-2026',
-      snippet: 'Lookalike corporate credential harvesting site used to intercept 2FA tokens from CFO Vikramaditya Rathore.',
-      status: 'SEIZED BY POLICE'
+      title: 'Fake Login Page',
+      type: 'Phishing Website',
+      docId: 'secure-zenithcorp-auth.com',
+      snippet: 'Fake website made by hackers to trick Vikramaditya and steal his password and OTP.',
+      status: 'Blocked by Police'
     },
     'PER-108': {
-      title: 'Vikramaditya Rathore (CFO / Complainant)',
-      type: 'Complainant & Corporate Signatory',
-      docId: 'PAN: VRTPR8821Z • DLF Phase 5 Gurugram',
-      hash: 'EVD-001: Complainant Incident Report',
-      date: '09-JUN-2026 14:00:00 IST',
-      snippet: 'Chief Financial Officer targeted by executive spoofing email. Filed formal FIR 0018/2026 after discovering unauthorized ₹1.0 Cr RTGS debit.',
-      status: 'VERIFIED COMPLAINANT'
+      title: 'Vikramaditya Rathore',
+      type: 'CFO (Victim)',
+      docId: 'Chief Financial Officer',
+      snippet: 'Victim who received the fake CEO email and reported the ₹1 Crore theft to the police.',
+      status: 'Victim'
     }
   };
 
@@ -1338,11 +1318,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                                 key={idx}
                                 type="button"
                                 onClick={() => setSelectedMapNode(otherNodeId)}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[3px] bg-[#12151B] border border-[#2B313D] text-[11px] font-mono text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#C68A46] cursor-pointer transition"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#12151B] border border-[#2B313D] text-[11px] font-sans text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#C68A46] cursor-pointer transition"
                               >
-                                <span className="text-[#C68A46]">{isOutgoing ? '→' : '←'}</span>
-                                <span>{edge.label}:</span>
                                 <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
+                                <span className="text-[#6B7382] text-[10px]">({edge.label})</span>
                               </button>
                             );
                           })}
@@ -1507,22 +1486,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
               </div>
 
-              {/* Dossier Quick Key Metrics Strip */}
-              <div className="pt-3 border-t border-[#2B313D] grid grid-cols-3 gap-2 text-[11px] font-mono">
-                <div>
-                  <span className="text-[#6B7382] block text-[10px]">2FA IP</span>
-                  <span className="text-[#6C93B8]">198.51.100.45</span>
-                </div>
-                <div>
-                  <span className="text-[#6B7382] block text-[10px]">PRIMARY MULE</span>
-                  <span className="text-[#4E9C93]">ACC-2201</span>
-                </div>
-                <div>
-                  <span className="text-[#6B7382] block text-[10px]">BRIDGE TARGET</span>
-                  <span className="text-[#8B81C4]">CASE-041 (MUM)</span>
-                </div>
-              </div>
-
               {/* Wikipedia Popover Tooltip with Framer Motion */}
               <AnimatePresence>
                 {activeTooltip && (
@@ -1552,11 +1515,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <p className="text-[11px] text-[#9AA3B2] leading-snug bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
                       "{activeTooltip.snippet}"
                     </p>
-
-                    <div className="pt-1 text-[10px] font-mono text-[#6B7382] flex items-center justify-between">
-                      <span>SHA-256:</span>
-                      <span className="text-[#C68A46] truncate max-w-[190px]">{activeTooltip.hash}</span>
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
