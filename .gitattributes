@@ -1,0 +1,3 @@
+* text=auto eol=lf
+sample_evidence/* text eol=lf
+synthetic_data/* text eol=lf
