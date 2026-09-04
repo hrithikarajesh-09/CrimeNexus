@@ -456,6 +456,213 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const activeReplayNodes = stepNodes[Math.min(currentStep, stepNodes.length - 1)] || [];
   const activeReplayEdges = stepEdges[Math.min(currentStep, stepEdges.length - 1)] || [];
 
+  const entityDossierDetails = {
+    'PER-108': {
+      name: 'Vikramaditya Rathore',
+      alias: 'Complainant CFO',
+      category: 'Victim / Complainant',
+      categoryVariant: 'green',
+      status: 'Verified Complainant & Corporate Signatory',
+      role: 'Chief Financial Officer (CFO) — Zenith Technologies Ltd',
+      location: 'DLF Phase 5 / Sector 29, Gurugram, Haryana',
+      phone: '+91 98100 11808 (Airtel Corporate Postpaid)',
+      idNumber: 'PAN: VRTPR8821Z • Employee ID: ZEN-EXEC-004',
+      deviceIp: 'MacBook Pro (M2, macOS 15.4) • IP: 10.0.4.12 (Zenith HQ)',
+      riskLevel: '10% (Zero Culpability — Targeted Victim)',
+      riskScore: 10,
+      whatHappened: 'On June 9, 2026 at 11:30 IST, CFO Vikramaditya Rathore received an urgent executive spoofing email ostensibly from Zenith CEO Rajiv Singhania directing emergency vendor clearance. Rathore navigated to duplicate phishing portal secure-zenithcorp-auth.com and entered corporate banking credentials. Rogue proxy IP 198.51.100.45 intercepted his multi-factor authentication (2FA) token, executing an unauthorized RTGS debit of ₹1,00,00,000 from Zenith Corporate Account ACC-1001 into primary mule account ACC-2201 (Suman Roy). Rathore discovered the fraudulent debit during 14:00 bank reconciliation and promptly registered FIR 0018/2026 at Gurugram Cyber PS.',
+      legalEvidence: 'EVD-001 (FIR 0018/2026 & Phishing Email Headers), RTGS Transaction Slip TXN-1001',
+      actionTaken: 'Complainant statement recorded under Sec 180 BNS; corporate email headers cryptographically preserved under Sec 63B BSA; forensic image of CFO workstation seized.'
+    },
+    'ACC-1001': {
+      name: 'Zenith Corporate Current Account',
+      alias: 'Corporate ACC-1001',
+      category: 'Target Corporate Account',
+      categoryVariant: 'teal',
+      status: 'Debited (Audit Freeze / Lien Active)',
+      role: 'Primary Corporate Treasury Account — Zenith Technologies Ltd',
+      location: 'Apex Global Bank, Cyber City Branch, Gurugram',
+      phone: 'Authorized Signatory: Vikramaditya Rathore',
+      idNumber: 'Account No: 001199884401 • IFSC: APEX0001044',
+      deviceIp: 'NetBanking Gateway IP: 10.0.4.12',
+      riskLevel: 'Targeted Institutional Infrastructure',
+      riskScore: 15,
+      whatHappened: 'Unauthorized single RTGS debit of ₹1,00,00,000 (One Crore INR) was cleared on June 9, 2026 at 14:10:00 IST using intercepted session tokens and forged payment voucher PV-2026-992. The entire balance was drained into mule account ACC-2201 within seconds, triggering bank AML alarm 25 minutes after execution.',
+      legalEvidence: 'TXN-1001 RTGS Core Banking Ledger, Apex Global Bank UTR APEX202606090011',
+      actionTaken: 'Audit logs exported; reverse RTGS recall request submitted to RBI Clearing Cell; internal audit initiated.'
+    },
+    'ACC-2201': {
+      name: 'Suman Roy Primary Mule Account',
+      alias: 'Primary Mule ACC-2201',
+      category: 'Primary Beneficiary Mule',
+      categoryVariant: 'red',
+      status: 'Frozen by Cyber Police',
+      role: 'First-Tier Inward Mule Account for Syndicate Cyber Proceeds',
+      location: 'Royal Crest Bank, Sector 14 Branch, Gurugram',
+      phone: 'Registered Mobile: +91 98110 04455',
+      idNumber: 'Account No: 9988220144 • IFSC: RCST0002201',
+      deviceIp: 'Mobile Banking IP 198.51.100.45 (Tor Exit Node)',
+      riskLevel: 'Direct Instrument of Cyber Heist (92% Risk Index)',
+      riskScore: 92,
+      whatHappened: 'Received full ₹1,00,00,000 heist tranche from Zenith Technologies. Within 25 minutes of credit, account automated scripts rapidly partitioned ₹1,00,00,000 into five ₹20,00,000 tranches across secondary mule accounts (ACC-3301 to ACC-8809) to deliberately dodge automated ₹25L AML freeze algorithms.',
+      legalEvidence: 'EVD-001 Bank Records, STR Alert 44102, Sec 63B BSA Hashed Transaction Slip',
+      actionTaken: 'PMLA debit freeze issued; ₹1,20,000 remaining balance attached; KYC voter ID identified as forged identity document.'
+    },
+    'PER-104': {
+      name: 'Suman Roy',
+      alias: 'Mule Alpha',
+      category: 'Primary Mule Suspect',
+      categoryVariant: 'brass',
+      status: 'In Police Custody (7-Day Remand)',
+      role: 'Recruited Primary Mule Accountholder & Local Cash Handler',
+      location: 'House No. 44, Old Railway Road, Gurugram, Haryana',
+      phone: '+91 98110 04455 (Vi Prepaid)',
+      idNumber: 'PAN: SMRPS1122M • Aadhaar: XXXX-XXXX-9921',
+      deviceIp: 'Redmi Note 11 • IMEI: 867452039182744',
+      riskLevel: 'High Operational Risk (75% Risk Index)',
+      riskScore: 75,
+      whatHappened: 'Opened multiple zero-balance accounts in exchange for a ₹50,000 commission from Rajesh Verma. Handled NetBanking login kits and handed over OTP forwarding SIM cards to syndicate technical operator Kunal Shah. Mobile phone was pinged at Sector 44 tower receiving call from Rajesh Verma 10 minutes prior to fund transfer.',
+      legalEvidence: 'CDR-1002 (Tower T-4401 call dump), Signed account opening forms, Seized SIM card',
+      actionTaken: 'Arrested on June 12, 2026 under Sec 318(4) BNS & Sec 66D IT Act; currently in 7-day police custody remand.'
+    },
+    'ACC-MULES': {
+      name: 'Secondary Mule Accounts Cluster',
+      alias: '5 Layering Accounts (ACC-3301 to ACC-8809)',
+      category: 'Layering Tier Network',
+      categoryVariant: 'teal',
+      status: '3 Frozen / 2 Layered',
+      role: 'Secondary Fan-Out Layering Mesh to Break Forensic Audit Trails',
+      location: 'Faridabad, Noida, and South Delhi Branches',
+      phone: 'Managed by sub-mule network (Meera Nair & others)',
+      idNumber: 'Cluster IDs: ACC-3301, ACC-4402, ACC-5503, ACC-6604, ACC-8809',
+      deviceIp: 'Layering IPs routed through Gurugram SIM box gateway',
+      riskLevel: 'Organized AML Layering Conduit (84% Risk Index)',
+      riskScore: 84,
+      whatHappened: 'Received 5x ₹20,00,000 IMPS/NEFT tranches from primary mule ACC-2201. Within 48 hours, these accounts funneled ₹70,00,000 onwards into broker Devrat Sharma account (ACC-7702), while withdrawing ₹10,00,000 via micro-ATM cash withdrawals in Faridabad and Noida.',
+      legalEvidence: 'TXN-1002, TXN-1007 NEFT Slips, Micro-ATM CCTV footage (ATM-ND-441)',
+      actionTaken: 'Notices issued under Sec 94 BNSS to 3 commercial banks; 3 accounts frozen with ₹18.5L recovered.'
+    },
+    'PER-101': {
+      name: 'Rajesh Verma',
+      alias: 'Viper / Cyber Lead',
+      category: 'Syndicate Chief / Mastermind',
+      categoryVariant: 'red',
+      status: 'Non-Bailable Warrant Issued (Absconding)',
+      role: 'Mastermind & Syndicate Chief of Operation PhishNet',
+      location: 'Villa 12, Greenwood City, Sector 45, Gurugram, Haryana (Last Known)',
+      phone: '+91 98110 01122 (Airtel NCR Postpaid)',
+      idNumber: 'PAN: ABCPV9012K • Passport: Z-9921404',
+      deviceIp: 'ThinkPad X1 Carbon • ProtonVPN & Tor Exit Nodes',
+      riskLevel: 'Extreme Threat (94% Risk Index — Interpol Notice Candidate)',
+      riskScore: 94,
+      whatHappened: 'Masterminded the entire spear-phishing campaign against Zenith Technologies. Commissioned Kunal Shah to clone the Zenith vendor clearance portal, coordinated mule accounts with Suman Roy, and directed Devrat Sharma to route proceeds into the Mumbai hawala corridor. Cell tower dump T-4401 disproved his fake Jaipur travel alibi.',
+      legalEvidence: 'CDR-1001, CDR-1002, Seized Telegram chat logs "Operation PhishNet", Phishing server hosting invoices',
+      actionTaken: 'NBW issued by CJM Court Gurugram; Look Out Circular (LOC) opened at all international airports; assets under provisional attachment.'
+    },
+    'LOC-101': {
+      name: 'Nodal Cell Tower T-4401',
+      alias: 'Sector 44 Telephony Hub',
+      category: 'Telecommunication Infrastructure',
+      categoryVariant: 'violet',
+      status: 'Forensic Triangulation Verified',
+      role: 'Nodal Cellular Tower Station Covering Sector 44 Cyber Hotspot',
+      location: 'Sector 44 Institutional Area, Gurugram (Lat: 28.4595° N, Long: 77.0725° E)',
+      phone: 'Carrier Sector: Airtel, Jio, and Vi Macro Cell Sites',
+      idNumber: 'Tower ID: DEL-GUR-T4401 • Cell Global ID: 404-45-8812-4401',
+      deviceIp: 'Telecom Switching Center BSC-NCR-04',
+      riskLevel: 'Forensic Triangulation Anchor (60% Evidence Weight)',
+      riskScore: 60,
+      whatHappened: 'Cell tower records captured 14 critical calls and data handshakes between Rajesh Verma, Kunal Shah, and mule Suman Roy between 11:00 and 12:30 on heist day. Provided definitive triangulation proving co-location and telephony conspiracy, shattering alibis.',
+      legalEvidence: 'EVD-003 (Carrier-certified CDR dump signed under Sec 63B BSA by Nodal Officer)',
+      actionTaken: 'Call detail records and IPDR dumps cryptographically anchored on hyperledger; azimuth sectors mapped.'
+    },
+    'PER-102': {
+      name: 'Kunal Shah',
+      alias: 'Coder K',
+      category: 'Technical Specialist',
+      categoryVariant: 'red',
+      status: 'Arrested & In Judicial Custody',
+      role: 'Cyber Technical Specialist & Phishing Infrastructure Developer',
+      location: 'Flat 402, Prateek Fedora, Sector 62, Noida, Uttar Pradesh',
+      phone: '+91 98110 02233 (Jio NCR)',
+      idNumber: 'PAN: KSHPK4410P • GitHub: dev-kunal-ops (Seized)',
+      deviceIp: 'VPS Reverse Proxy IP 198.51.100.45 • NGINX Gateway',
+      riskLevel: 'High Technical Threat (88% Risk Index)',
+      riskScore: 88,
+      whatHappened: 'Developed and hosted the clone credential harvester secure-zenithcorp-auth.com. Configured automated real-time reverse proxy to harvest session cookies and bypass 2FA OTP tokens. Maintained active development logs matching server IP 198.51.100.45.',
+      legalEvidence: 'Forensic clone of VPS server, SSH key pairs matching seized MacBook Pro, Domain purchase Bitcoin TXN',
+      actionTaken: 'Arrested at Noida residence on June 15, 2026; 2 laptops, 3 hardware crypto wallets, and 6 phones recovered.'
+    },
+    'PER-103': {
+      name: 'Devrat Sharma',
+      alias: 'The Accountant / Broker D',
+      category: 'Cross-Case Money Broker (Bridge Node)',
+      categoryVariant: 'violet',
+      status: 'Key Target (24/7 Surveillance Active)',
+      role: 'Central Cross-Jurisdiction Hawala Broker & Syndicate Financial Conduit',
+      location: 'Panchsheel Enclave, New Delhi & Nariman Point, Mumbai',
+      phone: '+91 98110 03344 (Airtel NCR/MUM Dual SIM)',
+      idNumber: 'PAN: DSRPS3311L • DIN: 08821904',
+      deviceIp: 'Encrypted Signal / Wickr Handle @broker_d',
+      riskLevel: 'Critical Centrality Node (96% Risk Index)',
+      riskScore: 96,
+      whatHappened: 'The vital linchpin connecting North Indian cyber criminals with Western Indian money launderers. Collected ₹70,00,000 from NCR secondary mule accounts into account ACC-7702. On August 7, 2026, executed the cross-case bridge transaction TXN_552 (₹50,00,000) into Mumbai front company Apex Trade Solutions (ACC-7701), linking Case 018 directly with Mumbai Operation ShadowLedge.',
+      legalEvidence: 'TXN_552 RTGS Advice (EVD-002), FIU STR-88912 Advisory, CDR-1008 (telephony link to Tariq Merchant)',
+      actionTaken: 'Bank accounts placed under PMLA attachment; 24/7 technical surveillance placed on communication nodes; ED referral initiated.'
+    },
+    'ACC-7701': {
+      name: 'Apex Trade Solutions Pvt Ltd Account',
+      alias: 'Mumbai Shell Front (Case 041 Bridge)',
+      category: 'Corporate Front Entity',
+      categoryVariant: 'violet',
+      status: 'Under PMLA Freeze (ED / Mumbai PS)',
+      role: 'Trade-Based Money Laundering Shell Front Company Account',
+      location: 'Mittal Towers, Nariman Point, Mumbai, Maharashtra',
+      phone: 'Director: Anita D\'Souza (+91 98220 07788)',
+      idNumber: 'CIN: U51909MH2024PTC99214 • Account No: 4455770199',
+      deviceIp: 'Corporate Office IP 203.0.113.88 (Nariman Point)',
+      riskLevel: 'Severe Institutional Laundering Nexus (90% Risk Index)',
+      riskScore: 90,
+      whatHappened: 'Purported textile import-export front with zero genuine commercial shipments. Received ₹50,00,000 from Devrat Sharma via TXN_552 on August 7, 2026. Disbursed ₹45,00,000 within 1 hour 45 minutes to hawala operator Tariq Merchant (ACC-7703) disguised as raw silk advance invoice.',
+      legalEvidence: 'EVD-002 (STR-88912), Forged import invoices, FIU-IND red-flag alert',
+      actionTaken: 'Offices raided by Mumbai Economic Offences Wing (EOW); statutory bank books seized; corporate registration suspended.'
+    },
+    'PER-105': {
+      name: 'Tariq Merchant',
+      alias: 'Goldman',
+      category: 'Hawala Syndicate Operator',
+      categoryVariant: 'red',
+      status: 'Named in Interpol Red Notice Referral',
+      role: 'Mumbai Bullion Market Hawala Operator & Offshore Remitter',
+      location: 'Waterfield Road, Bandra West & Zaveri Bazaar, Mumbai, Maharashtra',
+      phone: '+91 98220 05566 (Jio Mumbai)',
+      idNumber: 'PAN: TMKPM9901A • UAE Trade License: DXB-2024-8812',
+      deviceIp: 'BlackBerry SecuSUITE / Dubai Roaming IP',
+      riskLevel: 'Critical International Laundering Target (92% Risk)',
+      riskScore: 92,
+      whatHappened: 'Specializes in converting domestic cyber heist proceeds into offshore bullion credits. Received ₹45,00,000 from Apex Trade Solutions, converted funds into overseas gold consignment credits, and initiated SWIFT international wires to Dubai Bullion A/C (ACC-7705) in Deira, Dubai.',
+      legalEvidence: 'Hawala chit ledger seized in Zaveri Bazaar raid, Swift MT-103 confirmations, CDR-1008',
+      actionTaken: 'Non-bailable arrest warrant executed in Mumbai; overseas travel alert active; Enforcement Directorate prosecution complaint filed.'
+    },
+    'ACC-7705': {
+      name: 'Dubai Bullion Trading Account',
+      alias: 'Offshore Terminal Account',
+      category: 'Offshore Hawala Terminal',
+      categoryVariant: 'teal',
+      status: 'International MLAT Freeze Requested',
+      role: 'Offshore Bullion Trade & Capital Flight Terminal Account',
+      location: 'Emirates National Bank, Deira Branch, Dubai, UAE',
+      phone: 'Clearing Agent: Farooq Sheikh (+971 50 123 4567)',
+      idNumber: 'IBAN: AE982001190244109822 • SWIFT: EBILAEAD',
+      deviceIp: 'Foreign Financial Gateway (Dubai International Financial Centre)',
+      riskLevel: 'Offshore Capital Flight Destination (86% Risk Index)',
+      riskScore: 86,
+      whatHappened: 'Terminal foreign account used to permanently wash stolen funds beyond Indian jurisdiction. Proceeds from Operation PhishNet and Operation ShadowLedge were commingled and settled against precious metal bullion contracts, obscuring ultimate beneficial ownership.',
+      legalEvidence: 'SWIFT wire trace MT-103, FIU International Exchange Dossier IND-UAE-2026-88',
+      actionTaken: 'Mutual Legal Assistance Treaty (MLAT) request routed via Ministry of Home Affairs to UAE Central Bank.'
+    }
+  };
+
   const selectedNodeData = selectedMapNode 
     ? allGraphNodes.find(n => n.id === selectedMapNode)
     : null;
@@ -813,101 +1020,157 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             </Card>
 
             {/* Click-to-Expand Entity Inspector Drawer (Stays Expanded!) */}
-            {selectedNodeData ? (
-              <Card className="p-4 bg-[#181C24] border border-[#C68A46]/70 rounded-[5px] space-y-3">
-                <div className="flex items-center justify-between border-b border-[#2B313D] pb-2">
-                  <div className="flex items-center gap-2">
-                    <Badge variant={selectedNodeData.isBridge ? "violet" : "brass"}>
-                      {selectedNodeData.type.toUpperCase()}
-                    </Badge>
-                    <h3 className="font-serif font-bold text-[#E8EAEE] text-sm">
-                      {selectedNodeData.label}
-                    </h3>
-                    <span className="text-xs font-mono text-[#6B7382]">
-                      ({selectedNodeData.id})
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => onSelectEntity({ 
-                        person_id: selectedNodeData.id, 
-                        name: selectedNodeData.label, 
-                        role: selectedNodeData.sub, 
-                        is_bridge: selectedNodeData.isBridge 
-                      })}
-                      variant="brass"
-                      size="sm"
-                      className="text-xs"
-                    >
-                      <span>Inspect Full Dossier</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Button>
-                    <button 
-                      onClick={() => setSelectedMapNode(null)}
-                      className="p-1 rounded-[3px] text-[#6B7382] hover:text-[#E8EAEE] hover:bg-[#1F2430]"
-                      title="Collapse entity drawer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
+            {selectedNodeData ? (() => {
+              const dossier = entityDossierDetails[selectedNodeData.id] || {
+                name: selectedNodeData.label,
+                alias: selectedNodeData.id,
+                category: selectedNodeData.type.toUpperCase(),
+                categoryVariant: selectedNodeData.isBridge ? 'violet' : 'brass',
+                status: 'Identified Network Entity',
+                role: selectedNodeData.sub,
+                location: 'NCR Cyber PS Jurisdiction',
+                phone: 'N/A',
+                idNumber: selectedNodeData.id,
+                deviceIp: 'Network IP Logs',
+                riskLevel: 'Active Network Node',
+                riskScore: selectedSuspectInfo?.risk_score || 50,
+                whatHappened: `Entity participating in topological flow of ${caseData.case_id}. Linked via ${connectedEdgesCount} active conduits.`,
+                legalEvidence: 'FIR 0018/2026',
+                actionTaken: 'Under active case analysis'
+              };
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                  <div>
-                    <span className="text-[#6B7382] block text-[10px] font-mono">ROLE / ENTITY TYPE</span>
-                    <span className="text-[#E8EAEE] font-medium mt-0.5 block">{selectedNodeData.sub}</span>
-                  </div>
-                  <div>
-                    <span className="text-[#6B7382] block text-[10px] font-mono">CONDUIT CONNECTIONS</span>
-                    <span className="text-[#4E9C93] font-mono font-medium mt-0.5 block">
-                      {connectedEdgesCount} Active Link{connectedEdgesCount !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                  {selectedSuspectInfo ? (
-                    <>
+              const directConduits = allGraphEdges.filter(e => e.from === selectedNodeData.id || e.to === selectedNodeData.id);
+
+              return (
+                <Card className="p-4 bg-[#181C24] border border-[#C68A46]/70 rounded-[5px] space-y-3 shadow-lg">
+                  {/* Top Banner with Name, Badges, and Action Buttons */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant={dossier.categoryVariant || "brass"}>
+                        {dossier.category}
+                      </Badge>
                       <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono">PHONE &amp; CITY</span>
-                        <span className="text-[#E8EAEE] font-mono text-[11px] mt-0.5 block">
-                          {selectedSuspectInfo.phone} ({selectedSuspectInfo.location})
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono">RISK INDEX</span>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className={`font-mono font-bold ${selectedSuspectInfo.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
-                            {selectedSuspectInfo.risk_score}%
+                        <h3 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight flex items-center gap-2">
+                          {dossier.name}
+                          <span className="text-xs font-mono text-[#C68A46] font-normal">
+                            "{dossier.alias}"
                           </span>
-                          <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
-                            <div 
-                              className={`h-full ${selectedSuspectInfo.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
-                              style={{ width: `${selectedSuspectInfo.risk_score}%` }}
-                            />
-                          </div>
+                        </h3>
+                        <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">
+                          ID: <strong className="text-[#E8EAEE]">{selectedNodeData.id}</strong> &bull; Status: <span className="text-[#5FA876] font-medium">{dossier.status}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => onSelectEntity({ 
+                          person_id: selectedNodeData.id, 
+                          name: dossier.name, 
+                          role: dossier.role, 
+                          is_bridge: selectedNodeData.isBridge 
+                        })}
+                        variant="brass"
+                        size="sm"
+                        className="text-xs"
+                      >
+                        <span>Inspect Full Dossier</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </Button>
+                      <button 
+                        onClick={() => setSelectedMapNode(null)}
+                        className="p-1 rounded-[3px] text-[#6B7382] hover:text-[#E8EAEE] hover:bg-[#1F2430] border border-[#2B313D]"
+                        title="Collapse entity drawer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Profile & Metadata 4-Column Strip */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs bg-[#12151B] p-3 rounded-[4px] border border-[#2B313D]">
+                    <div>
+                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DESIGNATION / ROLE</span>
+                      <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.role}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LOCATION / ADDRESS</span>
+                      <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.location}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">CONTACT &amp; IDENTIFIERS</span>
+                      <span className="text-[#6C93B8] font-mono block mt-0.5">{dossier.phone}</span>
+                      <span className="text-[#6B7382] font-mono text-[10px] block">{dossier.idNumber}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">RISK INDEX &amp; STATUS</span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className={`font-mono font-bold ${dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}`}>
+                          {dossier.riskScore}%
+                        </span>
+                        <div className="w-16 bg-[#1F2430] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
+                          <div 
+                            className={`h-full ${dossier.riskScore >= 80 ? 'bg-[#C1655A]' : dossier.riskScore >= 40 ? 'bg-[#C68A46]' : 'bg-[#5FA876]'}`}
+                            style={{ width: `${dossier.riskScore}%` }}
+                          />
                         </div>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono">NODE CLASSIFICATION</span>
-                        <span className="text-[#9AA3B2] font-mono mt-0.5 block">
-                          {selectedNodeData.isBridge ? 'Cross-Jurisdiction Conductor' : 'Direct Financial Node'}
-                        </span>
+                      <span className="text-[10px] text-[#9AA3B2] block mt-0.5 truncate">{dossier.riskLevel}</span>
+                    </div>
+                  </div>
+
+                  {/* "WHAT HAPPENED" SECTION (Requested by User) */}
+                  <div className="space-y-1 bg-[#1F2430] p-3 rounded-[4px] border border-[#2B313D]">
+                    <div className="flex items-center gap-1.5 text-xs font-mono text-[#C68A46] font-semibold">
+                      <Info className="w-3.5 h-3.5" />
+                      <span>WHAT HAPPENED (INCIDENT &amp; FORENSIC NARRATIVE)</span>
+                    </div>
+                    <p className="text-xs text-[#E8EAEE] leading-relaxed font-sans font-normal">
+                      {dossier.whatHappened}
+                    </p>
+                  </div>
+
+                  {/* Evidence & Connected Conduits Strip */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-0.5">
+                    <div className="space-y-1">
+                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LEGAL EVIDENCE &amp; ACTIONS TAKEN</span>
+                      <p className="text-[#9AA3B2] leading-snug">
+                        <strong className="text-[#E8EAEE] font-mono">{dossier.legalEvidence}</strong>
+                      </p>
+                      <p className="text-[#6B7382] text-[11px] leading-snug">
+                        {dossier.actionTaken}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DIRECT CONDUIT LINKS ({directConduits.length})</span>
+                      <div className="flex flex-wrap gap-1.5 pt-0.5">
+                        {directConduits.map((edge, idx) => {
+                          const isOutgoing = edge.from === selectedNodeData.id;
+                          const otherNodeId = isOutgoing ? edge.to : edge.from;
+                          const otherNode = allGraphNodes.find(n => n.id === otherNodeId);
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setSelectedMapNode(otherNodeId)}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[3px] bg-[#12151B] border border-[#2B313D] text-[11px] font-mono text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#C68A46] cursor-pointer transition"
+                            >
+                              <span className="text-[#C68A46]">{isOutgoing ? '→' : '←'}</span>
+                              <span>{edge.label}:</span>
+                              <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
+                            </button>
+                          );
+                        })}
                       </div>
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono">JURISDICTION LINK</span>
-                        <span className="text-[#8B81C4] font-mono mt-0.5 block">
-                          {selectedNodeData.isBridge ? 'NCR - Mumbai Nexus' : 'NCR Cyber PS'}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </Card>
-            ) : (
+                    </div>
+                  </div>
+                </Card>
+              );
+            })() : (
               <div className="p-3 bg-[#181C24] border border-dashed border-[#2B313D] rounded-[5px] flex items-center justify-between text-xs text-[#6B7382] font-mono">
-                <span>Click any node on the graph to expand its details and pin it</span>
-                <span className="text-[#C68A46]">10 Topological Entities</span>
+                <span>Click any node on the graph to view complete dossier, location, and what happened</span>
+                <span className="text-[#C68A46]">12 Topological Entities</span>
               </div>
             )}
           </div>
