@@ -18,7 +18,8 @@ import {
   playStageChime, 
   speakNarration, 
   stopNarration, 
-  unlockAudio 
+  unlockAudio,
+  getActiveVoiceDescription
 } from '../lib/soundEngine';
 
 export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCopilot }) {
@@ -234,8 +235,18 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#4E9C93', animated: true }
   ];
 
-  // 6 Chronological Reconstruction Stages (Dynamic narrated materialization)
+  // 6 Chronological Reconstruction Stages (Plus Stage 0: Initial Board Cleared)
   const reconstructionStages = [
+    {
+      stageNumber: 0,
+      phaseTitle: 'Initial Forensic Board (Cleared)',
+      timestamp: '09-JUN-2026 10:00 IST',
+      evidence: 'Awaiting Investigation Execution',
+      narration: 'Forensic evidence board cleared. Press Play Reconstruction to start the chronological recreation of the investigation.',
+      nodes: [],
+      edges: [],
+      newNodes: [],
+    },
     {
       stageNumber: 1,
       phaseTitle: 'Spear-Phishing Infiltration & 2FA Theft',
@@ -328,7 +339,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  // Live Graph Video Reconstruction Player state
+  // Live Graph Video Reconstruction Player state (Starts at Stage 0 = Empty Board)
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [voiceAudio, setVoiceAudio] = useState(true);
@@ -337,126 +348,180 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [audioTestStatus, setAudioTestStatus] = useState(null);
 
+  // Zoom & Pan state for Review Investigation Reconstruction Canvas
+  const [reconZoom, setReconZoom] = useState(1);
+  const [reconPan, setReconPan] = useState({ x: 0, y: 0 });
+  const [isDraggingRecon, setIsDraggingRecon] = useState(false);
+  const reconDragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const reconContainerRef = useRef(null);
+
+  const handleReconZoomIn = () => {
+    setReconZoom(z => Math.min(2.8, +(z + 0.15).toFixed(2)));
+  };
+  const handleReconZoomOut = () => {
+    setReconZoom(z => Math.max(0.5, +(z - 0.15).toFixed(2)));
+  };
+  const handleReconResetZoom = () => {
+    setReconZoom(1);
+    setReconPan({ x: 0, y: 0 });
+  };
+
+  // Wheel zoom listener on reconstruction canvas
+  useEffect(() => {
+    const el = reconContainerRef.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.09 : -0.09;
+      setReconZoom((prev) => Math.max(0.5, Math.min(2.8, +(prev + delta).toFixed(2))));
+    };
+
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, []);
+
+  const handleReconMouseDown = (e) => {
+    // Only pan if not clicking on action buttons
+    if (e.target.closest && (e.target.closest('button') || e.target.closest('a'))) return;
+    setIsDraggingRecon(true);
+    reconDragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      panX: reconPan.x,
+      panY: reconPan.y
+    };
+  };
+
+  const handleReconMouseMove = (e) => {
+    if (!isDraggingRecon) return;
+    const dx = e.clientX - reconDragStartRef.current.x;
+    const dy = e.clientY - reconDragStartRef.current.y;
+    setReconPan({
+      x: reconDragStartRef.current.panX + dx,
+      y: reconDragStartRef.current.panY + dy
+    });
+  };
+
+  const handleReconMouseUp = () => {
+    setIsDraggingRecon(false);
+  };
+
   const currentStage = reconstructionStages[Math.min(currentStep, reconstructionStages.length - 1)] || reconstructionStages[0];
   const activeReplayNodes = currentStage.nodes;
   const activeReplayEdges = currentStage.edges;
   const newlyMaterializedNodes = currentStage.newNodes;
 
-  // BSA Certificate Modal state
-  const [isBsaModalOpen, setIsBsaModalOpen] = useState(false);
+  // Refs for tracking playback state without stale closures
+  const isPlayingRef = useRef(isPlaying);
+  isPlayingRef.current = isPlaying;
+  const advanceTimeoutRef = useRef(null);
 
-  // Statutory Violations accordion state (click to expand and view evidence)
-  const [expandedStatuteId, setExpandedStatuteId] = useState(null);
-  const toggleStatute = (id) => setExpandedStatuteId(prev => prev === id ? null : id);
+  const clearAdvanceTimer = () => {
+    if (advanceTimeoutRef.current) {
+      clearTimeout(advanceTimeoutRef.current);
+      advanceTimeoutRef.current = null;
+    }
+  };
 
-  // Network Map state
-  const [selectedMapNode, setSelectedMapNode] = useState(null);
-
-  // Deselect node when clicking outside the graph window or outside inspector drawer
-  useEffect(() => {
-    if (!selectedMapNode) return;
-
-    const handleGlobalClick = (e) => {
-      // If clicking inside the inspector drawer itself, keep selection
-      if (inspectorDrawerRef.current && inspectorDrawerRef.current.contains(e.target)) {
-        return;
+  // Advance to next stage smoothly
+  const advanceToNextStage = () => {
+    setCurrentStep((prev) => {
+      if (prev < reconstructionStages.length - 1) {
+        const next = prev + 1;
+        triggerStagePlayback(next);
+        return next;
+      } else {
+        setIsPlaying(false);
+        setIsSpeaking(false);
+        stopNarration();
+        return prev;
       }
-      // If clicking inside the graph container
-      if (graphContainerRef.current && graphContainerRef.current.contains(e.target)) {
-        // If clicking on an entity node, the node's onClick handles it
-        if (e.target.closest && e.target.closest('.group')) {
-          return;
-        }
-        // Clicking on canvas background
-        setSelectedMapNode(null);
-        return;
+    });
+  };
+
+  const scheduleNextStage = (delayMs = 1200) => {
+    clearAdvanceTimer();
+    advanceTimeoutRef.current = setTimeout(() => {
+      if (isPlayingRef.current) {
+        advanceToNextStage();
       }
-      // Clicking anywhere outside the graph window (e.g. page, summary briefing, navbar)
-      setSelectedMapNode(null);
-    };
-
-    const timer = setTimeout(() => {
-      document.addEventListener('click', handleGlobalClick);
-    }, 50);
-
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener('click', handleGlobalClick);
-    };
-  }, [selectedMapNode]);
+    }, delayMs / playbackSpeed);
+  };
 
   // Trigger audio playback and speech for a given stage
   const triggerStagePlayback = (stageIdx) => {
+    clearAdvanceTimer();
     const stage = reconstructionStages[stageIdx];
     if (!stage) return;
 
     // 1. Play sound effects
-    playStageChime();
-    setTimeout(() => {
-      playPinStamp();
-    }, 100);
+    if (stageIdx > 0) {
+      playStageChime();
+      setTimeout(() => {
+        playPinStamp();
+      }, 120);
+    }
 
-    // 2. Speak narration if voice audio is enabled
-    if (voiceAudio) {
+    // 2. Event-driven speech synthesis: NEVER cut off before sentence is completed!
+    if (voiceAudio && stage.narration && stageIdx > 0) {
       setIsSpeaking(true);
       speakNarration(stage.narration, {
         speed: playbackSpeed,
         onStart: () => setIsSpeaking(true),
-        onEnd: () => setIsSpeaking(false),
-        onError: () => setIsSpeaking(false),
+        onEnd: () => {
+          setIsSpeaking(false);
+          // When full sentence finishes, pause 1.3s so user can digest the graph, then advance
+          if (isPlayingRef.current) {
+            scheduleNextStage(1300);
+          }
+        },
+        onError: () => {
+          setIsSpeaking(false);
+          if (isPlayingRef.current) {
+            scheduleNextStage(4000);
+          }
+        }
       });
+    } else {
+      // Voice muted or initial stage: use comfortable text-length reading duration
+      if (isPlayingRef.current) {
+        const readingMs = Math.max(5000, (stage.narration || '').length * 52);
+        scheduleNextStage(readingMs);
+      }
     }
   };
 
-  // Continuous Video Player Loop
+  // Cleanup timers and voice on unmount
   useEffect(() => {
-    let timer = null;
-    if (isPlaying) {
-      const durationPerStep = 8000 / playbackSpeed;
-      const intervalMs = 100;
-      let elapsed = 0;
-
-      timer = setInterval(() => {
-        elapsed += intervalMs;
-        const totalDuration = reconstructionStages.length * durationPerStep;
-        const currentTotalElapsed = currentStep * durationPerStep + elapsed;
-        setProgressPercent(Math.min(100, (currentTotalElapsed / totalDuration) * 100));
-
-        if (elapsed >= durationPerStep) {
-          elapsed = 0;
-          setCurrentStep((prev) => {
-            if (prev < reconstructionStages.length - 1) {
-              const next = prev + 1;
-              triggerStagePlayback(next);
-              return next;
-            } else {
-              setIsPlaying(false);
-              stopNarration();
-              setIsSpeaking(false);
-              setProgressPercent(100);
-              return prev;
-            }
-          });
-        }
-      }, intervalMs);
-    }
-    return () => clearInterval(timer);
-  }, [isPlaying, playbackSpeed, voiceAudio, reconstructionStages.length]);
+    return () => {
+      clearAdvanceTimer();
+      stopNarration();
+    };
+  }, []);
 
   const handleStartVideo = () => {
     unlockAudio();
+    clearAdvanceTimer();
     let startStep = currentStep;
-    if (currentStep >= reconstructionStages.length - 1) {
-      startStep = 0;
-      setCurrentStep(0);
-      setProgressPercent(0);
+    if (currentStep === 0 || currentStep >= reconstructionStages.length - 1) {
+      startStep = 1;
+      setCurrentStep(1);
     }
     setIsPlaying(true);
     triggerStagePlayback(startStep);
   };
 
+  const handlePauseVideo = () => {
+    setIsPlaying(false);
+    clearAdvanceTimer();
+    stopNarration();
+    setIsSpeaking(false);
+  };
+
   const handleResetVideo = () => {
     setIsPlaying(false);
+    clearAdvanceTimer();
     stopNarration();
     setIsSpeaking(false);
     setCurrentStep(0);
@@ -465,6 +530,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
   const handleScrub = (index) => {
     setIsPlaying(false);
+    clearAdvanceTimer();
     stopNarration();
     unlockAudio();
     setCurrentStep(index);
@@ -476,7 +542,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     unlockAudio();
     playStageChime();
     setAudioTestStatus('Testing...');
-    speakNarration('CrimeNexus audio system online. Speech narration and evidence sound effects operational.', {
+    speakNarration('CrimeNexus audio system online. Indian English forensic synthesizer active for Case 018 Gurugram heist.', {
       speed: 1,
       onStart: () => {
         setIsSpeaking(true);
@@ -1816,7 +1882,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             {/* Player Controls Bar */}
             <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
               <button
-                onClick={isPlaying ? () => setIsPlaying(false) : handleStartVideo}
+                onClick={isPlaying ? handlePauseVideo : handleStartVideo}
                 className={`px-3 py-1 rounded-[4px] font-semibold text-xs transition flex items-center gap-1.5 ${
                   isPlaying
                     ? 'bg-[#C68A46] text-[#12151B]'
@@ -1830,7 +1896,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               <button
                 onClick={handleResetVideo}
                 className="p-1 rounded-[4px] bg-[#181C24] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
-                title="Reset to Stage 1"
+                title="Reset to Empty Board"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
@@ -1858,7 +1924,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               </button>
 
               <div className="flex items-center gap-0.5 px-1 text-xs font-mono">
-                {[1, 1.5, 2].map((s) => (
+                {[1, 1.25, 1.5].map((s) => (
                   <button
                     key={s}
                     onClick={() => setPlaybackSpeed(s)}
@@ -1876,13 +1942,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           {/* Timeline Progress Scrubber */}
           <div className="space-y-2">
             <div className="grid grid-cols-6 gap-2">
-              {reconstructionStages.map((stg, idx) => {
-                const isPast = idx < currentStep;
-                const isCurrent = idx === currentStep;
+              {reconstructionStages.slice(1).map((stg) => {
+                const stageNum = stg.stageNumber;
+                const isPast = stageNum < currentStep;
+                const isCurrent = stageNum === currentStep;
                 return (
                   <button
                     key={stg.stageNumber}
-                    onClick={() => handleScrub(idx)}
+                    onClick={() => handleScrub(stageNum)}
                     className={`h-2 rounded-[3px] transition-all duration-200 text-left relative overflow-hidden ${
                       isCurrent
                         ? 'bg-[#C68A46] ring-2 ring-[#C68A46]/40 shadow-sm'
@@ -1896,14 +1963,25 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               })}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-              <div className="flex items-center gap-2">
-                <span className="stamp-tag stamp-crimson px-1.5 py-0.5 text-[10px] font-bold">
-                  STAGE {currentStep + 1} OF {reconstructionStages.length}
-                </span>
-                <span className="font-semibold text-[#E8EAEE] tracking-wide font-sans text-xs">
-                  {currentStage.phaseTitle}
-                </span>
-              </div>
+              {currentStep === 0 ? (
+                <div className="flex items-center gap-2">
+                  <span className="stamp-tag stamp-brass px-1.5 py-0.5 text-[10px] font-bold">
+                    BOARD CLEARED
+                  </span>
+                  <span className="font-semibold text-[#E8EAEE] tracking-wide font-sans text-xs">
+                    Awaiting Investigation Recreation
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="stamp-tag stamp-crimson px-1.5 py-0.5 text-[10px] font-bold">
+                    STAGE {currentStep} OF 6
+                  </span>
+                  <span className="font-semibold text-[#E8EAEE] tracking-wide font-sans text-xs">
+                    {currentStage.phaseTitle}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-3 text-[11px] text-[#9AA3B2]">
                 <span>Timestamp: <strong className="text-[#E8EAEE] font-mono">{currentStage.timestamp}</strong></span>
                 <span>Exhibit: <strong className="text-[#C68A46] font-mono">{currentStage.evidence}</strong></span>
@@ -1911,7 +1989,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             </div>
           </div>
 
-          {/* Narration Subtitle Box */}
+          {/* Narration Subtitle Box with Voice Description */}
           <div className="bg-[#181C24] border border-[#2B313D] p-4 rounded-[5px] flex items-start gap-3 relative shadow-md">
             <div className="mt-1 shrink-0 flex items-center gap-1.5">
               {isSpeaking ? (
@@ -1926,14 +2004,20 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               )}
             </div>
             <div className="flex-1 space-y-1">
-              <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#787167]">
-                <span>Narrated Sequence Dispatch &bull; Phase {currentStep + 1}</span>
-                {isSpeaking && (
-                  <span className="text-[#C68A46] flex items-center gap-1 font-mono text-[10px]">
-                    <Volume2 className="w-3 h-3 animate-pulse" />
-                    Audio Synthesizer Active
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono uppercase tracking-wider text-[#787167]">
+                <span>Narrated Sequence Dispatch &bull; {currentStep === 0 ? 'Ready' : `Phase ${currentStep}`}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#C68A46] bg-[#12151B] px-2 py-0.5 rounded border border-[#2B313D] flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-[#C68A46]" />
+                    {getActiveVoiceDescription()}
                   </span>
-                )}
+                  {isSpeaking && (
+                    <span className="text-[#5FA876] flex items-center gap-1 font-mono text-[10px]">
+                      <Volume2 className="w-3 h-3 animate-pulse" />
+                      Speaking
+                    </span>
+                  )}
+                </div>
               </div>
               <p className="text-sm font-medium text-[#F4EFE6] leading-relaxed font-sans">
                 "{currentStage.narration}"
@@ -1941,173 +2025,243 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             </div>
           </div>
 
-          {/* LIVE GRAPH RECONSTRUCTION CANVAS: Entities and Lines Materialize One by One */}
-          <div className="bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[350px] relative overflow-x-auto select-none">
-            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#787167] bg-[#181C24] px-2 py-0.5 rounded-[3px] border border-[#2B313D] z-10 flex items-center gap-2">
-              <span>Phase {currentStep + 1}: {currentStage.phaseTitle}</span>
+          {/* LIVE GRAPH RECONSTRUCTION CANVAS: Zoomable, Pannable, with In-Place Elements */}
+          <div 
+            ref={reconContainerRef}
+            onMouseDown={handleReconMouseDown}
+            onMouseMove={handleReconMouseMove}
+            onMouseUp={handleReconMouseUp}
+            onMouseLeave={handleReconMouseUp}
+            className={`bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[410px] relative overflow-hidden select-none ${
+              isDraggingRecon ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
+          >
+            {/* Zoom Controls Toolbar */}
+            <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 bg-[#181C24]/95 backdrop-blur-sm border border-[#2B313D] p-1 rounded-[5px] text-xs font-mono shadow-lg">
+              <button
+                onClick={handleReconZoomOut}
+                className="p-1 rounded-[3px] hover:bg-[#232834] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                title="Zoom Out"
+              >
+                <ZoomOut className="w-3.5 h-3.5" />
+              </button>
+              <span className="px-1 text-[11px] text-[#C68A46] font-semibold min-w-[38px] text-center select-none">
+                {Math.round(reconZoom * 100)}%
+              </span>
+              <button
+                onClick={handleReconZoomIn}
+                className="p-1 rounded-[3px] hover:bg-[#232834] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                title="Zoom In"
+              >
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+              <div className="w-px h-3.5 bg-[#2B313D] mx-0.5" />
+              <button
+                onClick={handleReconResetZoom}
+                className="px-1.5 py-0.5 rounded-[3px] hover:bg-[#232834] text-[10px] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                title="Reset Zoom and Pan to Center"
+              >
+                Reset
+              </button>
+              <span className="hidden md:inline text-[9.5px] text-[#6B7382] border-l border-[#2B313D] pl-1.5 ml-0.5">
+                Scroll to Zoom &bull; Drag to Pan
+              </span>
+            </div>
+
+            {/* Stage & Count Status Badge */}
+            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#787167] bg-[#181C24]/95 backdrop-blur-sm px-2.5 py-1 rounded-[4px] border border-[#2B313D] z-10 flex items-center gap-2 shadow-lg">
+              <span>{currentStep === 0 ? 'Board Cleared' : `Phase ${currentStep}: ${currentStage.phaseTitle}`}</span>
               <span className="text-[#2B313D]">&bull;</span>
               <span className="text-[#C68A46]">{activeReplayNodes.length} Dossier Entities</span>
               <span className="text-[#2B313D]">&bull;</span>
               <span className="text-[#8B81C4]">{activeReplayEdges.length} Active Conduits</span>
             </div>
 
-            <svg className="w-full min-w-[940px] h-[390px]" viewBox="0 0 1180 440">
-              {/* Render Active Edges that have been built so far */}
-              {allGraphEdges.map((edge, i) => {
-                const isActive = activeReplayEdges.some(e => e.from === edge.from && e.to === edge.to);
-                if (!isActive) return null;
-
-                const srcNode = allGraphNodes.find(n => n.id === edge.from);
-                const tgtNode = allGraphNodes.find(n => n.id === edge.to);
-                if (!srcNode || !tgtNode) return null;
-
-                const midX = (srcNode.x + tgtNode.x) / 2;
-                const midY = (srcNode.y + tgtNode.y) / 2;
-                const labelWidth = Math.max(54, edge.label.length * 6.2 + 14);
-
-                return (
-                  <g key={i}>
-                    <line
-                      x1={srcNode.x}
-                      y1={srcNode.y}
-                      x2={tgtNode.x}
-                      y2={tgtNode.y}
-                      stroke={edge.color}
-                      strokeWidth={edge.strokeWidth || 1.8}
-                      strokeOpacity={0.85}
-                      className="line-draw-anim"
-                    />
-                    <rect
-                      x={midX - labelWidth / 2}
-                      y={midY - 8}
-                      width={labelWidth}
-                      height={16}
-                      rx={3}
-                      fill="#12151B"
-                      stroke="#2B313D"
-                      strokeWidth="0.75"
-                    />
-                    <text
-                      x={midX}
-                      y={midY + 3.5}
-                      textAnchor="middle"
-                      fill={edge.color}
-                      fontSize="8.5"
-                      fontFamily="Courier Prime, monospace"
-                      fontWeight="500"
-                      className="animate-in fade-in duration-300"
-                    >
-                      {edge.label}
+            <svg className="w-full h-[400px]" viewBox="0 0 1180 440" preserveAspectRatio="xMidYMid meet">
+              <g 
+                transform={`translate(${reconPan.x}, ${reconPan.y}) scale(${reconZoom})`}
+                style={{ 
+                  transformOrigin: '590px 220px', 
+                  transition: isDraggingRecon ? 'none' : 'transform 0.1s ease-out' 
+                }}
+              >
+                {/* Empty State Watermark: Displayed when Board is Initialized / Cleared */}
+                {activeReplayNodes.length === 0 && (
+                  <g transform="translate(590, 210)" className="pointer-events-none select-none">
+                    <circle r="44" fill="#181C24" stroke="#C68A46" strokeWidth="1.5" strokeDasharray="5 3" strokeOpacity="0.6" />
+                    <foreignObject x="-20" y="-20" width="40" height="40">
+                      <div className="w-full h-full flex items-center justify-center text-[#C68A46]">
+                        <Film className="w-7 h-7" />
+                      </div>
+                    </foreignObject>
+                    <text textAnchor="middle" y="70" fill="#E8EAEE" fontSize="13" fontWeight="600" fontFamily="Source Serif 4, serif">
+                      Investigation Evidence Board Cleared
+                    </text>
+                    <text textAnchor="middle" y="90" fill="#787167" fontSize="10.5" fontFamily="Courier Prime, monospace">
+                      Click "Play Reconstruction" above to generate live chronological graph and Indian English narration
                     </text>
                   </g>
-                );
-              })}
+                )}
 
-              {/* Render Active Nodes that have appeared so far */}
-              {allGraphNodes.map((node) => {
-                const isVisible = activeReplayNodes.includes(node.id);
-                if (!isVisible) return null;
+                {/* Render Active Edges that have been built so far */}
+                {allGraphEdges.map((edge, i) => {
+                  const isActive = activeReplayEdges.some(e => e.from === edge.from && e.to === edge.to);
+                  if (!isActive) return null;
 
-                const isNewlyAdded = newlyMaterializedNodes && newlyMaterializedNodes.includes(node.id);
-                const NodeIcon = node.icon;
-                const r = node.isBridge ? 20 : 16;
-                const boxWidth = node.isBridge ? 116 : 100;
+                  const srcNode = allGraphNodes.find(n => n.id === edge.from);
+                  const tgtNode = allGraphNodes.find(n => n.id === edge.to);
+                  if (!srcNode || !tgtNode) return null;
 
-                return (
-                  <g 
-                    key={node.id}
-                    transform={`translate(${node.x}, ${node.y})`}
-                    className="node-pop cursor-pointer"
-                    onClick={() => onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge })}
-                  >
-                    {/* Stage pulse ring around newly introduced entities */}
-                    {isNewlyAdded && (
-                      <circle
-                        r={r + 6}
-                        fill="none"
-                        stroke="#C68A46"
-                        strokeWidth="1.5"
-                        strokeDasharray="4 3"
-                        className="animate-spin"
-                        style={{ animationDuration: '6s' }}
+                  const midX = (srcNode.x + tgtNode.x) / 2;
+                  const midY = (srcNode.y + tgtNode.y) / 2;
+                  const labelWidth = Math.max(54, edge.label.length * 6.2 + 14);
+
+                  return (
+                    <g key={i}>
+                      <line
+                        x1={srcNode.x}
+                        y1={srcNode.y}
+                        x2={tgtNode.x}
+                        y2={tgtNode.y}
+                        stroke={edge.color}
+                        strokeWidth={edge.strokeWidth || 1.8}
+                        strokeOpacity={0.85}
+                        className="line-draw-anim"
                       />
-                    )}
+                      <rect
+                        x={midX - labelWidth / 2}
+                        y={midY - 8}
+                        width={labelWidth}
+                        height={16}
+                        rx={3}
+                        fill="#12151B"
+                        stroke="#2B313D"
+                        strokeWidth="0.75"
+                      />
+                      <text
+                        x={midX}
+                        y={midY + 3.5}
+                        textAnchor="middle"
+                        fill={edge.color}
+                        fontSize="8.5"
+                        fontFamily="Courier Prime, monospace"
+                        fontWeight="500"
+                        className="animate-in fade-in duration-300"
+                      >
+                        {edge.label}
+                      </text>
+                    </g>
+                  );
+                })}
 
-                    {/* Newly Materialized Phase Tag */}
-                    {isNewlyAdded && (
-                      <g transform={`translate(0, -${r + 7})`}>
-                        <rect
-                          x="-28"
-                          y="-9"
-                          width="56"
-                          height="12"
-                          rx="2"
-                          fill="#8B2626"
-                          stroke="#B83232"
-                          strokeWidth="0.5"
+                {/* Render Active Nodes: Placed strictly at (node.x, node.y) */}
+                {allGraphNodes.map((node) => {
+                  const isVisible = activeReplayNodes.includes(node.id);
+                  if (!isVisible) return null;
+
+                  const isNewlyAdded = newlyMaterializedNodes && newlyMaterializedNodes.includes(node.id);
+                  const NodeIcon = node.icon;
+                  const r = node.isBridge ? 20 : 16;
+                  const boxWidth = node.isBridge ? 116 : 100;
+
+                  return (
+                    <g 
+                      key={node.id}
+                      transform={`translate(${node.x}, ${node.y})`}
+                      className="cursor-pointer group"
+                      onClick={() => onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge })}
+                    >
+                      {/* Stage pulse ring around newly introduced entities */}
+                      {isNewlyAdded && (
+                        <circle
+                          r={r + 6}
+                          fill="none"
+                          stroke="#C68A46"
+                          strokeWidth="1.5"
+                          strokeDasharray="4 3"
+                          className="animate-spin"
+                          style={{ animationDuration: '6s' }}
                         />
+                      )}
+
+                      {/* Newly Materialized Phase Tag */}
+                      {isNewlyAdded && (
+                        <g transform={`translate(0, -${r + 7})`}>
+                          <rect
+                            x="-28"
+                            y="-9"
+                            width="56"
+                            height="12"
+                            rx="2"
+                            fill="#8B2626"
+                            stroke="#B83232"
+                            strokeWidth="0.5"
+                          />
+                          <text
+                            textAnchor="middle"
+                            y="-0.5"
+                            fill="#F4EFE6"
+                            fontSize="6.5"
+                            fontWeight="700"
+                            fontFamily="Courier Prime, monospace"
+                          >
+                            PHASE {currentStep}
+                          </text>
+                        </g>
+                      )}
+
+                      <g className="transition-transform duration-200 group-hover:scale-105">
+                        <circle
+                          r={r}
+                          fill="#181C24"
+                          stroke={node.color}
+                          strokeWidth={node.isBridge ? "2" : "1.5"}
+                        />
+
+                        <foreignObject 
+                          x={node.isBridge ? -9 : -8} 
+                          y={node.isBridge ? -9 : -8} 
+                          width={node.isBridge ? 18 : 16} 
+                          height={node.isBridge ? 18 : 16}
+                        >
+                          <NodeIcon className="w-full h-full" style={{ color: node.color }} />
+                        </foreignObject>
+
+                        <rect
+                          x={-boxWidth / 2}
+                          y={r + 3}
+                          width={boxWidth}
+                          height={24}
+                          rx={3}
+                          fill="#12151B"
+                          stroke={isNewlyAdded ? "#C68A46" : "#2B313D"}
+                          strokeWidth={isNewlyAdded ? "1" : "0.5"}
+                        />
+
                         <text
                           textAnchor="middle"
-                          y="-0.5"
-                          fill="#F4EFE6"
-                          fontSize="6.5"
-                          fontWeight="700"
+                          y={r + 13.5}
+                          fill="#E8EAEE"
+                          fontSize="9.5"
+                          fontWeight="600"
+                          fontFamily="IBM Plex Sans, sans-serif"
+                        >
+                          {node.label}
+                        </text>
+                        <text
+                          textAnchor="middle"
+                          y={r + 23}
+                          fill="#787167"
+                          fontSize="8"
                           fontFamily="Courier Prime, monospace"
                         >
-                          PHASE {currentStep + 1}
+                          {node.sub}
                         </text>
                       </g>
-                    )}
-
-                    <circle
-                      r={r}
-                      fill="#181C24"
-                      stroke={node.color}
-                      strokeWidth={node.isBridge ? "2" : "1.5"}
-                    />
-
-                    <foreignObject 
-                      x={node.isBridge ? -9 : -8} 
-                      y={node.isBridge ? -9 : -8} 
-                      width={node.isBridge ? 18 : 16} 
-                      height={node.isBridge ? 18 : 16}
-                    >
-                      <NodeIcon className="w-full h-full" style={{ color: node.color }} />
-                    </foreignObject>
-
-                    <rect
-                      x={-boxWidth / 2}
-                      y={r + 3}
-                      width={boxWidth}
-                      height={24}
-                      rx={3}
-                      fill="#12151B"
-                      stroke={isNewlyAdded ? "#C68A46" : "#2B313D"}
-                      strokeWidth={isNewlyAdded ? "1" : "0.5"}
-                    />
-
-                    <text
-                      textAnchor="middle"
-                      y={r + 13.5}
-                      fill="#E8EAEE"
-                      fontSize="9.5"
-                      fontWeight="600"
-                      fontFamily="IBM Plex Sans, sans-serif"
-                    >
-                      {node.label}
-                    </text>
-                    <text
-                      textAnchor="middle"
-                      y={r + 23}
-                      fill="#787167"
-                      fontSize="8"
-                      fontFamily="Courier Prime, monospace"
-                    >
-                      {node.sub}
-                    </text>
-                  </g>
-                );
-              })}
+                    </g>
+                  );
+                })}
+              </g>
             </svg>
           </div>
         </Card>
