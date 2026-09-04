@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, FileText, User, CreditCard, Radio, Laptop, Building2,
   Play, Pause, RotateCcw, Volume2, VolumeX, Scale, Sparkles, X, Info,
-  CheckCircle2, AlertTriangle, Film
+  CheckCircle2, AlertTriangle, Film, ZoomIn, ZoomOut, ArrowRight, ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from './ui/table';
 import { RAW_DATASET } from '../data/dataset';
 
@@ -19,6 +20,49 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const caseEvents = allEvents.filter(e => 
     e.case_id.includes(caseId) || e.case_id.includes('CASE-018 -> CASE-041')
   );
+
+  // Active workspace sub-tab: 'summary' (default), 'suspects', 'reconstruction', 'statutes'
+  const [activeTab, setActiveTab] = useState('summary');
+
+  // Zoom and pan state for the Interactive Entity Graph
+  const [graphZoom, setGraphZoom] = useState(1);
+  const [graphPan, setGraphPan] = useState({ x: 0, y: 0 });
+  const [isDraggingGraph, setIsDraggingGraph] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+
+  const handleGraphMouseDown = (e) => {
+    if (e.target.tagName === 'circle' || e.target.tagName === 'text' || e.target.tagName === 'path') {
+      return;
+    }
+    setIsDraggingGraph(true);
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      panX: graphPan.x,
+      panY: graphPan.y,
+    };
+  };
+
+  const handleGraphMouseMove = (e) => {
+    if (!isDraggingGraph) return;
+    const dx = e.clientX - dragStartRef.current.x;
+    const dy = e.clientY - dragStartRef.current.y;
+    setGraphPan({
+      x: dragStartRef.current.panX + dx,
+      y: dragStartRef.current.panY + dy,
+    });
+  };
+
+  const handleGraphMouseUp = () => {
+    setIsDraggingGraph(false);
+  };
+
+  const handleZoomIn = () => setGraphZoom(z => Math.min(2.5, +(z + 0.15).toFixed(2)));
+  const handleZoomOut = () => setGraphZoom(z => Math.max(0.5, +(z - 0.15).toFixed(2)));
+  const handleResetZoom = () => {
+    setGraphZoom(1);
+    setGraphPan({ x: 0, y: 0 });
+  };
 
   // Wikipedia-style tooltip hover state
   const [activeTooltip, setActiveTooltip] = useState(null);
@@ -337,6 +381,18 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const activeReplayNodes = stepNodes[Math.min(currentStep, stepNodes.length - 1)] || [];
   const activeReplayEdges = stepEdges[Math.min(currentStep, stepEdges.length - 1)] || [];
 
+  const selectedNodeData = selectedMapNode 
+    ? allGraphNodes.find(n => n.id === selectedMapNode)
+    : null;
+
+  const selectedSuspectInfo = selectedNodeData
+    ? primeSuspects.find(s => s.person_id === selectedNodeData.id)
+    : null;
+
+  const connectedEdgesCount = selectedMapNode
+    ? allGraphEdges.filter(e => e.from === selectedMapNode || e.to === selectedMapNode).length
+    : 0;
+
   return (
     <div className="max-w-7xl mx-auto py-5 px-4 space-y-5 font-sans">
       
@@ -412,626 +468,921 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       </Card>
 
       {/* ========================================================= */}
-      {/* SECTION 1: INVESTIGATION SUMMARY (CLEAN UNBOXED POINTS)   */}
+      {/* WORKSPACE SUB-TABS NAVIGATION BAR                         */}
       {/* ========================================================= */}
-      <Card className="p-5 space-y-3 relative">
-        <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
-          <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#C68A46]" />
-            <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Case Summary &amp; Investigation Briefing</h2>
-          </div>
-          <span className="text-[11px] text-[#6B7382] font-mono flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-[#C68A46]" />
-            Hover over highlighted tokens for instant evidence preview
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-3">
+        <TabsList className="bg-[#181C24]">
+          <TabsTrigger 
+            isActive={activeTab === 'summary'} 
+            onClick={() => setActiveTab('summary')}
+            className="flex items-center gap-2"
+          >
+            <Radio className="w-3.5 h-3.5" />
+            <span>Summary &amp; Entity Graph</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            isActive={activeTab === 'suspects'} 
+            onClick={() => setActiveTab('suspects')}
+            className="flex items-center gap-2"
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>Prime Suspects</span>
+            <Badge variant="brass" className="ml-1 px-1.5 py-0 text-[10px] leading-tight">
+              {primeSuspects.length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger 
+            isActive={activeTab === 'reconstruction'} 
+            onClick={() => setActiveTab('reconstruction')}
+            className="flex items-center gap-2"
+          >
+            <Film className="w-3.5 h-3.5" />
+            <span>Review Investigation</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            isActive={activeTab === 'statutes'} 
+            onClick={() => setActiveTab('statutes')}
+            className="flex items-center gap-2"
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Statutory Offences</span>
+            <Badge variant="green" className="ml-1 px-1.5 py-0 text-[10px] leading-tight">
+              {lawsBroken.length}
+            </Badge>
+          </TabsTrigger>
+        </TabsList>
+
+        <div className="flex items-center gap-2 text-xs text-[#6B7382] font-mono">
+          <span>Active View:</span>
+          <span className="text-[#C68A46] uppercase font-semibold">
+            {activeTab === 'summary' ? 'Split View (Graph + Briefing)' : activeTab}
           </span>
         </div>
+      </div>
 
-        {/* Unboxed points — natural readable dossier flow */}
-        <div className="space-y-3 text-xs text-[#9AA3B2] leading-relaxed pt-1">
-          <div className="flex items-start gap-2.5">
-            <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
-            <p>
-              Corporate finance treasury received an executive spoofing email prompting urgent vendor clearance via duplicate portal{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'DOMAIN-AUTH')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#6C93B8] hover:underline font-mono cursor-pointer border-b border-[#6C93B8]/50"
-              >
-                secure-zenithcorp-auth.com
-              </span>
-              . Rogue 2FA token intercepted by IP 198.51.100.45.
-            </p>
-          </div>
+      {/* ========================================================= */}
+      {/* SUB-TAB 1: SUMMARY & INTERACTIVE ENTITY GRAPH (SPLIT 2-COL) */}
+      {/* ========================================================= */}
+      {activeTab === 'summary' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          {/* LEFT COLUMN: ZOOMABLE INTERACTIVE ENTITY GRAPH (lg:col-span-7) */}
+          <div className="lg:col-span-7 space-y-3">
+            <Card className="p-4 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2B313D] pb-2.5">
+                <div className="flex items-center gap-2">
+                  <Radio className="w-4 h-4 text-[#C68A46]" />
+                  <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Interactive Entity Graph Map</h2>
+                </div>
 
-          <div className="flex items-start gap-2.5">
-            <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
-            <p>
-              Unauthorized RTGS debit of{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#E8EAEE] font-semibold hover:underline cursor-pointer border-b border-[#E8EAEE]/50"
-              >
-                ₹1,00,00,000 (One Crore INR)
-              </span>{' '}
-              executed from{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#4E9C93] font-mono hover:underline cursor-pointer border-b border-[#4E9C93]/50"
-              >
-                Zenith Corporate Account ACC-1001
-              </span>{' '}
-              into primary mule account{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'ACC-2201')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#C1655A] font-mono hover:underline cursor-pointer border-b border-[#C1655A]/50"
-              >
-                ACC-2201 (Suman Roy)
-              </span>
-              , registered under{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'EVD-001')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#5FA876] font-mono font-medium hover:underline cursor-pointer border-b border-[#5FA876]/50"
-              >
-                FIR 0018/2026 (EVD-001)
-              </span>
-              .
-            </p>
-          </div>
+                {/* Canvas Zoom & Pan Controls */}
+                <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[4px] text-xs font-mono">
+                  <button
+                    onClick={handleZoomOut}
+                    className="p-1 rounded-[3px] text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F] transition"
+                    title="Zoom Out"
+                  >
+                    <ZoomOut className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="px-1 text-[11px] text-[#C68A46] font-semibold min-w-[42px] text-center">
+                    {Math.round(graphZoom * 100)}%
+                  </span>
+                  <button
+                    onClick={handleZoomIn}
+                    className="p-1 rounded-[3px] text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F] transition"
+                    title="Zoom In"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" />
+                  </button>
+                  <div className="w-px h-3.5 bg-[#2B313D] mx-0.5" />
+                  <button
+                    onClick={handleResetZoom}
+                    className="px-2 py-0.5 rounded-[3px] text-[10px] text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F] transition"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
 
-          <div className="flex items-start gap-2.5">
-            <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
-            <p>
-              Within 25 minutes, Account ACC-2201 split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
-            </p>
-          </div>
-
-          <div className="flex items-start gap-2.5">
-            <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
-            <p>
-              Mule accounts funneled ₹70,00,000 into broker account ACC-7702 controlled by{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'PER-103')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#C68A46] font-semibold hover:underline cursor-pointer border-b border-[#C68A46]/50"
-              >
-                Devrat Sharma (PER-103, alias Broker D)
-              </span>
-              . Cell Tower Dump{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'EVD-003')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#6C93B8] font-mono hover:underline cursor-pointer border-b border-[#6C93B8]/50"
-              >
-                T-4401 (EVD-003)
-              </span>{' '}
-              confirmed simultaneous telephony coordination with syndicate chief Rajesh Verma and technician Kunal Shah.
-            </p>
-          </div>
-
-          <div className="flex items-start gap-2.5">
-            <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
-            <p>
-              Broker Devrat Sharma executed crucial transfer{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'TXN_552')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#8B81C4] font-mono font-semibold hover:underline cursor-pointer border-b border-[#8B81C4]/50"
-              >
-                TXN_552 (₹50,00,000)
-              </span>{' '}
-              into Mumbai shell front company{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'ACC-7701')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#8B81C4] font-mono hover:underline cursor-pointer border-b border-[#8B81C4]/50"
-              >
-                Apex Trade Solutions (ACC-7701)
-              </span>
-              , directly bridging Case #018 with Mumbai Operation ShadowLedge under{' '}
-              <span
-                onMouseEnter={(e) => handleWikiHover(e, 'EVD-002')}
-                onMouseLeave={handleWikiLeave}
-                className="text-[#5FA876] font-mono font-medium hover:underline cursor-pointer border-b border-[#5FA876]/50"
-              >
-                FIU Advisory STR-88912 (EVD-002)
-              </span>
-              .
-            </p>
-          </div>
-        </div>
-
-        {/* Minimal Dossier Popover Tooltip with Framer Motion */}
-        <AnimatePresence>
-          {activeTooltip && (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.96, y: 4 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.12 }}
-              style={{ top: `${tooltipPos.y}px`, left: `${Math.min(tooltipPos.x, window.innerWidth - 380)}px` }}
-              className="fixed z-50 w-80 bg-[#181C24] border border-[#2B313D] rounded-[5px] p-3.5 space-y-2 text-xs pointer-events-none shadow-none"
-            >
-              <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
-                <Badge variant="brass">
-                  {activeTooltip.type}
-                </Badge>
-                <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  {activeTooltip.status}
+              {/* Legend and User Guidance Strip */}
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-[#6B7382]">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1.5 text-[#9AA3B2]">
+                    <span className="w-2 h-2 rounded-full bg-[#6C93B8]" /> Person / Info
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[#9AA3B2]">
+                    <span className="w-2 h-2 rounded-full bg-[#4E9C93]" /> Account / Mule
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[#8B81C4] font-medium">
+                    <span className="w-2 h-2 rounded-full bg-[#8B81C4]" /> Cross-Case Link
+                  </span>
+                </div>
+                <span className="text-[10px] text-[#6B7382]">
+                  Drag to pan &bull; Scroll or +/- to zoom &bull; Click node to expand
                 </span>
               </div>
 
-              <div>
-                <h4 className="font-serif font-bold text-[#E8EAEE] text-sm">{activeTooltip.title}</h4>
-                <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">{activeTooltip.docId}</p>
+              {/* Zoomable / Pannable SVG Canvas Container */}
+              <div 
+                className="bg-[#12151B] border border-[#2B313D] rounded-[5px] h-[390px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
+                onMouseDown={handleGraphMouseDown}
+                onMouseMove={handleGraphMouseMove}
+                onMouseUp={handleGraphMouseUp}
+                onMouseLeave={handleGraphMouseUp}
+                onWheel={(e) => {
+                  e.preventDefault();
+                  if (e.deltaY < 0) handleZoomIn();
+                  else handleZoomOut();
+                }}
+              >
+                <svg className="w-full h-full" viewBox="0 0 940 330">
+                  <g 
+                    transform={`translate(${graphPan.x}, ${graphPan.y}) scale(${graphZoom})`}
+                    style={{ 
+                      transformOrigin: 'center center', 
+                      transition: isDraggingGraph ? 'none' : 'transform 0.15s ease-out' 
+                    }}
+                  >
+                    {/* Render Connecting Lines with Anti-Collision Mid-Stroke Labels */}
+                    {allGraphEdges.map((edge, i) => {
+                      const srcNode = allGraphNodes.find(n => n.id === edge.from);
+                      const tgtNode = allGraphNodes.find(n => n.id === edge.to);
+                      if (!srcNode || !tgtNode) return null;
+
+                      const isHighlighted = selectedMapNode 
+                        ? (selectedMapNode === srcNode.id || selectedMapNode === tgtNode.id) 
+                        : true;
+                      const opacity = isHighlighted ? 1 : 0.22;
+                      const midX = (srcNode.x + tgtNode.x) / 2;
+                      const midY = (srcNode.y + tgtNode.y) / 2;
+
+                      return (
+                        <g key={i} style={{ opacity, transition: 'opacity 0.2s' }}>
+                          <line
+                            x1={srcNode.x}
+                            y1={srcNode.y}
+                            x2={tgtNode.x}
+                            y2={tgtNode.y}
+                            stroke={edge.color}
+                            strokeWidth={edge.strokeWidth || 1.6}
+                            strokeOpacity={0.75}
+                            className={edge.animated ? 'animated-stream' : ''}
+                          />
+                          {/* Label Backdrop Pill so text never clashes with lines */}
+                          <rect
+                            x={midX - 34}
+                            y={midY - 14}
+                            width="68"
+                            height="13"
+                            rx="2"
+                            fill="#12151B"
+                            fillOpacity="0.9"
+                          />
+                          <text
+                            x={midX}
+                            y={midY - 4}
+                            textAnchor="middle"
+                            fill={edge.color}
+                            fontSize="8.5"
+                            fontFamily="IBM Plex Mono, monospace"
+                            fontWeight="500"
+                            opacity={0.95}
+                          >
+                            {edge.label}
+                          </text>
+                        </g>
+                      );
+                    })}
+
+                    {/* Render Clean Entity Nodes with Backdrops to Guarantee No Overwritten Text */}
+                    {allGraphNodes.map((node) => {
+                      const isSelected = selectedMapNode === node.id;
+                      const NodeIcon = node.icon;
+                      const r = isSelected ? (node.isBridge ? 22 : 18) : (node.isBridge ? 19 : 15);
+
+                      return (
+                        <g 
+                          key={node.id}
+                          transform={`translate(${node.x}, ${node.y})`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedMapNode(selectedMapNode === node.id ? null : node.id);
+                          }}
+                          className="cursor-pointer group"
+                        >
+                          {/* Halo ring for clicked / expanded entity */}
+                          {isSelected && (
+                            <circle
+                              r={r + 5}
+                              fill="none"
+                              stroke="#C68A46"
+                              strokeWidth="1.5"
+                              strokeDasharray="3 3"
+                              opacity="0.85"
+                            />
+                          )}
+
+                          <circle
+                            r={r}
+                            fill="#181C24"
+                            stroke={isSelected ? "#E8EAEE" : node.color}
+                            strokeWidth={node.isBridge || isSelected ? "2" : "1.5"}
+                          />
+
+                          <foreignObject 
+                            x={node.isBridge ? -9 : -8} 
+                            y={node.isBridge ? -9 : -8} 
+                            width={node.isBridge ? 18 : 16} 
+                            height={node.isBridge ? 18 : 16}
+                            className="pointer-events-none"
+                          >
+                            <NodeIcon className="w-full h-full" style={{ color: isSelected ? '#E8EAEE' : node.color }} />
+                          </foreignObject>
+
+                          {/* Opaque backdrop pill behind text to ensure zero overwritten or obscured text */}
+                          <rect
+                            x="-60"
+                            y={r + 4}
+                            width="120"
+                            height="25"
+                            rx="3"
+                            fill="#12151B"
+                            fillOpacity="0.94"
+                            stroke={isSelected ? "#C68A46" : "#2B313D"}
+                            strokeWidth={isSelected ? "1" : "0.5"}
+                          />
+
+                          <text
+                            textAnchor="middle"
+                            y={r + 15}
+                            fill="#E8EAEE"
+                            fontSize="10"
+                            fontWeight="600"
+                            fontFamily="IBM Plex Sans, sans-serif"
+                          >
+                            {node.label}
+                          </text>
+                          <text
+                            textAnchor="middle"
+                            y={r + 25}
+                            fill={isSelected ? "#C68A46" : "#6B7382"}
+                            fontSize="8"
+                            fontFamily="IBM Plex Mono, monospace"
+                          >
+                            {node.sub}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </g>
+                </svg>
               </div>
+            </Card>
 
-              <p className="text-[11px] text-[#9AA3B2] leading-snug bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
-                "{activeTooltip.snippet}"
-              </p>
+            {/* Click-to-Expand Entity Inspector Drawer (Stays Expanded!) */}
+            {selectedNodeData ? (
+              <Card className="p-4 bg-[#181C24] border border-[#C68A46]/70 rounded-[5px] space-y-3">
+                <div className="flex items-center justify-between border-b border-[#2B313D] pb-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant={selectedNodeData.isBridge ? "violet" : "brass"}>
+                      {selectedNodeData.type.toUpperCase()}
+                    </Badge>
+                    <h3 className="font-serif font-bold text-[#E8EAEE] text-sm">
+                      {selectedNodeData.label}
+                    </h3>
+                    <span className="text-xs font-mono text-[#6B7382]">
+                      ({selectedNodeData.id})
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={() => onSelectEntity({ 
+                        person_id: selectedNodeData.id, 
+                        name: selectedNodeData.label, 
+                        role: selectedNodeData.sub, 
+                        is_bridge: selectedNodeData.isBridge 
+                      })}
+                      variant="brass"
+                      size="sm"
+                      className="text-xs"
+                    >
+                      <span>Inspect Full Dossier</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Button>
+                    <button 
+                      onClick={() => setSelectedMapNode(null)}
+                      className="p-1 rounded-[3px] text-[#6B7382] hover:text-[#E8EAEE] hover:bg-[#1F2430]"
+                      title="Collapse entity drawer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
 
-              <div className="pt-1 text-[10px] font-mono text-[#6B7382] flex items-center justify-between">
-                <span>SHA-256:</span>
-                <span className="text-[#C68A46] truncate max-w-[190px]">{activeTooltip.hash}</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Card>
-
-      {/* ========================================================= */}
-      {/* SECTION 2: AESTHETIC KNOWLEDGE GRAPH (ENTITIES & LINES)   */}
-      {/* ========================================================= */}
-      <Card className="p-5 space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
-          <div>
-            <div className="flex items-center gap-2">
-              <Radio className="w-4 h-4 text-[#C68A46]" />
-              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Case Entity Graph Map</h2>
-            </div>
-            <p className="text-xs text-[#9AA3B2] mt-0.5 font-sans">
-              Topological knowledge graph mapping entities, financial conduits, and cross-case bridge conduits.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="flex items-center gap-1.5 text-[#9AA3B2]">
-              <span className="w-2 h-2 rounded-full bg-[#6C93B8]" /> Person / Info
-            </span>
-            <span className="flex items-center gap-1.5 text-[#9AA3B2]">
-              <span className="w-2 h-2 rounded-full bg-[#4E9C93]" /> Account / Verified
-            </span>
-            <span className="flex items-center gap-1.5 text-[#8B81C4] font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#8B81C4]" /> Cross-Case Link
-            </span>
-          </div>
-        </div>
-
-        {/* Clean, Aesthetic SVG Canvas */}
-        <div className="bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[360px] relative overflow-x-auto select-none">
-          <svg className="w-full min-w-[940px] h-[330px]" viewBox="0 0 940 330">
-            {/* Render Connecting Lines (No bulky badge boxes) */}
-            {allGraphEdges.map((edge, i) => {
-              const srcNode = allGraphNodes.find(n => n.id === edge.from);
-              const tgtNode = allGraphNodes.find(n => n.id === edge.to);
-              if (!srcNode || !tgtNode) return null;
-
-              const isHighlighted = selectedMapNode ? (selectedMapNode === srcNode.id || selectedMapNode === tgtNode.id) : true;
-              const opacity = isHighlighted ? 1 : 0.2;
-              const midX = (srcNode.x + tgtNode.x) / 2;
-              const midY = (srcNode.y + tgtNode.y) / 2;
-
-              return (
-                <g key={i} style={{ opacity, transition: 'opacity 0.2s' }}>
-                  <line
-                    x1={srcNode.x}
-                    y1={srcNode.y}
-                    x2={tgtNode.x}
-                    y2={tgtNode.y}
-                    stroke={edge.color}
-                    strokeWidth={edge.strokeWidth || 1.6}
-                    strokeOpacity={0.75}
-                    className={edge.animated ? 'animated-stream' : ''}
-                  />
-                  {/* Subtle Inline Label directly on the stroke */}
-                  <text
-                    x={midX}
-                    y={midY - 5}
-                    textAnchor="middle"
-                    fill={edge.color}
-                    fontSize="9"
-                    fontFamily="IBM Plex Mono, monospace"
-                    fontWeight="500"
-                    opacity={0.9}
-                  >
-                    {edge.label}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Render Clean Entity Nodes */}
-            {allGraphNodes.map((node) => {
-              const isSelected = selectedMapNode === node.id;
-              const NodeIcon = node.icon;
-              return (
-                <g 
-                  key={node.id}
-                  transform={`translate(${node.x}, ${node.y})`}
-                  onClick={() => {
-                    setSelectedMapNode(selectedMapNode === node.id ? null : node.id);
-                    onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge });
-                  }}
-                  className="cursor-pointer group"
-                >
-                  <circle
-                    r={node.isBridge ? "20" : "16"}
-                    fill="#181C24"
-                    stroke={isSelected ? "#E8EAEE" : node.color}
-                    strokeWidth={node.isBridge ? "2" : "1.5"}
-                  />
-
-                  <foreignObject 
-                    x={node.isBridge ? -9 : -8} 
-                    y={node.isBridge ? -9 : -8} 
-                    width={node.isBridge ? 18 : 16} 
-                    height={node.isBridge ? 18 : 16}
-                  >
-                    <NodeIcon className="w-full h-full" style={{ color: node.color }} />
-                  </foreignObject>
-
-                  {/* Clean text label directly beneath (NO black box wrapper) */}
-                  <text
-                    textAnchor="middle"
-                    y={node.isBridge ? "32" : "28"}
-                    fill="#E8EAEE"
-                    fontSize="11"
-                    fontWeight="600"
-                    fontFamily="IBM Plex Sans, sans-serif"
-                  >
-                    {node.label}
-                  </text>
-                  <text
-                    textAnchor="middle"
-                    y={node.isBridge ? "44" : "40"}
-                    fill="#6B7382"
-                    fontSize="9"
-                    fontFamily="IBM Plex Mono, monospace"
-                  >
-                    {node.sub}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-      </Card>
-
-      {/* ========================================================= */}
-      {/* SECTION 3: LIVE RECONSTRUCTION (DYNAMIC GRAPH GENERATION) */}
-      {/* ========================================================= */}
-      <Card className="p-5 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
-          <div>
-            <div className="flex items-center gap-2">
-              <Film className="w-4 h-4 text-[#C68A46]" />
-              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Review Investigation</h2>
-            </div>
-            <p className="text-xs text-[#9AA3B2] mt-0.5">
-              Chronological incident reconstruction and topological entity graph sequence.
-            </p>
-          </div>
-
-          {/* Player Controls Bar */}
-          <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
-            <button
-              onClick={isPlaying ? () => setIsPlaying(false) : handleStartVideo}
-              className={`px-3 py-1 rounded-[4px] font-semibold text-xs transition flex items-center gap-1.5 ${
-                isPlaying
-                  ? 'bg-[#C68A46] text-[#12151B]'
-                  : 'bg-[#C68A46] text-[#12151B] hover:bg-[#D49855]'
-              }`}
-            >
-              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-              <span>{isPlaying ? 'Pause' : currentStep === 0 ? 'Play Reconstruction' : 'Resume'}</span>
-            </button>
-
-            <button
-              onClick={handleResetVideo}
-              className="p-1 rounded-[4px] bg-[#181C24] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
-              title="Reset"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              onClick={() => setVoiceAudio(!voiceAudio)}
-              className={`p-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 ${
-                voiceAudio ? 'bg-[#181C24] text-[#C68A46] border-[#2B313D]' : 'bg-[#181C24] text-[#6B7382] border-[#2B313D]'
-              }`}
-              title="Toggle Voice"
-            >
-              {voiceAudio ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline text-[11px]">{voiceAudio ? 'Voice ON' : 'Muted'}</span>
-            </button>
-
-            <div className="flex items-center gap-0.5 px-1 text-xs font-mono">
-              {[1, 1.5, 2].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setPlaybackSpeed(s)}
-                  className={`px-1.5 py-0.2 rounded-[3px] text-[10px] font-medium ${
-                    playbackSpeed === s ? 'bg-[#C68A46] text-[#12151B] font-bold' : 'text-[#6B7382] hover:text-[#E8EAEE]'
-                  }`}
-                >
-                  {s}x
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Timeline Progress Scrubber */}
-        <div className="space-y-1">
-          <div className="grid grid-cols-6 gap-1.5">
-            {caseEvents.map((evt, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleScrub(idx)}
-                className={`h-1.5 rounded-[2px] transition-all duration-150 ${
-                  idx <= currentStep ? 'bg-[#C68A46]' : 'bg-[#1F2430] hover:bg-[#2B313D]'
-                }`}
-                title={`Event ${idx + 1}: ${evt.timestamp}`}
-              />
-            ))}
-          </div>
-          <div className="flex items-center justify-between text-[11px] font-mono text-[#6B7382]">
-            <span>Event {currentStep + 1} of {caseEvents.length}: {caseEvents[currentStep]?.timestamp}</span>
-            <span>Source: <strong className="text-[#9AA3B2]">{caseEvents[currentStep]?.evidence_reference}</strong></span>
-          </div>
-        </div>
-
-        {/* Narration Subtitle Box */}
-        <div className="bg-[#1F2430] border border-[#2B313D] p-3.5 rounded-[5px] flex items-start gap-3">
-          <div className="mt-0.5 shrink-0">
-            {isPlaying && voiceAudio ? (
-              <div className="flex items-center gap-0.5 h-4">
-                <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
-                <span className="w-0.5 bg-[#6C93B8] rounded-full wave-bar" />
-                <span className="w-0.5 bg-[#5FA876] rounded-full wave-bar" />
-                <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
-              </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div>
+                    <span className="text-[#6B7382] block text-[10px] font-mono">ROLE / ENTITY TYPE</span>
+                    <span className="text-[#E8EAEE] font-medium mt-0.5 block">{selectedNodeData.sub}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#6B7382] block text-[10px] font-mono">CONDUIT CONNECTIONS</span>
+                    <span className="text-[#4E9C93] font-mono font-medium mt-0.5 block">
+                      {connectedEdgesCount} Active Link{connectedEdgesCount !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  {selectedSuspectInfo ? (
+                    <>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono">PHONE &amp; CITY</span>
+                        <span className="text-[#E8EAEE] font-mono text-[11px] mt-0.5 block">
+                          {selectedSuspectInfo.phone} ({selectedSuspectInfo.location})
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono">RISK INDEX</span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className={`font-mono font-bold ${selectedSuspectInfo.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
+                            {selectedSuspectInfo.risk_score}%
+                          </span>
+                          <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
+                            <div 
+                              className={`h-full ${selectedSuspectInfo.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
+                              style={{ width: `${selectedSuspectInfo.risk_score}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono">NODE CLASSIFICATION</span>
+                        <span className="text-[#9AA3B2] font-mono mt-0.5 block">
+                          {selectedNodeData.isBridge ? 'Cross-Jurisdiction Conductor' : 'Direct Financial Node'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono">JURISDICTION LINK</span>
+                        <span className="text-[#8B81C4] font-mono mt-0.5 block">
+                          {selectedNodeData.isBridge ? 'NCR - Mumbai Nexus' : 'NCR Cyber PS'}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </Card>
             ) : (
-              <span className="w-2 h-2 rounded-full bg-[#C68A46] block" />
+              <div className="p-3 bg-[#181C24] border border-dashed border-[#2B313D] rounded-[5px] flex items-center justify-between text-xs text-[#6B7382] font-mono">
+                <span>Click any node on the graph to expand its details and pin it</span>
+                <span className="text-[#C68A46]">10 Topological Entities</span>
+              </div>
             )}
           </div>
-          <p className="text-sm font-medium text-[#E8EAEE] leading-relaxed font-sans">
-            "{caseEvents[currentStep]?.narration}"
-          </p>
-        </div>
 
-        {/* LIVE GRAPH RECONSTRUCTION CANVAS: Entities and Lines Materialize One by One */}
-        <div className="bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[350px] relative overflow-x-auto select-none">
-          <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#6B7382] bg-[#181C24] px-2 py-0.5 rounded-[3px] border border-[#2B313D] z-10">
-            Materialized Graph: {activeReplayNodes.length} Nodes &bull; {activeReplayEdges.length} Conduits Active
-          </div>
-
-          <svg className="w-full min-w-[940px] h-[330px]" viewBox="0 0 940 330">
-            {/* Render Active Edges that have been built so far */}
-            {allGraphEdges.map((edge, i) => {
-              const isActive = activeReplayEdges.some(e => e.from === edge.from && e.to === edge.to);
-              if (!isActive) return null;
-
-              const srcNode = allGraphNodes.find(n => n.id === edge.from);
-              const tgtNode = allGraphNodes.find(n => n.id === edge.to);
-              if (!srcNode || !tgtNode) return null;
-
-              const midX = (srcNode.x + tgtNode.x) / 2;
-              const midY = (srcNode.y + tgtNode.y) / 2;
-
-              return (
-                <g key={i}>
-                  <line
-                    x1={srcNode.x}
-                    y1={srcNode.y}
-                    x2={tgtNode.x}
-                    y2={tgtNode.y}
-                    stroke={edge.color}
-                    strokeWidth={edge.strokeWidth || 1.8}
-                    strokeOpacity={0.8}
-                    className="line-draw-anim"
-                  />
-                  <text
-                    x={midX}
-                    y={midY - 5}
-                    textAnchor="middle"
-                    fill={edge.color}
-                    fontSize="9"
-                    fontFamily="IBM Plex Mono, monospace"
-                    fontWeight="500"
-                    className="animate-in fade-in duration-300"
-                  >
-                    {edge.label}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Render Active Nodes that have appeared so far */}
-            {allGraphNodes.map((node) => {
-              const isVisible = activeReplayNodes.includes(node.id);
-              if (!isVisible) return null;
-
-              const NodeIcon = node.icon;
-              return (
-                <g 
-                  key={node.id}
-                  transform={`translate(${node.x}, ${node.y})`}
-                  className="node-pop cursor-pointer"
-                  onClick={() => onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge })}
-                >
-                  <circle
-                    r={node.isBridge ? "20" : "16"}
-                    fill="#181C24"
-                    stroke={node.color}
-                    strokeWidth={node.isBridge ? "2" : "1.5"}
-                  />
-
-                  <foreignObject 
-                    x={node.isBridge ? -9 : -8} 
-                    y={node.isBridge ? -9 : -8} 
-                    width={node.isBridge ? 18 : 16} 
-                    height={node.isBridge ? 18 : 16}
-                  >
-                    <NodeIcon className="w-full h-full" style={{ color: node.color }} />
-                  </foreignObject>
-
-                  <text
-                    textAnchor="middle"
-                    y={node.isBridge ? "32" : "28"}
-                    fill="#E8EAEE"
-                    fontSize="11"
-                    fontWeight="600"
-                    fontFamily="IBM Plex Sans, sans-serif"
-                  >
-                    {node.label}
-                  </text>
-                  <text
-                    textAnchor="middle"
-                    y={node.isBridge ? "44" : "40"}
-                    fill="#6B7382"
-                    fontSize="9"
-                    fontFamily="IBM Plex Mono, monospace"
-                  >
-                    {node.sub}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-      </Card>
-
-      {/* ========================================================= */}
-      {/* SECTION 4: SUSPECTS ROSTER (CLEAN MINIMAL LIST TABLE)      */}
-      {/* ========================================================= */}
-      <Card className="p-5 space-y-3">
-        <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
-          <div className="flex items-center gap-2">
-            <User className="w-4 h-4 text-[#C68A46]" />
-            <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Prime Suspects Roster</h2>
-          </div>
-          <span className="text-xs font-mono text-[#6B7382]">
-            {primeSuspects.length} Identified Persons of Interest
-          </span>
-        </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>SUSPECT IDENTITY</TableHead>
-              <TableHead>ALIAS</TableHead>
-              <TableHead>OPERATIONAL ROLE</TableHead>
-              <TableHead>PHONE &amp; LOCATION</TableHead>
-              <TableHead>PAN</TableHead>
-              <TableHead>RISK INDEX</TableHead>
-              <TableHead className="text-right">ACTION</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {primeSuspects.map((suspect) => (
-              <TableRow key={suspect.person_id}>
-                <TableCell className="font-medium text-[#E8EAEE]">
-                  {suspect.name}
-                </TableCell>
-                <TableCell className="font-mono text-[#C68A46]">
-                  "{suspect.alias}"
-                </TableCell>
-                <TableCell>
-                  {suspect.is_bridge ? (
-                    <Badge variant="violet">
-                      {suspect.role} (Bridge Broker)
-                    </Badge>
-                  ) : (
-                    suspect.role
-                  )}
-                </TableCell>
-                <TableCell className="font-mono text-[11px]">
-                  <span className="text-[#E8EAEE] block">{suspect.phone}</span>
-                  <span className="text-[#6B7382]">{suspect.location}</span>
-                </TableCell>
-                <TableCell className="font-mono text-[11px]">
-                  {suspect.pan || 'N/A'}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
-                      {suspect.risk_score}%
-                    </span>
-                    <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
-                      <div 
-                        className={`h-full ${suspect.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
-                        style={{ width: `${suspect.risk_score}%` }}
-                      />
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    onClick={() => onSelectEntity(suspect)}
-                    variant="secondary"
-                    size="sm"
-                  >
-                    Inspect
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
-
-      {/* ========================================================= */}
-      {/* SECTION 5: STATUTORY VIOLATIONS & LAWS BROKEN             */}
-      {/* ========================================================= */}
-      <Card className="p-5 space-y-3">
-        <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
-          <div className="flex items-center gap-2">
-            <Scale className="w-4 h-4 text-[#5FA876]" />
-            <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Statutory Criminal Law Violations</h2>
-          </div>
-          <Badge variant="green">
-            {lawsBroken.length} Substantiated Sections
-          </Badge>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-          {lawsBroken.map((law, idx) => (
-            <div
-              key={idx}
-              className="bg-[#1F2430] border border-[#2B313D] rounded-[5px] p-3.5 space-y-1.5 text-xs"
-            >
-              <div className="flex items-center justify-between">
-                <Badge variant="brass">
-                  {law.act}
+          {/* RIGHT COLUMN: POINT-WISE CASE SUMMARY & INVESTIGATION BRIEFING (lg:col-span-5) */}
+          <div className="lg:col-span-5 space-y-3">
+            <Card className="p-5 space-y-3.5 relative">
+              <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-[#C68A46]" />
+                  <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Case Summary &amp; Briefing</h2>
+                </div>
+                <Badge variant="green">
+                  Verified FIR
                 </Badge>
-                <span className="text-[10px] font-mono text-[#5FA876]">
-                  {law.penalty}
-                </span>
               </div>
-              <h4 className="font-serif font-semibold text-[#E8EAEE] text-sm">{law.section}: {law.title}</h4>
-              <p className="text-[#9AA3B2] leading-relaxed">{law.description}</p>
-              <p className="text-[11px] font-mono text-[#6B7382] pt-1 border-t border-[#2B313D]">
-                Proof: <strong className="text-[#E8EAEE]">{law.evidenceRef}</strong>
+
+              <p className="text-[11px] text-[#6B7382] font-mono flex items-center gap-1.5 pb-1">
+                <Info className="w-3.5 h-3.5 text-[#C68A46]" />
+                Hover over highlighted tokens for instant evidence preview
+              </p>
+
+              {/* Point-wise natural readable dossier flow */}
+              <div className="space-y-3 text-xs text-[#9AA3B2] leading-relaxed">
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Corporate finance treasury received an executive spoofing email prompting urgent vendor clearance via duplicate portal{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'DOMAIN-AUTH')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#6C93B8] hover:underline font-mono cursor-pointer border-b border-[#6C93B8]/50"
+                    >
+                      secure-zenithcorp-auth.com
+                    </span>
+                    . Rogue 2FA token intercepted by IP 198.51.100.45.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Unauthorized RTGS debit of{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#E8EAEE] font-semibold hover:underline cursor-pointer border-b border-[#E8EAEE]/50"
+                    >
+                      ₹1,00,00,000 (One Crore INR)
+                    </span>{' '}
+                    executed from{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#4E9C93] font-mono hover:underline cursor-pointer border-b border-[#4E9C93]/50"
+                    >
+                      Zenith Corporate Account ACC-1001
+                    </span>{' '}
+                    into primary mule account{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'ACC-2201')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#C1655A] font-mono hover:underline cursor-pointer border-b border-[#C1655A]/50"
+                    >
+                      ACC-2201 (Suman Roy)
+                    </span>
+                    , registered under{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'EVD-001')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#5FA876] font-mono font-medium hover:underline cursor-pointer border-b border-[#5FA876]/50"
+                    >
+                      FIR 0018/2026 (EVD-001)
+                    </span>
+                    .
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Within 25 minutes, Account ACC-2201 split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Mule accounts funneled ₹70,00,000 into broker account ACC-7702 controlled by{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'PER-103')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#C68A46] font-semibold hover:underline cursor-pointer border-b border-[#C68A46]/50"
+                    >
+                      Devrat Sharma (PER-103, alias Broker D)
+                    </span>
+                    . Cell Tower Dump{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'EVD-003')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#6C93B8] font-mono hover:underline cursor-pointer border-b border-[#6C93B8]/50"
+                    >
+                      T-4401 (EVD-003)
+                    </span>{' '}
+                    confirmed simultaneous telephony coordination with syndicate chief Rajesh Verma and technician Kunal Shah.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <p>
+                    Broker Devrat Sharma executed crucial transfer{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'TXN_552')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#8B81C4] font-mono font-semibold hover:underline cursor-pointer border-b border-[#8B81C4]/50"
+                    >
+                      TXN_552 (₹50,00,000)
+                    </span>{' '}
+                    into Mumbai shell front company{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'ACC-7701')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#8B81C4] font-mono hover:underline cursor-pointer border-b border-[#8B81C4]/50"
+                    >
+                      Apex Trade Solutions (ACC-7701)
+                    </span>
+                    , directly bridging Case #018 with Mumbai Operation ShadowLedge under{' '}
+                    <span
+                      onMouseEnter={(e) => handleWikiHover(e, 'EVD-002')}
+                      onMouseLeave={handleWikiLeave}
+                      className="text-[#5FA876] font-mono font-medium hover:underline cursor-pointer border-b border-[#5FA876]/50"
+                    >
+                      FIU Advisory STR-88912 (EVD-002)
+                    </span>
+                    .
+                  </p>
+                </div>
+              </div>
+
+              {/* Dossier Quick Key Metrics Strip */}
+              <div className="pt-3 border-t border-[#2B313D] grid grid-cols-3 gap-2 text-[11px] font-mono">
+                <div>
+                  <span className="text-[#6B7382] block text-[10px]">2FA IP</span>
+                  <span className="text-[#6C93B8]">198.51.100.45</span>
+                </div>
+                <div>
+                  <span className="text-[#6B7382] block text-[10px]">PRIMARY MULE</span>
+                  <span className="text-[#4E9C93]">ACC-2201</span>
+                </div>
+                <div>
+                  <span className="text-[#6B7382] block text-[10px]">BRIDGE TARGET</span>
+                  <span className="text-[#8B81C4]">CASE-041 (MUM)</span>
+                </div>
+              </div>
+
+              {/* Wikipedia Popover Tooltip with Framer Motion */}
+              <AnimatePresence>
+                {activeTooltip && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.96, y: 4 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.12 }}
+                    style={{ top: `${tooltipPos.y}px`, left: `${Math.min(tooltipPos.x, window.innerWidth - 380)}px` }}
+                    className="fixed z-50 w-80 bg-[#181C24] border border-[#2B313D] rounded-[5px] p-3.5 space-y-2 text-xs pointer-events-none shadow-none"
+                  >
+                    <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
+                      <Badge variant="brass">
+                        {activeTooltip.type}
+                      </Badge>
+                      <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        {activeTooltip.status}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h4 className="font-serif font-bold text-[#E8EAEE] text-sm">{activeTooltip.title}</h4>
+                      <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">{activeTooltip.docId}</p>
+                    </div>
+
+                    <p className="text-[11px] text-[#9AA3B2] leading-snug bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
+                      "{activeTooltip.snippet}"
+                    </p>
+
+                    <div className="pt-1 text-[10px] font-mono text-[#6B7382] flex items-center justify-between">
+                      <span>SHA-256:</span>
+                      <span className="text-[#C68A46] truncate max-w-[190px]">{activeTooltip.hash}</span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Card>
+          </div>
+
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* SUB-TAB 2: PRIME SUSPECTS ROSTER                          */}
+      {/* ========================================================= */}
+      {activeTab === 'suspects' && (
+        <Card className="p-5 space-y-3">
+          <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-[#C68A46]" />
+              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Prime Suspects Roster</h2>
+            </div>
+            <span className="text-xs font-mono text-[#6B7382]">
+              {primeSuspects.length} Identified Persons of Interest
+            </span>
+          </div>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>SUSPECT IDENTITY</TableHead>
+                <TableHead>ALIAS</TableHead>
+                <TableHead>OPERATIONAL ROLE</TableHead>
+                <TableHead>PHONE &amp; LOCATION</TableHead>
+                <TableHead>PAN</TableHead>
+                <TableHead>RISK INDEX</TableHead>
+                <TableHead className="text-right">ACTION</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {primeSuspects.map((suspect) => (
+                <TableRow key={suspect.person_id}>
+                  <TableCell className="font-medium text-[#E8EAEE]">
+                    {suspect.name}
+                  </TableCell>
+                  <TableCell className="font-mono text-[#C68A46]">
+                    "{suspect.alias}"
+                  </TableCell>
+                  <TableCell>
+                    {suspect.is_bridge ? (
+                      <Badge variant="violet">
+                        {suspect.role} (Bridge Broker)
+                      </Badge>
+                    ) : (
+                      suspect.role
+                    )}
+                  </TableCell>
+                  <TableCell className="font-mono text-[11px]">
+                    <span className="text-[#E8EAEE] block">{suspect.phone}</span>
+                    <span className="text-[#6B7382]">{suspect.location}</span>
+                  </TableCell>
+                  <TableCell className="font-mono text-[11px]">
+                    {suspect.pan || 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
+                        {suspect.risk_score}%
+                      </span>
+                      <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
+                        <div 
+                          className={`h-full ${suspect.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
+                          style={{ width: `${suspect.risk_score}%` }}
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      onClick={() => onSelectEntity(suspect)}
+                      variant="secondary"
+                      size="sm"
+                    >
+                      Inspect
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      )}
+
+      {/* ========================================================= */}
+      {/* SUB-TAB 3: REVIEW INVESTIGATION (DYNAMIC GRAPH VIDEO)     */}
+      {/* ========================================================= */}
+      {activeTab === 'reconstruction' && (
+        <Card className="p-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
+            <div>
+              <div className="flex items-center gap-2">
+                <Film className="w-4 h-4 text-[#C68A46]" />
+                <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Review Investigation</h2>
+              </div>
+              <p className="text-xs text-[#9AA3B2] mt-0.5">
+                Chronological incident reconstruction and topological entity graph sequence.
               </p>
             </div>
-          ))}
-        </div>
-      </Card>
+
+            {/* Player Controls Bar */}
+            <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
+              <button
+                onClick={isPlaying ? () => setIsPlaying(false) : handleStartVideo}
+                className={`px-3 py-1 rounded-[4px] font-semibold text-xs transition flex items-center gap-1.5 ${
+                  isPlaying
+                    ? 'bg-[#C68A46] text-[#12151B]'
+                    : 'bg-[#C68A46] text-[#12151B] hover:bg-[#D49855]'
+                }`}
+              >
+                {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                <span>{isPlaying ? 'Pause' : currentStep === 0 ? 'Play Reconstruction' : 'Resume'}</span>
+              </button>
+
+              <button
+                onClick={handleResetVideo}
+                className="p-1 rounded-[4px] bg-[#181C24] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                title="Reset"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={() => setVoiceAudio(!voiceAudio)}
+                className={`p-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 ${
+                  voiceAudio ? 'bg-[#181C24] text-[#C68A46] border-[#2B313D]' : 'bg-[#181C24] text-[#6B7382] border-[#2B313D]'
+                }`}
+                title="Toggle Voice"
+              >
+                {voiceAudio ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+                <span className="hidden sm:inline text-[11px]">{voiceAudio ? 'Voice ON' : 'Muted'}</span>
+              </button>
+
+              <div className="flex items-center gap-0.5 px-1 text-xs font-mono">
+                {[1, 1.5, 2].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setPlaybackSpeed(s)}
+                    className={`px-1.5 py-0.2 rounded-[3px] text-[10px] font-medium ${
+                      playbackSpeed === s ? 'bg-[#C68A46] text-[#12151B] font-bold' : 'text-[#6B7382] hover:text-[#E8EAEE]'
+                    }`}
+                  >
+                    {s}x
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Timeline Progress Scrubber */}
+          <div className="space-y-1">
+            <div className="grid grid-cols-6 gap-1.5">
+              {caseEvents.map((evt, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleScrub(idx)}
+                  className={`h-1.5 rounded-[2px] transition-all duration-150 ${
+                    idx <= currentStep ? 'bg-[#C68A46]' : 'bg-[#1F2430] hover:bg-[#2B313D]'
+                  }`}
+                  title={`Event ${idx + 1}: ${evt.timestamp}`}
+                />
+              ))}
+            </div>
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#6B7382]">
+              <span>Event {currentStep + 1} of {caseEvents.length}: {caseEvents[currentStep]?.timestamp}</span>
+              <span>Source: <strong className="text-[#9AA3B2]">{caseEvents[currentStep]?.evidence_reference}</strong></span>
+            </div>
+          </div>
+
+          {/* Narration Subtitle Box */}
+          <div className="bg-[#1F2430] border border-[#2B313D] p-3.5 rounded-[5px] flex items-start gap-3">
+            <div className="mt-0.5 shrink-0">
+              {isPlaying && voiceAudio ? (
+                <div className="flex items-center gap-0.5 h-4">
+                  <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#6C93B8] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#5FA876] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
+                </div>
+              ) : (
+                <span className="w-2 h-2 rounded-full bg-[#C68A46] block" />
+              )}
+            </div>
+            <p className="text-sm font-medium text-[#E8EAEE] leading-relaxed font-sans">
+              "{caseEvents[currentStep]?.narration}"
+            </p>
+          </div>
+
+          {/* LIVE GRAPH RECONSTRUCTION CANVAS: Entities and Lines Materialize One by One */}
+          <div className="bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[350px] relative overflow-x-auto select-none">
+            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#6B7382] bg-[#181C24] px-2 py-0.5 rounded-[3px] border border-[#2B313D] z-10">
+              Materialized Graph: {activeReplayNodes.length} Nodes &bull; {activeReplayEdges.length} Conduits Active
+            </div>
+
+            <svg className="w-full min-w-[940px] h-[330px]" viewBox="0 0 940 330">
+              {/* Render Active Edges that have been built so far */}
+              {allGraphEdges.map((edge, i) => {
+                const isActive = activeReplayEdges.some(e => e.from === edge.from && e.to === edge.to);
+                if (!isActive) return null;
+
+                const srcNode = allGraphNodes.find(n => n.id === edge.from);
+                const tgtNode = allGraphNodes.find(n => n.id === edge.to);
+                if (!srcNode || !tgtNode) return null;
+
+                const midX = (srcNode.x + tgtNode.x) / 2;
+                const midY = (srcNode.y + tgtNode.y) / 2;
+
+                return (
+                  <g key={i}>
+                    <line
+                      x1={srcNode.x}
+                      y1={srcNode.y}
+                      x2={tgtNode.x}
+                      y2={tgtNode.y}
+                      stroke={edge.color}
+                      strokeWidth={edge.strokeWidth || 1.8}
+                      strokeOpacity={0.8}
+                      className="line-draw-anim"
+                    />
+                    <rect
+                      x={midX - 34}
+                      y={midY - 14}
+                      width="68"
+                      height="13"
+                      rx="2"
+                      fill="#12151B"
+                      fillOpacity="0.9"
+                    />
+                    <text
+                      x={midX}
+                      y={midY - 4}
+                      textAnchor="middle"
+                      fill={edge.color}
+                      fontSize="9"
+                      fontFamily="IBM Plex Mono, monospace"
+                      fontWeight="500"
+                      className="animate-in fade-in duration-300"
+                    >
+                      {edge.label}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Render Active Nodes that have appeared so far */}
+              {allGraphNodes.map((node) => {
+                const isVisible = activeReplayNodes.includes(node.id);
+                if (!isVisible) return null;
+
+                const NodeIcon = node.icon;
+                const r = node.isBridge ? 20 : 16;
+                return (
+                  <g 
+                    key={node.id}
+                    transform={`translate(${node.x}, ${node.y})`}
+                    className="node-pop cursor-pointer"
+                    onClick={() => onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge })}
+                  >
+                    <circle
+                      r={r}
+                      fill="#181C24"
+                      stroke={node.color}
+                      strokeWidth={node.isBridge ? "2" : "1.5"}
+                    />
+
+                    <foreignObject 
+                      x={node.isBridge ? -9 : -8} 
+                      y={node.isBridge ? -9 : -8} 
+                      width={node.isBridge ? 18 : 16} 
+                      height={node.isBridge ? 18 : 16}
+                    >
+                      <NodeIcon className="w-full h-full" style={{ color: node.color }} />
+                    </foreignObject>
+
+                    <rect
+                      x="-60"
+                      y={r + 4}
+                      width="120"
+                      height="25"
+                      rx="3"
+                      fill="#12151B"
+                      fillOpacity="0.94"
+                      stroke="#2B313D"
+                      strokeWidth="0.5"
+                    />
+
+                    <text
+                      textAnchor="middle"
+                      y={r + 15}
+                      fill="#E8EAEE"
+                      fontSize="10"
+                      fontWeight="600"
+                      fontFamily="IBM Plex Sans, sans-serif"
+                    >
+                      {node.label}
+                    </text>
+                    <text
+                      textAnchor="middle"
+                      y={r + 25}
+                      fill="#6B7382"
+                      fontSize="8"
+                      fontFamily="IBM Plex Mono, monospace"
+                    >
+                      {node.sub}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+        </Card>
+      )}
+
+      {/* ========================================================= */}
+      {/* SUB-TAB 4: STATUTORY VIOLATIONS & LAWS BROKEN             */}
+      {/* ========================================================= */}
+      {activeTab === 'statutes' && (
+        <Card className="p-5 space-y-3">
+          <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+            <div className="flex items-center gap-2">
+              <Scale className="w-4 h-4 text-[#5FA876]" />
+              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Statutory Criminal Law Violations</h2>
+            </div>
+            <Badge variant="green">
+              {lawsBroken.length} Substantiated Sections
+            </Badge>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            {lawsBroken.map((law, idx) => (
+              <div
+                key={idx}
+                className="bg-[#1F2430] border border-[#2B313D] rounded-[5px] p-3.5 space-y-1.5 text-xs"
+              >
+                <div className="flex items-center justify-between">
+                  <Badge variant="brass">
+                    {law.act}
+                  </Badge>
+                  <span className="text-[10px] font-mono text-[#5FA876]">
+                    {law.penalty}
+                  </span>
+                </div>
+                <h4 className="font-serif font-semibold text-[#E8EAEE] text-sm">{law.section}: {law.title}</h4>
+                <p className="text-[#9AA3B2] leading-relaxed">{law.description}</p>
+                <p className="text-[11px] font-mono text-[#6B7382] pt-1 border-t border-[#2B313D]">
+                  Proof: <strong className="text-[#E8EAEE]">{law.evidenceRef}</strong>
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* ========================================================= */}
       {/* SECTION 63B BSA CERTIFICATE MODAL                         */}
