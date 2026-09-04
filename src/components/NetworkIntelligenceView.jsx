@@ -12,7 +12,7 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
       community: "Community 1 & 2 Bridge",
       assessment: "Exhibits high network-brokerage characteristics bridging isolated clusters; primary bridge between Delhi & Mumbai rings.",
       status_badge: "Key Bridge Broker Node",
-      badge_color: "text-brand-amber border-brand-amber/40 bg-brand-amber/10"
+      badge_color: "text-[#8B81C4] border-[#8B81C4]/40 bg-[#1F2430]"
     },
     {
       person_id: "PER-101",
@@ -23,7 +23,7 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
       community: "NCR Phishing Syndicate",
       assessment: "Central technical command node within NCR Cluster; multiple inbound telephony and device associations.",
       status_badge: "Syndicate Operator",
-      badge_color: "text-brand-rose border-brand-rose/40 bg-brand-rose/10"
+      badge_color: "text-[#C1655A] border-[#C1655A]/40 bg-[#1F2430]"
     },
     {
       person_id: "PER-105",
@@ -34,7 +34,7 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
       community: "Mumbai Hawala Ring",
       assessment: "Primary liquidity routing node in Western region; coordinates bullion clearing transactions.",
       status_badge: "Hawala Clearing Node",
-      badge_color: "text-brand-rose border-brand-rose/40 bg-brand-rose/10"
+      badge_color: "text-[#C1655A] border-[#C1655A]/40 bg-[#1F2430]"
     },
     {
       person_id: "PER-107",
@@ -45,30 +45,30 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
       community: "Mumbai Hawala Ring",
       assessment: "Director of corporate front company (Apex Trade Solutions); high transactional velocity.",
       status_badge: "Shell Company Director",
-      badge_color: "text-slate-300 border-white/20 bg-white/5"
+      badge_color: "text-[#9AA3B2] border-[#2B313D] bg-[#1F2430]"
     }
   ];
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-5 font-sans">
       {/* Header Banner */}
-      <div className="panel rounded-xl p-5 shadow-sm">
-        <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="dossier-card p-5">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-brand-primary/15 text-brand-primary border border-brand-primary/30">
+              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-[4px] bg-[#1F2430] text-[#C68A46] border border-[#2B313D]">
                 GRAPH ANALYTICS
               </span>
-              <h2 className="text-lg font-bold text-white tracking-tight">Graph Centrality &amp; Community Analytics</h2>
+              <h2 className="text-xl font-serif font-bold text-[#E8EAEE] tracking-tight">Centrality &amp; Community Detection</h2>
             </div>
-            <p className="text-xs text-brand-slate mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs text-[#9AA3B2] mt-1 max-w-2xl leading-relaxed">
               Powered by Neo4j Graph Data Science (GDS) &amp; NetworkX. Computes Betweenness Centrality, PageRank, Degree Centrality, and Louvain Community Detection across multi-jurisdiction criminal networks.
             </p>
           </div>
 
-          <div className="bg-dark-bg border border-dark-border px-3 py-1.5 rounded-lg text-xs text-brand-slate flex items-center gap-2 font-mono">
-            <AlertTriangle className="w-3.5 h-3.5 text-brand-amber" />
-            <span><strong className="text-white">Neutrality Protocol:</strong> Evidence-neutral analytical terminology enforced.</span>
+          <div className="bg-[#1F2430] border border-[#2B313D] px-3 py-1.5 rounded-[5px] text-xs text-[#9AA3B2] flex items-center gap-2 font-mono">
+            <AlertTriangle className="w-3.5 h-3.5 text-[#C68A46]" />
+            <span><strong className="text-[#E8EAEE]">Neutrality Protocol:</strong> Evidence-neutral analytical terminology enforced.</span>
           </div>
         </div>
       </div>
@@ -76,44 +76,44 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
       {/* Analytics Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {analytics.map((item) => (
-          <div key={item.person_id} className="panel rounded-xl p-5 space-y-4">
+          <div key={item.person_id} className="dossier-card p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-dark-bg text-brand-accent border border-dark-border">
+                <span className="text-xs font-mono font-semibold px-1.5 py-0.2 rounded-[3px] bg-[#1F2430] text-[#6C93B8] border border-[#2B313D]">
                   {item.person_id}
                 </span>
-                <h3 className="text-base font-bold text-white mt-1.5">{item.name}</h3>
+                <h3 className="text-base font-serif font-bold text-[#E8EAEE] mt-1">{item.name}</h3>
               </div>
-              <span className={`text-xs font-medium px-2.5 py-0.5 rounded border ${item.badge_color}`}>
+              <span className={`text-xs font-mono px-2 py-0.5 rounded-[4px] border ${item.badge_color}`}>
                 {item.status_badge}
               </span>
             </div>
 
             {/* Metrics Breakdown Grid */}
             <div className="grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="bg-dark-bg p-2.5 rounded-lg border border-dark-border">
-                <span className="text-[10px] text-dark-slate block font-medium">Betweenness</span>
-                <span className="font-mono font-bold text-brand-amber text-xs">{item.betweenness}</span>
+              <div className="bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
+                <span className="text-[10px] text-[#6B7382] block font-mono">Betweenness</span>
+                <span className="font-mono font-bold text-[#C68A46] text-xs">{item.betweenness}</span>
               </div>
-              <div className="bg-dark-bg p-2.5 rounded-lg border border-dark-border">
-                <span className="text-[10px] text-dark-slate block font-medium">PageRank</span>
-                <span className="font-mono font-bold text-slate-200 text-xs">{item.pagerank}</span>
+              <div className="bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
+                <span className="text-[10px] text-[#6B7382] block font-mono">PageRank</span>
+                <span className="font-mono font-bold text-[#E8EAEE] text-xs">{item.pagerank}</span>
               </div>
-              <div className="bg-dark-bg p-2.5 rounded-lg border border-dark-border">
-                <span className="text-[10px] text-dark-slate block font-medium">Connectivity</span>
-                <span className="font-mono font-bold text-brand-accent text-xs">{item.degree}</span>
+              <div className="bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
+                <span className="text-[10px] text-[#6B7382] block font-mono">Degree</span>
+                <span className="font-mono font-bold text-[#6C93B8] text-xs">{item.degree}</span>
               </div>
             </div>
 
-            <p className="text-xs text-brand-slate leading-relaxed bg-dark-bg p-3 rounded-lg border border-dark-border">
+            <p className="text-xs text-[#9AA3B2] leading-relaxed bg-[#1F2430] p-2.5 rounded-[4px] border border-[#2B313D]">
               "{item.assessment}"
             </p>
 
             <div className="pt-1 flex items-center justify-between">
-              <span className="text-xs text-dark-slate">Cluster: <strong className="text-slate-300">{item.community}</strong></span>
+              <span className="text-xs text-[#6B7382]">Cluster: <strong className="text-[#E8EAEE]">{item.community}</strong></span>
               <button
                 onClick={() => onSelectEntity({ person_id: item.person_id, name: item.name, role: item.status_badge, is_bridge: item.person_id === 'PER-103' })}
-                className="text-xs font-semibold text-brand-accent hover:underline flex items-center gap-1"
+                className="text-xs font-medium text-[#C68A46] hover:underline flex items-center gap-1"
               >
                 <span>Inspect Entity</span>
                 <ArrowRight className="w-3.5 h-3.5" />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, FolderGit2, GitBranch, Home, LogOut, User, Lock, Sparkles, Building2 } from 'lucide-react';
+import { Shield, FolderGit2, GitBranch, Home, LogOut } from 'lucide-react';
 import LoginView from './components/LoginView';
 import HomePortal from './components/HomePortal';
 import CasesView from './components/CasesView';
@@ -34,42 +34,42 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg text-slate-300 flex flex-col font-sans selection:bg-brand-primary selection:text-white">
-      {/* Sleek Minimalist Top Header */}
-      <header className="sticky top-0 z-40 bg-dark-surface/95 backdrop-blur-md border-b border-dark-border">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-[#12151B] text-[#E8EAEE] flex flex-col font-sans selection:bg-[#C68A46] selection:text-[#12151B]">
+      {/* Dossier Top Navigation Header */}
+      <header className="sticky top-0 z-40 bg-[#181C24] border-b border-[#2B313D]">
+        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
           
-          {/* Logo & Platform Tagline */}
+          {/* Logo & Dossier Identifier */}
           <div 
             onClick={() => setActiveView('home')} 
             className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-lg bg-brand-primary/15 border border-brand-primary/30 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-brand-primary" />
+            <div className="w-8 h-8 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#C68A46]">
+              <Shield className="w-4 h-4 text-[#C68A46]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold tracking-tight text-white group-hover:text-brand-accent transition">
+                <span className="text-base font-serif font-semibold tracking-tight text-[#E8EAEE] group-hover:text-[#C68A46] transition">
                   CrimeNexus
                 </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-slate-300 border border-white/10">
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[4px] bg-[#1F2430] text-[#6B7382] border border-[#2B313D]">
                   SIH26189
                 </span>
               </div>
-              <p className="text-[11px] text-dark-slate">
-                Criminal Network Intelligence
+              <p className="text-[11px] text-[#6B7382] font-sans">
+                Criminal Network Analysis Platform
               </p>
             </div>
           </div>
 
-          {/* Clean Minimalist Navigation */}
-          <nav className="flex items-center gap-1 bg-dark-bg border border-dark-border p-1 rounded-lg">
+          {/* Unopinionated Shadcn-style Tabs */}
+          <nav className="flex items-center gap-1 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
             <button
               onClick={() => setActiveView('home')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
                 activeView === 'home'
-                  ? 'bg-white/10 text-white'
-                  : 'text-brand-slate hover:text-white hover:bg-white/5'
+                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
+                  : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
               }`}
             >
               <Home className="w-3.5 h-3.5" />
@@ -78,10 +78,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveView('cases')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
                 activeView === 'cases' || activeView === 'case_workspace'
-                  ? 'bg-white/10 text-white'
-                  : 'text-brand-slate hover:text-white hover:bg-white/5'
+                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
+                  : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
               }`}
             >
               <FolderGit2 className="w-3.5 h-3.5" />
@@ -90,10 +90,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveView('intelligence')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
                 activeView === 'intelligence'
-                  ? 'bg-white/10 text-white'
-                  : 'text-brand-slate hover:text-white hover:bg-white/5'
+                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
+                  : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
               }`}
             >
               <GitBranch className="w-3.5 h-3.5" />
@@ -105,19 +105,19 @@ export default function App() {
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block text-xs">
               <div className="flex items-center justify-end gap-1.5">
-                <span className="font-medium text-white">{session.officerName}</span>
-                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-dark-subtle text-brand-slate border border-dark-border">
+                <span className="font-medium text-[#E8EAEE]">{session.officerName}</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[4px] bg-[#1F2430] text-[#9AA3B2] border border-[#2B313D]">
                   {session.badgeNumber}
                 </span>
               </div>
-              <span className="text-[11px] text-dark-slate block truncate max-w-[200px]">
+              <span className="text-[11px] text-[#6B7382] block truncate max-w-[200px]">
                 {session.isSuperAdmin ? 'Super-Admin' : session.regionName}
               </span>
             </div>
 
             <button
               onClick={() => setSession(null)}
-              className="p-2 rounded-lg bg-dark-subtle hover:bg-dark-panel border border-dark-border text-brand-slate hover:text-white transition flex items-center gap-1.5 text-xs font-medium"
+              className="p-1.5 rounded-[5px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[#9AA3B2] hover:text-[#E8EAEE] transition flex items-center gap-1.5 text-xs font-medium"
               title="Switch Jurisdiction or Log Out"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -157,9 +157,7 @@ export default function App() {
             caseId={activeCaseId}
             onBack={() => setActiveView('cases')}
             onSelectEntity={setSelectedEntity}
-            onAskCopilot={(query) => {
-              // Floating copilot can handle this
-            }}
+            onAskCopilot={(query) => {}}
           />
         )}
 
@@ -173,7 +171,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Movable / Draggable Floating AI Copilot Widget */}
+      {/* Movable Floating AI Copilot Widget */}
       <FloatingAICopilot
         activeCaseId={activeCaseId}
         onSelectEntity={setSelectedEntity}
@@ -197,9 +195,9 @@ export default function App() {
         />
       )}
 
-      {/* Technical Footer */}
-      <footer className="border-t border-dark-border bg-dark-surface py-3 text-center text-xs text-dark-slate">
-        CrimeNexus (SIH26189) &bull; Criminal Network Analysis Platform &bull; Row-Level Security Enforced &bull; SHA-256 Ledger Verified
+      {/* Dossier Footer */}
+      <footer className="border-t border-[#2B313D] bg-[#181C24] py-3 text-center text-xs text-[#6B7382] font-mono">
+        CRIMENEXUS // SIH26189 &bull; ROW-LEVEL SECURITY ENFORCED &bull; SHA-256 FABRIC REGISTRY VERIFIED
       </footer>
     </div>
   );

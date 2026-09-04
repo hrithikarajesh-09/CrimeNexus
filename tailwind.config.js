@@ -7,27 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: {
-          bg: '#0B0D13',
-          surface: '#11141D',
-          panel: '#151924',
-          subtle: '#1C2230',
-          border: 'rgba(255, 255, 255, 0.08)',
-          borderHover: 'rgba(255, 255, 255, 0.16)',
+        bg: '#12151B',
+        panel: {
+          DEFAULT: '#181C24',
+          subtle: '#1F2430',
         },
-        brand: {
-          primary: '#6366F1',   // Refined Indigo
-          accent: '#38BDF8',    // Ice Blue
-          amber: '#F59E0B',     // Warm Amber (Bridge Broker)
-          emerald: '#10B981',   // Verified Green
-          rose: '#F43F5E',      // Alert Red
-          slate: '#94A3B8',
-        }
+        border: '#2B313D',
+        ink: {
+          DEFAULT: '#E8EAEE',
+          dim: '#9AA3B2',
+          faint: '#6B7382',
+        },
+        brass: {
+          DEFAULT: '#C68A46',
+          hover: '#D49855',
+          muted: 'rgba(198, 138, 70, 0.15)',
+        },
+        steel: '#6C93B8',
+        teal: '#4E9C93',
+        violet: '#8B81C4',
+        red: '#C1655A',
+        green: '#5FA876',
+      },
+      borderRadius: {
+        DEFAULT: '5px',
+        sm: '4px',
+        md: '5px',
+        lg: '6px',
+        xl: '6px',
+        '2xl': '6px',
+        '3xl': '6px',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-        display: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+        serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+        sans: ['"IBM Plex Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'JetBrains Mono', 'monospace'],
       }
     },
   },

@@ -8,26 +8,26 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
   );
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 space-y-6 font-sans">
+    <div className="max-w-5xl mx-auto py-6 px-4 space-y-5 font-sans">
       {/* Welcome & Session Header */}
-      <div className="panel rounded-xl p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div className="dossier-card p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-brand-primary/15 text-brand-primary border border-brand-primary/30">
+            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-[4px] bg-[#1F2430] text-[#C68A46] border border-[#2B313D]">
               {session.isSuperAdmin ? 'SUPER-ADMIN SCOPE' : session.regionId}
             </span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-2 tracking-tight">
+          <h2 className="text-xl font-serif font-bold text-[#E8EAEE] mt-2 tracking-tight">
             Welcome, {session.officerName}
           </h2>
-          <p className="text-xs text-dark-slate mt-0.5">
-            Badge: <span className="text-brand-accent font-mono">{session.badgeNumber}</span> &bull; Jurisdiction: <strong className="text-white">{session.regionName}</strong>
+          <p className="text-xs text-[#6B7382] mt-0.5">
+            Badge: <span className="text-[#C68A46] font-mono">{session.badgeNumber}</span> &bull; Jurisdiction: <strong className="text-[#E8EAEE]">{session.regionName}</strong>
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-dark-bg border border-dark-border px-3 py-1.5 rounded-lg text-xs">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span className="font-mono text-[11px] text-brand-slate">RLS Active &bull; SHA-256 Verified</span>
+        <div className="flex items-center gap-2 bg-[#1F2430] border border-[#2B313D] px-3 py-1.5 rounded-[5px] text-xs">
+          <ShieldCheck className="w-4 h-4 text-[#5FA876]" />
+          <span className="font-mono text-[11px] text-[#9AA3B2]">RLS Active &bull; SHA-256 Ledger Verified</span>
         </div>
       </div>
 
@@ -36,30 +36,30 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
         {/* Card 1: Cases Workspace */}
         <div 
           onClick={onNavigateToCases}
-          className="panel panel-hover rounded-xl p-6 transition duration-150 cursor-pointer flex flex-col justify-between"
+          className="dossier-card dossier-card-hover p-5 transition duration-150 cursor-pointer flex flex-col justify-between"
         >
           <div>
-            <div className="w-10 h-10 rounded-lg bg-brand-primary/15 border border-brand-primary/30 flex items-center justify-center text-brand-primary mb-4">
+            <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#C68A46] mb-3.5">
               <FolderGit2 className="w-5 h-5" />
             </div>
 
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-serif font-bold text-[#E8EAEE]">
                 Cases Workspace
               </h3>
-              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-dark-bg text-brand-accent border border-dark-border">
+              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-[4px] bg-[#1F2430] text-[#C68A46] border border-[#2B313D]">
                 {accessibleCases.length} Active
               </span>
             </div>
 
-            <p className="text-xs text-brand-slate leading-relaxed mt-2">
-              Browse investigations in chronological order. Access unboxed case narratives, clean entity knowledge graphs, structured suspect tables, and documentary live video reconstructions.
+            <p className="text-xs text-[#9AA3B2] leading-relaxed mt-2">
+              Chronological case registry (most recent first). Access unboxed case briefings, topological entity graphs, suspect tables, and live documentary reconstructions.
             </p>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-dark-border flex items-center justify-between">
-            <span className="text-xs text-dark-slate font-medium">Chronological Registry</span>
-            <div className="flex items-center gap-1 text-xs font-semibold text-brand-accent">
+          <div className="mt-5 pt-3.5 border-t border-[#2B313D] flex items-center justify-between">
+            <span className="text-xs text-[#6B7382] font-mono">Registry Index</span>
+            <div className="flex items-center gap-1 text-xs font-semibold text-[#C68A46]">
               <span>Open Cases</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
@@ -69,30 +69,30 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
         {/* Card 2: Network Intelligence */}
         <div 
           onClick={onNavigateToIntelligence}
-          className="panel panel-hover rounded-xl p-6 transition duration-150 cursor-pointer flex flex-col justify-between"
+          className="dossier-card dossier-card-hover p-5 transition duration-150 cursor-pointer flex flex-col justify-between"
         >
           <div>
-            <div className="w-10 h-10 rounded-lg bg-brand-amber/15 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-4">
+            <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#8B81C4] mb-3.5">
               <GitBranch className="w-5 h-5" />
             </div>
 
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-serif font-bold text-[#E8EAEE]">
                 Network Intelligence
               </h3>
-              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-dark-bg text-brand-amber border border-dark-border">
+              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-[4px] bg-[#1F2430] text-[#8B81C4] border border-[#2B313D]">
                 Macro Graph
               </span>
             </div>
 
-            <p className="text-xs text-brand-slate leading-relaxed mt-2">
-              Global graph analytics powered by Neo4j GDS &amp; NetworkX. Inspect Betweenness Centrality, PageRank, and Louvain community detection to expose broker nodes connecting isolated regional syndicates.
+            <p className="text-xs text-[#9AA3B2] leading-relaxed mt-2">
+              Cross-case graph analytics powered by Neo4j GDS &amp; NetworkX. Calculate Betweenness Centrality, PageRank, and Louvain community detection to expose bridge broker nodes.
             </p>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-dark-border flex items-center justify-between">
-            <span className="text-xs text-brand-amber font-medium">1 Key Bridge Broker Flagged</span>
-            <div className="flex items-center gap-1 text-xs font-semibold text-brand-amber">
+          <div className="mt-5 pt-3.5 border-t border-[#2B313D] flex items-center justify-between">
+            <span className="text-xs text-[#8B81C4] font-medium">1 Bridge Broker Identified</span>
+            <div className="flex items-center gap-1 text-xs font-semibold text-[#8B81C4]">
               <span>Inspect Centrality</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
@@ -101,25 +101,25 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
       </div>
 
       {/* Quick Access to Primary Demonstration Case */}
-      <div className="panel rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-lg bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-white font-mono font-bold text-xs">
+      <div className="dossier-card p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#E8EAEE] font-mono font-bold text-xs">
             018
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-semibold text-brand-accent uppercase">PRIMARY DEMO</span>
-              <span className="text-sm font-semibold text-white">CASE-018: Operation PhishNet</span>
+              <span className="text-[10px] font-mono font-semibold text-[#C68A46] uppercase">PRIMARY DOSSIER</span>
+              <span className="text-sm font-semibold text-[#E8EAEE]">CASE-018: Operation PhishNet</span>
             </div>
-            <p className="text-xs text-dark-slate mt-0.5">
-              Spear-phishing wire fraud &bull; ₹1.0 Cr heist with cross-jurisdiction bridge to Mumbai Hawala syndicate.
+            <p className="text-xs text-[#6B7382] mt-0.5">
+              Spear-phishing wire fraud &bull; ₹1.0 Cr RTGS heist linking to Mumbai Hawala ring via Devrat Sharma (TXN_552).
             </p>
           </div>
         </div>
 
         <button
           onClick={() => onOpenRecentCase('CASE-018')}
-          className="px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+          className="px-3.5 py-1.5 bg-[#C68A46] hover:bg-[#D49855] text-[#12151B] rounded-[5px] text-xs font-semibold transition flex items-center gap-1.5"
         >
           <span>Open Case #018</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -128,21 +128,21 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
 
       {/* System Integrity & Metrics Status */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
-        <div className="panel rounded-lg p-3">
-          <span className="text-[11px] text-dark-slate block font-medium">Active Jurisdictions</span>
-          <span className="text-sm font-mono font-bold text-white mt-0.5 block">3 Stations</span>
+        <div className="dossier-card p-3">
+          <span className="text-[11px] text-[#6B7382] block font-mono">REGIONAL STATIONS</span>
+          <span className="text-sm font-mono font-bold text-[#E8EAEE] mt-0.5 block">3 Stations</span>
         </div>
-        <div className="panel rounded-lg p-3">
-          <span className="text-[11px] text-dark-slate block font-medium">Evidence Cryptography</span>
-          <span className="text-sm font-mono font-bold text-emerald-400 mt-0.5 block">100% Verified</span>
+        <div className="dossier-card p-3">
+          <span className="text-[11px] text-[#6B7382] block font-mono">HASH INTEGRITY</span>
+          <span className="text-sm font-mono font-bold text-[#5FA876] mt-0.5 block">100% Verified</span>
         </div>
-        <div className="panel rounded-lg p-3">
-          <span className="text-[11px] text-dark-slate block font-medium">Bridge Broker Node</span>
-          <span className="text-sm font-mono font-bold text-brand-amber mt-0.5 block">PER-103 (Devrat)</span>
+        <div className="dossier-card p-3">
+          <span className="text-[11px] text-[#6B7382] block font-mono">BRIDGE BROKER NODE</span>
+          <span className="text-sm font-mono font-bold text-[#8B81C4] mt-0.5 block">PER-103 (Devrat)</span>
         </div>
-        <div className="panel rounded-lg p-3">
-          <span className="text-[11px] text-dark-slate block font-medium">Security Standard</span>
-          <span className="text-sm font-mono font-bold text-brand-accent mt-0.5 block">Sec 63B BSA Ready</span>
+        <div className="dossier-card p-3">
+          <span className="text-[11px] text-[#6B7382] block font-mono">EVIDENTIARY STATUTE</span>
+          <span className="text-sm font-mono font-bold text-[#C68A46] mt-0.5 block">Sec 63B BSA Compliant</span>
         </div>
       </div>
     </div>
