@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, FolderGit2, GitBranch, Home, LogOut } from 'lucide-react';
+import { Shield, GitBranch, Home, LogOut } from 'lucide-react';
 import LoginView from './components/LoginView';
 import HomePortal from './components/HomePortal';
 import CasesView from './components/CasesView';
@@ -7,6 +7,17 @@ import CaseWorkspace from './components/CaseWorkspace';
 import NetworkIntelligenceView from './components/NetworkIntelligenceView';
 import FloatingAICopilot from './components/FloatingAICopilot';
 import EntityCardModal from './components/EntityCardModal';
+
+// Authentic physical case file / dossier folder icon
+function CaseFolderIcon({ className = "w-3.5 h-3.5" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
+      <path d="M2 10h20" />
+      <path d="M10 14h4" />
+    </svg>
+  );
+}
 
 export default function App() {
   // Session State: null means user is on the Login / Jurisdiction Selection Gateway
@@ -84,7 +95,7 @@ export default function App() {
                   : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
               }`}
             >
-              <FolderGit2 className="w-3.5 h-3.5" />
+              <CaseFolderIcon className="w-3.5 h-3.5" />
               <span>Cases</span>
             </button>
 

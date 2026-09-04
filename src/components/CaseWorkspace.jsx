@@ -704,10 +704,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           <div>
             <div className="flex items-center gap-2">
               <Film className="w-4 h-4 text-[#C68A46]" />
-              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Review Investigation (Live Graph Generation)</h2>
+              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Review Investigation</h2>
             </div>
             <p className="text-xs text-[#9AA3B2] mt-0.5">
-              Live automated documentary reconstruction. Voice narrates each event while entities and connecting lines materialize on the canvas step-by-step.
+              Chronological incident reconstruction and topological entity graph sequence.
             </p>
           </div>
 

@@ -59,7 +59,7 @@ export default function CasesView({ session, onOpenCase }) {
               Active Investigations
             </h2>
             <p className="text-xs text-[#9AA3B2]">
-              Select a file to inspect point-wise narratives, real network graphs, and live documentary reconstruction.
+              Authorized incident dockets and case dossiers.
             </p>
           </div>
 
