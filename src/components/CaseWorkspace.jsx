@@ -858,6 +858,40 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     ? allGraphEdges.filter(e => e.from === selectedMapNode || e.to === selectedMapNode).length
     : 0;
 
+  // Calculate container pixel coordinates for placing the expanded card directly over the entity
+  const getNodeContainerPos = (node) => {
+    if (!graphContainerRef.current || !node) return { left: 100, top: 50, cardW: 355, cardH: 295 };
+    const rect = graphContainerRef.current.getBoundingClientRect();
+    const containerW = rect.width || 750;
+    const containerH = rect.height || 400;
+
+    const scale = Math.min(containerW / 1180, containerH / 440);
+    const offsetX = (containerW - 1180 * scale) / 2;
+    const offsetY = (containerH - 440 * scale) / 2;
+
+    const cx = 590;
+    const cy = 220;
+    const transformedX = cx + (node.x - cx) * graphZoom + graphPan.x;
+    const transformedY = cy + (node.y - cy) * graphZoom + graphPan.y;
+
+    const pixelX = offsetX + transformedX * scale;
+    const pixelY = offsetY + transformedY * scale;
+
+    const cardW = 355;
+    const cardH = 295;
+
+    let left = pixelX - cardW / 2;
+    let top = pixelY - cardH / 2;
+
+    // Clamping within container boundaries with 10px margin
+    if (left < 10) left = 10;
+    if (left + cardW > containerW - 10) left = Math.max(10, containerW - cardW - 10);
+    if (top < 10) top = 10;
+    if (top + cardH > containerH - 10) top = Math.max(10, containerH - cardH - 10);
+
+    return { left, top, cardW, cardH };
+  };
+
   return (
     <div className="max-w-7xl mx-auto py-5 px-4 space-y-5 font-sans">
       
@@ -1109,8 +1143,27 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     {allGraphNodes.map((node) => {
                       const isSelected = selectedMapNode === node.id;
                       const NodeIcon = node.icon;
-                      const r = isSelected ? (node.isBridge ? 22 : 18) : (node.isBridge ? 19 : 15);
+                      const r = node.isBridge ? 19 : 15;
                       const boxWidth = node.isBridge ? 112 : 98;
+
+                      // When clicked, the entity becomes the card!
+                      // Inside SVG, we render a subtle pulse anchor where connecting lines meet.
+                      if (isSelected) {
+                        return (
+                          <g 
+                            key={node.id} 
+                            transform={`translate(${node.x}, ${node.y})`}
+                            className="cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedMapNode(null); // Declick on re-click
+                            }}
+                          >
+                            <circle r={8} fill="#C68A46" opacity="0.35" className="animate-ping" />
+                            <circle r={5} fill="#C68A46" />
+                          </g>
+                        );
+                      }
 
                       return (
                         <g 
@@ -1118,29 +1171,18 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                           transform={`translate(${node.x}, ${node.y})`}
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedMapNode(selectedMapNode === node.id ? null : node.id);
+                            setSelectedMapNode(node.id);
+                            playPinStamp();
                           }}
                           onMouseEnter={(e) => handleNodeHover(e, node)}
                           onMouseLeave={handleNodeLeave}
                           className="cursor-pointer group"
                         >
-                          {/* Halo ring for clicked / expanded entity */}
-                          {isSelected && (
-                            <circle
-                              r={r + 5}
-                              fill="none"
-                              stroke="#C68A46"
-                              strokeWidth="1.5"
-                              strokeDasharray="3 3"
-                              opacity="0.85"
-                            />
-                          )}
-
                           <circle
                             r={r}
                             fill="#181C24"
-                            stroke={isSelected ? "#E8EAEE" : node.color}
-                            strokeWidth={node.isBridge || isSelected ? "2" : "1.5"}
+                            stroke={node.color}
+                            strokeWidth={node.isBridge ? "2" : "1.5"}
                           />
 
                           <foreignObject 
@@ -1150,7 +1192,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             height={node.isBridge ? 18 : 16}
                             className="pointer-events-none"
                           >
-                            <NodeIcon className="w-full h-full" style={{ color: isSelected ? '#E8EAEE' : node.color }} />
+                            <NodeIcon className="w-full h-full" style={{ color: node.color }} />
                           </foreignObject>
 
                           {/* Opaque backdrop pill behind text to ensure zero overwritten or obscured text */}
@@ -1161,8 +1203,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             height={24}
                             rx={3}
                             fill="#12151B"
-                            stroke={isSelected ? "#C68A46" : "#2B313D"}
-                            strokeWidth={isSelected ? "1" : "0.5"}
+                            stroke="#2B313D"
+                            strokeWidth="0.5"
                           />
 
                           <text
@@ -1178,7 +1220,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                           <text
                             textAnchor="middle"
                             y={r + 23}
-                            fill={isSelected ? "#C68A46" : "#6B7382"}
+                            fill="#6B7382"
                             fontSize="8"
                             fontFamily="IBM Plex Mono, monospace"
                           >
@@ -1189,11 +1231,181 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     })}
                   </g>
                 </svg>
+
+                {/* IN-PLACE EXPANDED ENTITY CARD: Click entity to become card, declick to return to entity */}
+                <AnimatePresence>
+                  {selectedNodeData && (() => {
+                    const node = selectedNodeData;
+                    const dossier = entityDossierDetails[node.id] || {
+                      name: node.label,
+                      alias: node.id,
+                      category: node.type.toUpperCase(),
+                      categoryVariant: node.isBridge ? 'violet' : 'brass',
+                      status: 'Identified Network Entity',
+                      role: node.sub,
+                      location: 'NCR Cyber PS Jurisdiction',
+                      phone: 'N/A',
+                      idNumber: node.id,
+                      riskLevel: 'Active Network Node',
+                      riskScore: 50,
+                      whatHappened: `Entity participating in topological flow of ${caseData.case_id}.`,
+                      legalEvidence: 'FIR 0018/2026',
+                      actionTaken: 'Under active case analysis'
+                    };
+
+                    const directConduits = allGraphEdges.filter(e => e.from === node.id || e.to === node.id);
+                    const pos = getNodeContainerPos(node);
+
+                    return (
+                      <motion.div
+                        key={`expanded-card-${node.id}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.15, ease: 'easeOut' }}
+                        style={{ left: `${pos.left}px`, top: `${pos.top}px` }}
+                        className="absolute z-30 w-[355px] bg-[#181C24] border border-[#C68A46] rounded-[8px] p-3.5 space-y-2.5 text-xs shadow-2xl depth-floating select-text"
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
+                        {/* Top Banner with Badges and Declick Button */}
+                        <div className="flex items-center justify-between border-b border-[#2B313D] pb-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant={dossier.categoryVariant || 'brass'} className="text-[10px] px-2 py-0.5 font-mono">
+                              {dossier.category}
+                            </Badge>
+                            <span className="text-[10.5px] font-mono text-[#5FA876] flex items-center gap-1 font-medium">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#5FA876]" />
+                              {dossier.status}
+                            </span>
+                          </div>
+
+                          {/* Declick button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedMapNode(null);
+                            }}
+                            className="stamp-tag stamp-crimson hover:bg-[#8B2626] hover:text-[#F4EFE6] transition flex items-center gap-1 cursor-pointer"
+                            title="Declick / Collapse back to entity"
+                          >
+                            <span className="text-[9.5px]">DECLICK</span>
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+
+                        {/* Name & Alias & Subtitle */}
+                        <div>
+                          <div className="flex items-baseline justify-between gap-1.5 flex-wrap">
+                            <h4 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight">
+                              {dossier.name}
+                            </h4>
+                            <span className="text-[11px] font-mono text-[#C68A46]">
+                              "{dossier.alias}"
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-[#9AA3B2] font-sans mt-0.5 leading-snug">
+                            {dossier.role}
+                          </p>
+                        </div>
+
+                        {/* 2-Column Meta Grid: LOCATION & IDENTIFIER */}
+                        <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#12151B] p-2 rounded-[5px] border border-[#2B313D]">
+                          <div>
+                            <span className="text-[#787167] block text-[9px] font-mono uppercase tracking-wider">LOCATION</span>
+                            <span className="text-[#E8EAEE] block truncate mt-0.5 font-sans">{dossier.location}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#787167] block text-[9px] font-mono uppercase tracking-wider">IDENTIFIER</span>
+                            <span className="text-[#6C93B8] font-mono block truncate mt-0.5">{dossier.idNumber}</span>
+                          </div>
+                        </div>
+
+                        {/* WHAT HAPPENED Section */}
+                        <div className="bg-[#1F2430] p-2.5 rounded-[5px] border border-[#2B313D] space-y-1">
+                          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#C68A46] font-bold tracking-wide">
+                            <Info className="w-3.5 h-3.5 text-[#C68A46]" />
+                            <span>WHAT HAPPENED</span>
+                          </div>
+                          <p className="text-[11px] text-[#E8EAEE] leading-relaxed font-sans line-clamp-4">
+                            {dossier.whatHappened}
+                          </p>
+                        </div>
+
+                        {/* Connected Conduits Quick Jump */}
+                        {directConduits.length > 0 && (
+                          <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                            <span className="text-[9.5px] font-mono text-[#787167] uppercase">LINKS:</span>
+                            {directConduits.slice(0, 3).map((edge, idx) => {
+                              const isOutgoing = edge.from === node.id;
+                              const otherNodeId = isOutgoing ? edge.to : edge.from;
+                              const otherNode = allGraphNodes.find(n => n.id === otherNodeId);
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedMapNode(otherNodeId);
+                                    playPinStamp();
+                                  }}
+                                  className="px-1.5 py-0.2 rounded bg-[#12151B] border border-[#2B313D] hover:border-[#C68A46] text-[9.5px] text-[#9AA3B2] hover:text-[#E8EAEE] flex items-center gap-1 transition"
+                                  title={`Switch to ${otherNode?.label || otherNodeId}`}
+                                >
+                                  <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Footer Strip with Risk Index and Actions */}
+                        <div className="flex items-center justify-between text-[10px] font-mono text-[#787167] pt-1.5 border-t border-[#2B313D]">
+                          <div>
+                            Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}>
+                              {dossier.riskScore}%
+                            </strong>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectEntity({
+                                  person_id: node.id,
+                                  name: dossier.name,
+                                  role: dossier.role,
+                                  is_bridge: node.isBridge
+                                });
+                              }}
+                              className="text-[#C68A46] hover:text-[#D49855] text-[10.5px] font-medium underline underline-offset-2 flex items-center gap-0.5 transition"
+                            >
+                              <span>Full Dossier</span>
+                              <ArrowRight className="w-2.5 h-2.5" />
+                            </button>
+
+                            <span className="text-[#2B313D]">&bull;</span>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedMapNode(null);
+                              }}
+                              className="hover:text-[#E8EAEE] text-[10px] transition"
+                              title="Declick back to entity"
+                            >
+                              Declick [✕]
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })()}
+                </AnimatePresence>
               </div>
 
-              {/* Spatial Floating Node Popover on Hover (with Boundary Flipping) */}
+              {/* Spatial Floating Node Popover on Hover (Only when NO card is open!) */}
               <AnimatePresence>
-                {hoveredNode && (() => {
+                {hoveredNode && !selectedMapNode && (() => {
                   const dossier = entityDossierDetails[hoveredNode.id] || {
                     name: hoveredNode.label,
                     alias: hoveredNode.id,
@@ -1277,157 +1489,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 })()}
               </AnimatePresence>
             </Card>
-
-            {/* Click-to-Expand Entity Inspector Drawer (Stays Expanded!) */}
-            {selectedNodeData ? (() => {
-              const dossier = entityDossierDetails[selectedNodeData.id] || {
-                name: selectedNodeData.label,
-                alias: selectedNodeData.id,
-                category: selectedNodeData.type.toUpperCase(),
-                categoryVariant: selectedNodeData.isBridge ? 'violet' : 'brass',
-                status: 'Identified Network Entity',
-                role: selectedNodeData.sub,
-                location: 'NCR Cyber PS Jurisdiction',
-                phone: 'N/A',
-                idNumber: selectedNodeData.id,
-                deviceIp: 'Network IP Logs',
-                riskLevel: 'Active Network Node',
-                riskScore: selectedSuspectInfo?.risk_score || 50,
-                whatHappened: `Entity participating in topological flow of ${caseData.case_id}. Linked via ${connectedEdgesCount} active conduits.`,
-                legalEvidence: 'FIR 0018/2026',
-                actionTaken: 'Under active case analysis'
-              };
-
-              const directConduits = allGraphEdges.filter(e => e.from === selectedNodeData.id || e.to === selectedNodeData.id);
-
-              return (
-                <div ref={inspectorDrawerRef}>
-                  <Card className="p-4 bg-[#181C24] border border-[#C68A46]/70 rounded-[5px] space-y-3 shadow-lg">
-                    {/* Top Banner with Name, Badges, and Action Buttons */}
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant={dossier.categoryVariant || "brass"}>
-                          {dossier.category}
-                        </Badge>
-                        <div>
-                          <h3 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight flex items-center gap-2">
-                            {dossier.name}
-                            <span className="text-xs font-mono text-[#C68A46] font-normal">
-                              "{dossier.alias}"
-                            </span>
-                          </h3>
-                          <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">
-                            ID: <strong className="text-[#E8EAEE]">{selectedNodeData.id}</strong> &bull; Status: <span className="text-[#5FA876] font-medium">{dossier.status}</span>
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Button
-                          onClick={() => onSelectEntity({ 
-                            person_id: selectedNodeData.id, 
-                            name: dossier.name, 
-                            role: dossier.role, 
-                            is_bridge: selectedNodeData.isBridge 
-                          })}
-                          variant="brass"
-                          size="sm"
-                          className="text-xs"
-                        >
-                          <span>Inspect Full Dossier</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </Button>
-                        <button 
-                          onClick={() => setSelectedMapNode(null)}
-                          className="p-1 rounded-[3px] text-[#6B7382] hover:text-[#E8EAEE] hover:bg-[#1F2430] border border-[#2B313D]"
-                          title="Collapse entity drawer"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Simple, Readable 4-Column Strip */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs bg-[#12151B] p-3 rounded-[4px] border border-[#2B313D]">
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">ROLE</span>
-                        <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.role}</span>
-                      </div>
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LOCATION</span>
-                        <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.location}</span>
-                      </div>
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DETAILS</span>
-                        <span className="text-[#6C93B8] font-mono block mt-0.5">{dossier.phone}</span>
-                        <span className="text-[#6B7382] font-mono text-[10px] block">{dossier.idNumber}</span>
-                      </div>
-                      <div>
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">RISK LEVEL</span>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className={`font-mono font-bold ${dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}`}>
-                            {dossier.riskScore}%
-                          </span>
-                          <div className="w-16 bg-[#1F2430] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
-                            <div 
-                              className={`h-full ${dossier.riskScore >= 80 ? 'bg-[#C1655A]' : dossier.riskScore >= 40 ? 'bg-[#C68A46]' : 'bg-[#5FA876]'}`}
-                              style={{ width: `${dossier.riskScore}%` }}
-                            />
-                          </div>
-                        </div>
-                        <span className="text-[10px] text-[#9AA3B2] block mt-0.5 truncate">{dossier.riskLevel}</span>
-                      </div>
-                    </div>
-
-                    {/* "WHAT HAPPENED" SECTION */}
-                    <div className="space-y-1 bg-[#1F2430] p-3 rounded-[4px] border border-[#2B313D]">
-                      <div className="flex items-center gap-1.5 text-xs font-mono text-[#C68A46] font-semibold">
-                        <Info className="w-3.5 h-3.5" />
-                        <span>WHAT HAPPENED</span>
-                      </div>
-                      <p className="text-xs text-[#E8EAEE] leading-relaxed font-sans font-normal">
-                        {dossier.whatHappened}
-                      </p>
-                    </div>
-
-                    {/* Evidence & Connected Conduits Strip */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-0.5">
-                      <div className="space-y-1">
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">EVIDENCE &amp; STATUS</span>
-                        <p className="text-[#9AA3B2] leading-snug">
-                          <strong className="text-[#E8EAEE] font-mono">{dossier.legalEvidence}</strong>
-                        </p>
-                        <p className="text-[#6B7382] text-[11px] leading-snug">
-                          {dossier.actionTaken}
-                        </p>
-                      </div>
-
-                      <div className="space-y-1">
-                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">CONNECTED TO ({directConduits.length})</span>
-                        <div className="flex flex-wrap gap-1.5 pt-0.5">
-                          {directConduits.map((edge, idx) => {
-                            const isOutgoing = edge.from === selectedNodeData.id;
-                            const otherNodeId = isOutgoing ? edge.to : edge.from;
-                            const otherNode = allGraphNodes.find(n => n.id === otherNodeId);
-                            return (
-                              <button
-                                key={idx}
-                                type="button"
-                                onClick={() => setSelectedMapNode(otherNodeId)}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#12151B] border border-[#2B313D] text-[11px] font-sans text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#C68A46] cursor-pointer transition"
-                              >
-                                <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
-                                <span className="text-[#6B7382] text-[10px]">({edge.label})</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              );
-            })() : null}
           </div>
 
           {/* RIGHT COLUMN: POINT-WISE CASE SUMMARY & INVESTIGATION BRIEFING (lg:col-span-5) */}
