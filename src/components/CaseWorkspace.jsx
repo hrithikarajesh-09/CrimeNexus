@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, FileText, User, CreditCard, Radio, Laptop, Building2,
   Play, Pause, RotateCcw, Volume2, VolumeX, Scale, Sparkles, X, Info,
-  CheckCircle2, AlertTriangle, Film, ZoomIn, ZoomOut, ArrowRight, ExternalLink
+  CheckCircle2, AlertTriangle, Film, ZoomIn, ZoomOut, ArrowRight, ExternalLink,
+  ChevronDown, ChevronUp, FileCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from './ui/card';
@@ -344,6 +345,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   // BSA Certificate Modal state
   const [isBsaModalOpen, setIsBsaModalOpen] = useState(false);
 
+  // Statutory Violations accordion state (click to expand and view evidence)
+  const [expandedStatuteId, setExpandedStatuteId] = useState(null);
+  const toggleStatute = (id) => setExpandedStatuteId(prev => prev === id ? null : id);
+
   // Network Map state
   const [selectedMapNode, setSelectedMapNode] = useState(null);
 
@@ -593,47 +598,77 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     p.primary_case_id === caseId || (p.is_bridge && (caseId === 'CASE-018' || caseId === 'CASE-041'))
   );
 
-  // Laws broken mapping for this case
+  // Laws broken mapping for this case (Articles, simple reason why violated, and evidence)
   const lawsBroken = [
     {
+      id: 'SEC-66C',
       act: 'Information Technology Act, 2000',
+      actShort: 'IT Act, 2000',
       section: 'Section 66C',
       title: 'Punishment for Identity Theft',
+      simpleWhy: 'Hackers stole CFO Vikramaditya\'s corporate password and OTP token using a spoofed executive email and fake login site.',
       penalty: 'Imprisonment up to 3 years and fine up to ₹1,00,000',
-      description: 'Fraudulent use of electronic signature, password, and corporate authentication credentials of CFO Vikramaditya Rathore.',
-      evidenceRef: 'EVD-001 (Phishing domain secure-zenithcorp-auth.com logs)'
+      description: 'Fraudulent capture and unauthorized use of electronic signature, password, and corporate 2FA authentication credentials of CFO Vikramaditya Rathore to access Zenith corporate banking portal.',
+      evidenceRef: 'EVD-001 (Phishing domain secure-zenithcorp-auth.com logs)',
+      evidenceDoc: 'Phishing Server Access Logs, Captured POST Credentials & Forensic IP Trails',
+      evidenceHash: 'SHA256: d4c56ad10356cf2cc8ddfdc26fd4c04f... (Verified Police Cyber Cell)',
+      suspects: ['Kunal Shah (Technical Operator)', 'Rajesh Verma (Syndicate Leader)'],
     },
     {
+      id: 'SEC-66D',
       act: 'Information Technology Act, 2000',
+      actShort: 'IT Act, 2000',
       section: 'Section 66D',
       title: 'Cheating by Personation using Computer Resource',
+      simpleWhy: 'The scammers impersonated Zenith CEO Rajiv Singhania in a forged email to trick the CFO into clearing emergency vendor funds.',
       penalty: 'Imprisonment up to 3 years and fine up to ₹1,00,000',
-      description: 'Cheating by personating executive management via spoofed email header to induce corporate fund clearance.',
-      evidenceRef: 'EVD-001 (Spoofed email artifacts & IP 198.51.100.45)'
+      description: 'Cheating by personating executive corporate management via forged email headers (RFC-822 Return-Path spoofing) to induce fraudulent corporate fund clearance.',
+      evidenceRef: 'EVD-001 (Spoofed email artifacts & IP 198.51.100.45)',
+      evidenceDoc: 'RFC-822 Email Header Dump, Spoofed Mail Server Connection Records & VPN Logs',
+      evidenceHash: 'SHA256: a89f0102cd3e9942bb11005a77ef9102... (Seized Digital Exhibit)',
+      suspects: ['Rajesh Verma (Operator)', 'Kunal Shah (Technical Operator)'],
     },
     {
+      id: 'SEC-318-4',
       act: 'Bharatiya Nyaya Sanhita (BNS), 2023',
+      actShort: 'BNS, 2023',
       section: 'Section 318(4)',
       title: 'Cheating and Dishonestly Inducing Delivery of Property',
+      simpleWhy: 'Dishonestly tricked the company into executing an unauthorized ₹1,00,00,000 (One Crore) RTGS wire into mule bank accounts.',
       penalty: 'Rigorous imprisonment up to 7 years and fine',
-      description: 'Dishonestly inducing Zenith Technologies to part with ₹1,00,00,000 RTGS fund transfer into mule accounts.',
-      evidenceRef: 'EVD-001 & Core Banking Transaction TXN-1001'
+      description: 'Dishonestly inducing Zenith Technologies to part with ₹1,00,00,000 RTGS fund transfer into mule bank account ACC-2201 under fraudulent pretexts.',
+      evidenceRef: 'EVD-001 & Core Banking Transaction TXN-1001',
+      evidenceDoc: 'Apex Global Bank Core RTGS Transfer Slip (UTR: APEX202606090011) & Ledger Debit Records',
+      evidenceHash: 'SHA256: 3c91a0f882b45012da779e0011244bb5... (Core Banking Record)',
+      suspects: ['Suman Roy (Primary Mule Accountholder)', 'Rajesh Verma (Syndicate Leader)'],
     },
     {
+      id: 'SEC-61-2',
       act: 'Bharatiya Nyaya Sanhita (BNS), 2023',
+      actShort: 'BNS, 2023',
       section: 'Section 61(2)',
       title: 'Criminal Conspiracy',
+      simpleWhy: 'Technical developers, syndicate operators, and money brokers coordinated together across cities to execute wire fraud.',
       penalty: 'Same punishment as for the abetment of the principal offence',
-      description: 'Agreement and coordination between technical operators (Kunal Shah), syndicate lead (Rajesh Verma), and money broker (Devrat Sharma) to execute wire fraud.',
-      evidenceRef: 'EVD-003 (Nodal Tower T-4401 CDR Call Dump Logs)'
+      description: 'Criminal agreement, phone call coordination, and joint criminal planning between technical operators (Kunal Shah), syndicate heads (Rajesh Verma), and money brokers (Devrat Sharma) to carry out the heist and distribute stolen proceeds.',
+      evidenceRef: 'EVD-003 (Nodal Tower T-4401 CDR Call Dump Logs)',
+      evidenceDoc: 'Sector 44 Gurugram Cell Tower Telephony CDR Dump, Inter-Suspect Call Records & SIM Box Logs',
+      evidenceHash: 'SHA256: ccfb08874fc7038d541678894b70eee7... (Telecom CDR Exhibit)',
+      suspects: ['Rajesh Verma', 'Devrat Sharma (Broker)', 'Kunal Shah'],
     },
     {
+      id: 'SEC-PMLA',
       act: 'Prevention of Money Laundering Act (PMLA), 2002',
+      actShort: 'PMLA, 2002',
       section: 'Section 3 & Section 4',
       title: 'Offence of Money-Laundering & Layering',
+      simpleWhy: 'Rapidly split the ₹1 Crore into 5 secondary accounts and wired ₹50 Lakhs to Mumbai to conceal the criminal origin of the money.',
       penalty: 'Rigorous imprisonment up to 7 to 10 years and fine',
-      description: 'Direct involvement in layering proceeds of crime from primary mule account ACC-2201 through secondary accounts into broker ACC-7702 and shell entities.',
-      evidenceRef: 'EVD-002 (STR-88912 & Cross-Case Bridge TXN_552)'
+      description: 'Direct involvement in laundering and layering proceeds of crime from primary mule account ACC-2201 across 5 secondary student accounts, onwards to money broker Devrat Sharma, and cross-case bridge transfer TXN_552 to Mumbai shell company Apex Trade Solutions.',
+      evidenceRef: 'EVD-002 (STR-88912 & Cross-Case Bridge TXN_552)',
+      evidenceDoc: 'FIU-IND Suspicious Transaction Report STR-88912, Cross-Case Wire TXN_552 & SWIFT MT-103 Logs',
+      evidenceHash: 'SHA256: afeb4ed06feb8f55c8a7028172dec410... (FIU-IND Financial Trail)',
+      suspects: ['Devrat Sharma (Broker)', 'Apex Trade Solutions (Case 041 Shell)', 'Tariq Merchant (Hawala)'],
     }
   ];
 
@@ -2079,41 +2114,158 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       )}
 
       {/* ========================================================= */}
-      {/* SUB-TAB 4: STATUTORY VIOLATIONS & LAWS BROKEN             */}
+      {/* SUB-TAB 4: STATUTORY VIOLATIONS & LAWS BROKEN (LIST-WISE) */}
       {/* ========================================================= */}
       {activeTab === 'statutes' && (
-        <Card className="p-5 space-y-3">
-          <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
-            <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#5FA876]" />
-              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Statutory Criminal Law Violations</h2>
+        <Card className="p-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <Scale className="w-4 h-4 text-[#C68A46]" />
+                <h2 className="text-base font-serif font-bold text-[#E8EAEE] tracking-tight">
+                  Statutory Criminal Law Violations
+                </h2>
+              </div>
+              <p className="text-xs text-[#9AA3B2] mt-0.5 font-sans">
+                List of violated legal articles, why each law was broken, and linked digital evidence. Click any article to view exhibits.
+              </p>
             </div>
-            <Badge variant="green">
-              {lawsBroken.length} Substantiated Sections
-            </Badge>
+
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setIsBsaModalOpen(true)}
+                variant="brass"
+                size="sm"
+                className="text-xs flex items-center gap-1.5"
+              >
+                <FileCheck className="w-3.5 h-3.5" />
+                <span>Section 63B BSA Certificate</span>
+              </Button>
+              <span className="stamp-tag stamp-sage text-[10px]">
+                {lawsBroken.length} SUBSTANTIATED
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-            {lawsBroken.map((law, idx) => (
-              <div
-                key={idx}
-                className="bg-[#1F2430] border border-[#2B313D] rounded-[5px] p-3.5 space-y-1.5 text-xs"
-              >
-                <div className="flex items-center justify-between">
-                  <Badge variant="brass">
-                    {law.act}
-                  </Badge>
-                  <span className="text-[10px] font-mono text-[#5FA876]">
-                    {law.penalty}
-                  </span>
+          {/* LIST-WISE ACCORDION OF STATUTES */}
+          <div className="space-y-2.5">
+            {lawsBroken.map((law) => {
+              const isExpanded = expandedStatuteId === law.id;
+
+              return (
+                <div
+                  key={law.id}
+                  onClick={() => toggleStatute(law.id)}
+                  className={`bg-[#181C24] hover:bg-[#1C212B] border rounded-[6px] p-3.5 transition-all duration-150 cursor-pointer ${
+                    isExpanded 
+                      ? 'border-[#C68A46] shadow-lg ring-1 ring-[#C68A46]/20' 
+                      : 'border-[#2B313D] hover:border-[#3E4759]'
+                  }`}
+                >
+                  {/* Collapsed List Row: Article Section + Plain-English Reason Why Violated + Action */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    {/* Left: Article Badge & Act */}
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      <span className="stamp-tag stamp-crimson text-[10.5px] font-bold tracking-wider">
+                        {law.section}
+                      </span>
+                      <span className="text-[11px] font-mono text-[#787167]">
+                        {law.actShort}
+                      </span>
+                    </div>
+
+                    {/* Middle: Why Violated in Simple Words */}
+                    <div className="flex-1 text-xs text-[#E8EAEE] font-sans font-medium leading-relaxed sm:px-2">
+                      {law.simpleWhy}
+                    </div>
+
+                    {/* Right: View Evidence Toggle Button */}
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded border transition flex items-center gap-1.5 ${
+                        isExpanded
+                          ? 'bg-[#C68A46] text-[#12151B] border-[#C68A46] font-bold'
+                          : 'bg-[#12151B] text-[#C68A46] border-[#2B313D] hover:border-[#C68A46]'
+                      }`}>
+                        <span>{isExpanded ? 'Hide Details' : 'View Evidence'}</span>
+                        {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Expanded View: Full Legal Penalty, How Violated & Evidence Document */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.15 }}
+                        className="pt-3.5 mt-3 border-t border-[#2B313D] space-y-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {/* Legal Act & Penalty Strip */}
+                        <div className="flex flex-wrap items-center justify-between gap-2.5 bg-[#12151B] p-2.5 rounded-[5px] border border-[#2B313D]">
+                          <div>
+                            <span className="text-[9.5px] font-mono uppercase text-[#787167] block">LEGAL OFFENCE TITLE</span>
+                            <span className="text-xs font-serif font-bold text-[#E8EAEE]">{law.title}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-[9.5px] font-mono uppercase text-[#787167] block">STATUTORY PENALTY</span>
+                            <span className="text-[11px] font-mono font-semibold text-[#5FA876]">{law.penalty}</span>
+                          </div>
+                        </div>
+
+                        {/* Full Forensic Description */}
+                        <div className="space-y-1">
+                          <span className="text-[9.5px] font-mono uppercase text-[#787167] block">HOW IT WAS VIOLATED IN THIS CASE</span>
+                          <p className="text-xs text-[#9AA3B2] leading-relaxed font-sans bg-[#1F2430] p-2.5 rounded-[4px] border border-[#2B313D]">
+                            {law.description}
+                          </p>
+                        </div>
+
+                        {/* Direct Evidence Box */}
+                        <div className="bg-[#12151B] p-3 rounded-[5px] border border-[#2B313D] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-1.5 text-[10.5px] font-mono text-[#C68A46] font-semibold">
+                              <FileCheck className="w-3.5 h-3.5 text-[#C68A46]" />
+                              <span>EVIDENCE EXHIBIT: {law.evidenceRef}</span>
+                            </div>
+                            <div className="text-xs text-[#E8EAEE] font-sans font-medium">{law.evidenceDoc}</div>
+                            <div className="text-[10px] font-mono text-[#787167]">{law.evidenceHash}</div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Button
+                              onClick={() => setIsBsaModalOpen(true)}
+                              variant="brass"
+                              size="sm"
+                              className="text-xs"
+                            >
+                              <Scale className="w-3 h-3" />
+                              <span>View Section 63B Certificate</span>
+                            </Button>
+                          </div>
+                        </div>
+
+                        {/* Accused Suspects */}
+                        {law.suspects && (
+                          <div className="flex items-center gap-2 text-xs pt-0.5">
+                            <span className="text-[10px] font-mono text-[#787167] uppercase">ACCUSED:</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {law.suspects.map((s, i) => (
+                                <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181C24] text-[#E8EAEE] border border-[#2B313D]">
+                                  {s}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <h4 className="font-serif font-semibold text-[#E8EAEE] text-sm">{law.section}: {law.title}</h4>
-                <p className="text-[#9AA3B2] leading-relaxed">{law.description}</p>
-                <p className="text-[11px] font-mono text-[#6B7382] pt-1 border-t border-[#2B313D]">
-                  Proof: <strong className="text-[#E8EAEE]">{law.evidenceRef}</strong>
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       )}
