@@ -857,13 +857,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             </Badge>
           </TabsTrigger>
         </TabsList>
-
-        <div className="flex items-center gap-2 text-xs text-[#6B7382] font-mono">
-          <span>Active View:</span>
-          <span className="text-[#C68A46] uppercase font-semibold">
-            {activeTab === 'summary' ? 'Split View (Graph + Briefing)' : activeTab}
-          </span>
-        </div>
       </div>
 
       {/* ========================================================= */}
@@ -910,21 +903,16 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
               </div>
 
-              {/* Legend and User Guidance Strip */}
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-[#6B7382]">
-                <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1.5 text-[#9AA3B2]">
-                    <span className="w-2 h-2 rounded-full bg-[#6C93B8]" /> Person / Info
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[#9AA3B2]">
-                    <span className="w-2 h-2 rounded-full bg-[#4E9C93]" /> Account / Mule
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[#8B81C4] font-medium">
-                    <span className="w-2 h-2 rounded-full bg-[#8B81C4]" /> Cross-Case Link
-                  </span>
-                </div>
-                <span className="text-[10px] text-[#6B7382]">
-                  Drag to pan &bull; Scroll or +/- to zoom &bull; Click node to expand
+              {/* Legend Strip */}
+              <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-[#6B7382]">
+                <span className="flex items-center gap-1.5 text-[#9AA3B2]">
+                  <span className="w-2 h-2 rounded-full bg-[#6C93B8]" /> Person / Info
+                </span>
+                <span className="flex items-center gap-1.5 text-[#9AA3B2]">
+                  <span className="w-2 h-2 rounded-full bg-[#4E9C93]" /> Account / Mule
+                </span>
+                <span className="flex items-center gap-1.5 text-[#8B81C4] font-medium">
+                  <span className="w-2 h-2 rounded-full bg-[#8B81C4]" /> Cross-Case Link
                 </span>
               </div>
 
@@ -1163,7 +1151,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       {/* Footer info strip */}
                       <div className="flex items-center justify-between text-[10px] font-mono text-[#6B7382] pt-0.5 border-t border-[#2B313D]">
                         <span>Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}>{dossier.riskScore}%</strong></span>
-                        <span className="text-[#C68A46]">Click node to pin &amp; view full dossier</span>
+                        <span className="text-[#9AA3B2]">{dossier.category}</span>
                       </div>
                     </motion.div>
                   );
@@ -1319,12 +1307,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                   </div>
                 </Card>
               );
-            })() : (
-              <div className="p-3 bg-[#181C24] border border-dashed border-[#2B313D] rounded-[5px] flex items-center justify-between text-xs text-[#6B7382] font-mono">
-                <span>Click any node on the graph to view complete dossier, location, and what happened</span>
-                <span className="text-[#C68A46]">12 Topological Entities</span>
-              </div>
-            )}
+            })() : null}
           </div>
 
           {/* RIGHT COLUMN: POINT-WISE CASE SUMMARY & INVESTIGATION BRIEFING (lg:col-span-5) */}
@@ -1339,11 +1322,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                   Verified FIR
                 </Badge>
               </div>
-
-              <p className="text-[11px] text-[#6B7382] font-mono flex items-center gap-1.5 pb-1">
-                <Info className="w-3.5 h-3.5 text-[#C68A46]" />
-                Hover over highlighted tokens for instant evidence preview
-              </p>
 
               {/* Point-wise natural readable chronological flow */}
               <div className="space-y-3 text-xs text-[#9AA3B2] leading-relaxed">
