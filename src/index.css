@@ -4,72 +4,90 @@
 
 @layer base {
   body {
-    background-color: #121816;
-    color: #D1E8E2;
+    background-color: #080c18;
+    color: #C1C8E4;
     font-family: 'Inter', system-ui, sans-serif;
     letter-spacing: -0.01em;
     overflow-x: hidden;
   }
 
   ::selection {
-    background-color: #116466;
+    background-color: #5680E9;
     color: #FFFFFF;
   }
 }
 
-/* Futuristic Custom Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #121816;
+  background: #080c18;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2C3531;
-  border-radius: 3px;
-  border: 1px solid rgba(17, 100, 102, 0.4);
+  background: #1c294a;
+  border-radius: 4px;
+  border: 1px solid rgba(86, 128, 233, 0.3);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #116466;
+  background: #5680E9;
 }
 
-/* Futuristic HUD Panel & Crosshairs */
-.futuristic-panel {
-  background: rgba(28, 36, 33, 0.85);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(17, 100, 102, 0.35);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+/* Ethereal Frosted Glass Panels */
+.ethereal-glass {
+  background: rgba(15, 22, 41, 0.82);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(86, 128, 233, 0.22);
+  box-shadow: 0 10px 30px -10px rgba(86, 128, 233, 0.15);
 }
 
-.futuristic-panel:hover {
-  border-color: rgba(17, 100, 102, 0.6);
+.ethereal-glass:hover {
+  border-color: rgba(90, 185, 234, 0.45);
+  box-shadow: 0 12px 36px -8px rgba(86, 128, 233, 0.25);
 }
 
-.futuristic-glow {
-  box-shadow: 0 0 25px -5px rgba(17, 100, 102, 0.3);
+.ethereal-glow {
+  box-shadow: 0 0 30px -5px rgba(86, 128, 233, 0.35);
 }
 
-.futuristic-border {
-  border-color: rgba(17, 100, 102, 0.35);
+.ethereal-border {
+  border-color: rgba(86, 128, 233, 0.25);
 }
 
-.futuristic-tag {
-  background: rgba(17, 100, 102, 0.18);
-  color: #D1E8E2;
-  border: 1px solid rgba(17, 100, 102, 0.45);
+/* Audio Waveform Animation */
+@keyframes wave {
+  0%, 100% { height: 6px; }
+  50% { height: 22px; }
 }
 
-.futuristic-badge-warm {
-  background: rgba(217, 176, 140, 0.12);
-  color: #FFCB9A;
-  border: 1px solid rgba(217, 176, 140, 0.3);
+.wave-bar {
+  animation: wave 1s ease-in-out infinite;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.15s; }
+.wave-bar:nth-child(3) { animation-delay: 0.3s; }
+.wave-bar:nth-child(4) { animation-delay: 0.45s; }
+.wave-bar:nth-child(5) { animation-delay: 0.6s; }
+.wave-bar:nth-child(6) { animation-delay: 0.2s; }
+
+/* Dynamic Flowing Beam */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -40;
+  }
 }
 
-/* Subtle background tech grid */
-.tech-grid-bg {
+.animated-link {
+  stroke-dasharray: 6, 6;
+  animation: dash 1.2s linear infinite;
+}
+
+/* Luminous circular ambient backdrop */
+.ethereal-aura-bg {
   background-image: 
-    linear-gradient(to right, rgba(17, 100, 102, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(17, 100, 102, 0.04) 1px, transparent 1px);
-  background-size: 36px 36px;
+    radial-gradient(circle at 50% 20%, rgba(86, 128, 233, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(136, 96, 208, 0.1) 0%, transparent 40%),
+    linear-gradient(to right, rgba(86, 128, 233, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(86, 128, 233, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
 }

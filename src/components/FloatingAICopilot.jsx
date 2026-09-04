@@ -141,11 +141,11 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
             setIsOpen(true);
             setIsMinimized(false);
           }}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-[#116466] hover:bg-[#167b7e] text-white rounded-2xl shadow-2xl shadow-[#116466]/40 transition-all duration-200 active:scale-95 group font-sans border border-[#D1E8E2]/30"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white rounded-full shadow-2xl shadow-[#5680E9]/40 transition-all duration-200 active:scale-95 group font-sans border border-[#84CEEB]/40"
         >
-          <div className="w-2 h-2 rounded-full bg-[#FFCB9A] animate-ping" />
-          <Sparkles className="w-4 h-4 text-[#FFCB9A]" />
-          <span className="text-xs font-bold tracking-widest uppercase font-display">AI Copilot</span>
+          <div className="w-2 h-2 rounded-full bg-[#84CEEB] animate-ping" />
+          <Sparkles className="w-4 h-4 text-white" />
+          <span className="text-xs font-bold tracking-wider uppercase font-display">AI Copilot</span>
         </button>
       )}
 
@@ -156,25 +156,25 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
             position: 'fixed',
             left: `${position.x}px`,
             top: `${position.y}px`,
-            width: '400px',
+            width: '410px',
             zIndex: 60
           }}
-          className={`bg-[#1a2320] border border-[#116466] rounded-2xl shadow-2xl flex flex-col font-sans transition-shadow futuristic-glow ${
-            isDragging ? 'shadow-[#116466]/40' : ''
+          className={`bg-[#0f1629] border border-[#5680E9]/50 rounded-3xl shadow-2xl flex flex-col font-sans transition-shadow ethereal-glow ${
+            isDragging ? 'shadow-[#5680E9]/40' : ''
           }`}
         >
           {/* Draggable Header Bar */}
           <div
             onMouseDown={handleMouseDown}
-            className="p-3.5 bg-[#141a18] border-b border-[#116466]/40 rounded-t-2xl flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
+            className="p-4 bg-[#151f38] border-b border-[#5680E9]/25 rounded-t-3xl flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
           >
             <div className="flex items-center gap-2">
-              <Move className="w-3.5 h-3.5 text-[#7e968e]" />
+              <Move className="w-3.5 h-3.5 text-[#8e9cc2]" />
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-[#FFCB9A]" />
+                <Sparkles className="w-4 h-4 text-[#84CEEB]" />
                 <span className="text-xs font-bold text-white font-display tracking-wider">Investigation Copilot</span>
               </div>
-              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#116466]/30 text-[#D1E8E2] border border-[#116466]/50">
+              <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
                 ACTIVE
               </span>
             </div>
@@ -182,14 +182,14 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
-                className="p-1 rounded text-[#7e968e] hover:text-white hover:bg-[#1c2420] transition"
+                className="p-1.5 rounded-xl text-[#8e9cc2] hover:text-white hover:bg-[#1c294a] transition"
                 title={isMinimized ? "Expand" : "Minimize"}
               >
                 <Minus className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded text-[#7e968e] hover:text-white hover:bg-[#1c2420] transition"
+                className="p-1.5 rounded-xl text-[#8e9cc2] hover:text-white hover:bg-[#1c294a] transition"
                 title="Close"
               >
                 <X className="w-3.5 h-3.5" />
@@ -199,15 +199,15 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
 
           {/* Window Body (collapsible if minimized) */}
           {!isMinimized && (
-            <div className="flex flex-col h-[480px]">
+            <div className="flex flex-col h-[490px]">
               {/* Context indicator */}
-              <div className="px-3.5 py-1.5 bg-[#121816] border-b border-[#116466]/30 text-[10px] text-[#7e968e] flex items-center justify-between font-mono">
-                <span>Scope: <strong className="text-[#D1E8E2]">{activeCaseId || 'CASE-018'}</strong></span>
-                <span className="text-[#D9B08C]">● Cypher Engine Online</span>
+              <div className="px-4 py-1.5 bg-[#080c18] border-b border-[#5680E9]/20 text-[10px] text-[#8e9cc2] flex items-center justify-between font-mono">
+                <span>Scope: <strong className="text-white">{activeCaseId || 'CASE-018'}</strong></span>
+                <span className="text-[#84CEEB]">● Cypher Engine Online</span>
               </div>
 
               {/* Chat Message Scrollable Area */}
-              <div className="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs bg-[#121816]/95">
+              <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-[#080c18]/95">
                 {chatHistory.map((msg) => (
                   <div
                     key={msg.id}
@@ -216,27 +216,27 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
                     }`}
                   >
                     <div
-                      className={`max-w-[88%] p-3 rounded-xl leading-relaxed ${
+                      className={`max-w-[88%] p-3.5 rounded-2xl leading-relaxed ${
                         msg.sender === 'user'
-                          ? 'bg-[#116466] text-white font-medium rounded-tr-none border border-[#116466]'
-                          : 'bg-[#1a2320] border border-[#116466]/30 text-[#D1E8E2] rounded-tl-none shadow-sm'
+                          ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white font-medium rounded-tr-none'
+                          : 'bg-[#151f38] border border-[#5680E9]/30 text-[#C1C8E4] rounded-tl-none shadow-sm'
                       }`}
                     >
                       <p className="text-xs">{msg.text}</p>
 
                       {/* Visual Graph Path if available */}
                       {msg.graphPath && (
-                        <div className="mt-2.5 pt-2 border-t border-[#116466]/30 space-y-1 font-mono text-[10px]">
-                          <span className="text-[#D9B08C] flex items-center gap-1 font-bold">
-                            <GitBranch className="w-3 h-3 text-[#D1E8E2]" /> Evidence Path:
+                        <div className="mt-2.5 pt-2 border-t border-[#5680E9]/25 space-y-1 font-mono text-[10px]">
+                          <span className="text-[#84CEEB] flex items-center gap-1 font-bold">
+                            <GitBranch className="w-3 h-3 text-[#84CEEB]" /> Evidence Path:
                           </span>
-                          <div className="flex flex-wrap items-center gap-1 text-[#D1E8E2]">
+                          <div className="flex flex-wrap items-center gap-1 text-[#84CEEB]">
                             {msg.graphPath.map((node, i) => (
                               <React.Fragment key={i}>
-                                <span className="bg-[#121816] px-1.5 py-0.5 rounded border border-[#116466]/30">
+                                <span className="bg-[#080c18] px-2 py-0.5 rounded-lg border border-[#5680E9]/30">
                                   {node}
                                 </span>
-                                {i < msg.graphPath.length - 1 && <span className="text-[#116466]">&rarr;</span>}
+                                {i < msg.graphPath.length - 1 && <span className="text-[#8e9cc2]">&rarr;</span>}
                               </React.Fragment>
                             ))}
                           </div>
@@ -245,11 +245,11 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
 
                       {/* Evidence Citations if available */}
                       {msg.citations && msg.citations.length > 0 && (
-                        <div className="mt-2 text-[10px] text-[#7e968e] space-y-0.5">
-                          <span className="font-semibold block text-[#D9B08C]">Verified Evidence Citations:</span>
+                        <div className="mt-2 text-[10px] text-[#8e9cc2] space-y-0.5">
+                          <span className="font-semibold block text-[#84CEEB]">Verified Evidence Citations:</span>
                           {msg.citations.map((cite, i) => (
-                            <div key={i} className="flex items-center gap-1 text-[#D1E8E2] font-mono">
-                              <CheckCircle2 className="w-2.5 h-2.5 text-[#FFCB9A]" />
+                            <div key={i} className="flex items-center gap-1 text-white font-mono">
+                              <CheckCircle2 className="w-2.5 h-2.5 text-[#84CEEB]" />
                               <span>{cite}</span>
                             </div>
                           ))}
@@ -260,8 +260,8 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
                 ))}
 
                 {isTyping && (
-                  <div className="flex items-center gap-1.5 text-xs text-[#7e968e] bg-[#1a2320] p-2.5 rounded-xl border border-[#116466]/30 w-fit">
-                    <Bot className="w-3.5 h-3.5 text-[#FFCB9A]" />
+                  <div className="flex items-center gap-1.5 text-xs text-[#8e9cc2] bg-[#151f38] p-2.5 rounded-2xl border border-[#5680E9]/30 w-fit">
+                    <Bot className="w-3.5 h-3.5 text-[#84CEEB]" />
                     <span>Analyzing knowledge graph...</span>
                   </div>
                 )}
@@ -269,12 +269,12 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
               </div>
 
               {/* Quick Preset Prompts */}
-              <div className="p-2 bg-[#141a18] border-t border-[#116466]/30 flex gap-1.5 overflow-x-auto no-scrollbar">
+              <div className="p-2.5 bg-[#0f1629] border-t border-[#5680E9]/20 flex gap-1.5 overflow-x-auto no-scrollbar">
                 {presetQuestions.map((q, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(q)}
-                    className="whitespace-nowrap px-2.5 py-1 rounded-lg bg-[#1a2320] hover:bg-[#242e2a] border border-[#116466]/30 text-[10px] text-[#D9B08C] hover:text-[#FFCB9A] transition font-mono"
+                    className="whitespace-nowrap px-3 py-1 rounded-full bg-[#151f38] hover:bg-[#1c294a] border border-[#5680E9]/25 text-[10px] text-[#84CEEB] hover:text-white transition font-mono"
                   >
                     {q}
                   </button>
@@ -282,21 +282,21 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
               </div>
 
               {/* Input Area */}
-              <div className="p-3 bg-[#161f1c] border-t border-[#116466]/40 flex items-center gap-2">
+              <div className="p-3.5 bg-[#151f38] border-t border-[#5680E9]/30 flex items-center gap-2">
                 <input
                   type="text"
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="Ask a question about this case..."
-                  className="flex-1 px-3 py-2 bg-[#121816] border border-[#116466]/40 rounded-xl text-xs text-[#D1E8E2] placeholder-[#7e968e] focus:outline-none focus:border-[#116466]"
+                  className="flex-1 px-4 py-2.5 bg-[#080c18] border border-[#5680E9]/35 rounded-2xl text-xs text-white placeholder-[#8e9cc2] focus:outline-none focus:border-[#84CEEB]"
                 />
                 <button
                   onClick={() => handleSend()}
-                  className="p-2 bg-[#116466] hover:bg-[#167b7e] text-white rounded-xl transition disabled:opacity-50 border border-[#116466]"
+                  className="p-2.5 bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white rounded-2xl transition disabled:opacity-50 shadow-md shadow-[#5680E9]/25"
                   disabled={!inputQuery.trim()}
                 >
-                  <Send className="w-3.5 h-3.5 text-[#D1E8E2]" />
+                  <Send className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>

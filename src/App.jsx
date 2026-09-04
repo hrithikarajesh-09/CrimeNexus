@@ -34,69 +34,71 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121816] text-[#D1E8E2] flex flex-col font-sans selection:bg-[#116466] selection:text-white tech-grid-bg">
-      {/* Sleek Futuristic Top Header */}
-      <header className="sticky top-0 z-40 bg-[#17201c]/90 backdrop-blur-md border-b border-[#116466]/35">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-[#080c18] text-[#C1C8E4] flex flex-col font-sans selection:bg-[#5680E9] selection:text-white ethereal-aura-bg">
+      {/* Sleek Top Header */}
+      <header className="sticky top-0 z-40 bg-[#0f1629]/90 backdrop-blur-md border-b border-[#5680E9]/25">
+        <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
           
           {/* Logo & Platform Tagline */}
           <div 
             onClick={() => setActiveView('home')} 
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <div className="w-9 h-9 rounded-xl bg-[#116466]/20 border border-[#116466]/50 flex items-center justify-center text-[#D1E8E2] group-hover:bg-[#116466] group-hover:text-white transition shadow-sm">
-              <Shield className="w-5 h-5 text-[#D1E8E2]" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#5680E9] to-[#8860D0] p-0.5 shadow-lg shadow-[#5680E9]/20 flex items-center justify-center">
+              <div className="w-full h-full bg-[#080c18] rounded-[14px] flex items-center justify-center group-hover:bg-transparent transition">
+                <Shield className="w-5 h-5 text-[#84CEEB] group-hover:text-white transition" />
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base font-black tracking-wider uppercase text-white group-hover:text-[#FFCB9A] transition font-display">
+                <span className="text-base font-black tracking-wider uppercase text-white group-hover:text-[#84CEEB] transition font-display">
                   CrimeNexus
                 </span>
-                <span className="text-[10px] font-mono font-bold tracking-widest px-1.5 py-0.2 rounded bg-[#116466]/20 text-[#D1E8E2] border border-[#116466]/50">
+                <span className="text-[10px] font-mono font-bold tracking-widest px-2 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/35">
                   SIH26189
                 </span>
               </div>
-              <p className="text-[11px] text-[#7e968e] font-medium tracking-wide">
-                Criminal Network Analysis Platform &bull; <span className="text-[#D9B08C]">Where Every Clue Connects</span>
+              <p className="text-[11px] text-[#8e9cc2] font-medium">
+                Criminal Network Analysis Platform &bull; <span className="text-[#84CEEB]">Where Every Clue Connects</span>
               </p>
             </div>
           </div>
 
           {/* Primary View Navigation Buttons */}
-          <nav className="flex items-center gap-1.5 bg-[#121816]/90 border border-[#116466]/35 p-1 rounded-xl">
+          <nav className="flex items-center gap-1.5 bg-[#080c18]/90 border border-[#5680E9]/30 p-1.5 rounded-2xl">
             <button
               onClick={() => setActiveView('home')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeView === 'home'
-                  ? 'bg-[#116466] text-white shadow-sm border border-[#116466]'
-                  : 'text-[#7e968e] hover:text-[#D1E8E2] hover:bg-[#1c2420]'
+                  ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-md shadow-[#5680E9]/25'
+                  : 'text-[#8e9cc2] hover:text-white hover:bg-[#151f38]'
               }`}
             >
-              <Home className="w-3.5 h-3.5 text-[#D1E8E2]" />
+              <Home className="w-3.5 h-3.5" />
               <span>Home</span>
             </button>
 
             <button
               onClick={() => setActiveView('cases')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeView === 'cases' || activeView === 'case_workspace'
-                  ? 'bg-[#116466] text-white shadow-sm border border-[#116466]'
-                  : 'text-[#7e968e] hover:text-[#D1E8E2] hover:bg-[#1c2420]'
+                  ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-md shadow-[#5680E9]/25'
+                  : 'text-[#8e9cc2] hover:text-white hover:bg-[#151f38]'
               }`}
             >
-              <FolderGit2 className="w-3.5 h-3.5 text-[#D1E8E2]" />
+              <FolderGit2 className="w-3.5 h-3.5" />
               <span>Cases</span>
             </button>
 
             <button
               onClick={() => setActiveView('intelligence')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeView === 'intelligence'
-                  ? 'bg-[#116466] text-white shadow-sm border border-[#116466]'
-                  : 'text-[#7e968e] hover:text-[#D1E8E2] hover:bg-[#1c2420]'
+                  ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-md shadow-[#5680E9]/25'
+                  : 'text-[#8e9cc2] hover:text-white hover:bg-[#151f38]'
               }`}
             >
-              <GitBranch className="w-3.5 h-3.5 text-[#D1E8E2]" />
+              <GitBranch className="w-3.5 h-3.5" />
               <span>Network Intelligence</span>
             </button>
           </nav>
@@ -106,21 +108,21 @@ export default function App() {
             <div className="text-right hidden sm:block text-xs">
               <div className="flex items-center justify-end gap-1.5">
                 <span className="font-semibold text-white">{session.officerName}</span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#1c2420] text-[#FFCB9A] border border-[#116466]/40">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#151f38] text-[#84CEEB] border border-[#5680E9]/30">
                   {session.badgeNumber}
                 </span>
               </div>
-              <span className="text-[11px] text-[#7e968e] block truncate max-w-[200px]">
+              <span className="text-[11px] text-[#8e9cc2] block truncate max-w-[200px]">
                 {session.isSuperAdmin ? 'Super-Admin (Cross-Regional)' : session.regionName}
               </span>
             </div>
 
             <button
               onClick={() => setSession(null)}
-              className="p-2 rounded-xl bg-[#1c2420] hover:bg-[#242e2a] border border-[#116466]/40 text-[#7e968e] hover:text-[#D1E8E2] transition flex items-center gap-1.5 text-xs font-semibold"
+              className="p-2.5 rounded-2xl bg-[#151f38] hover:bg-[#1c294a] border border-[#5680E9]/30 text-[#8e9cc2] hover:text-white transition flex items-center gap-1.5 text-xs font-semibold"
               title="Switch Jurisdiction or Log Out"
             >
-              <LogOut className="w-3.5 h-3.5 text-[#D9B08C]" />
+              <LogOut className="w-3.5 h-3.5 text-[#84CEEB]" />
               <span className="hidden md:inline">Switch Region</span>
             </button>
           </div>
@@ -197,9 +199,9 @@ export default function App() {
         />
       )}
 
-      {/* Futuristic Technical Footer */}
-      <footer className="border-t border-[#116466]/30 bg-[#0f1412] py-4 text-center text-xs text-[#7e968e]">
-        CrimeNexus (SIH26189) &bull; Sleek Futuristic Criminal Network Analysis System &bull; <span className="text-[#D9B08C]">Row-Level Security</span> &amp; <span className="text-[#D1E8E2]">SHA-256 Fabric Ledger</span>
+      {/* Technical Footer */}
+      <footer className="border-t border-[#5680E9]/20 bg-[#080c18] py-4 text-center text-xs text-[#8e9cc2]">
+        CrimeNexus (SIH26189) &bull; AI-Powered Criminal Network Analysis Platform &bull; <span className="text-[#84CEEB]">Row-Level Security</span> &bull; <span className="text-[#8860D0]">SHA-256 Ledger Verified</span>
       </footer>
     </div>
   );
