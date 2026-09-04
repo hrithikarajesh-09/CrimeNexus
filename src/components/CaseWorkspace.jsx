@@ -24,7 +24,7 @@ import {
   getActiveVoiceDescription
 } from '../lib/soundEngine';
 
-export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCopilot }) {
+export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCopilot, initialTab = 'summary' }) {
   const caseData = RAW_DATASET.cases.find(c => c.case_id === caseId) || RAW_DATASET.cases[0];
   const allEvents = RAW_DATASET.groundTruth.chronological_reconstruction_events;
 
@@ -34,7 +34,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   );
 
   // Active workspace sub-tab: 'summary' (default), 'suspects', 'reconstruction', 'statutes'
-  const [activeTab, setActiveTab] = useState('summary');
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   // Selected map node for in-place transformation from entity circle to detailed evidence card
   const [selectedMapNode, setSelectedMapNode] = useState(null);
@@ -2357,7 +2357,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 <div
                   key={law.id}
                   onClick={() => toggleStatute(law.id)}
-                  className={`bg-[#131A26] hover:bg-[#1C212B] border rounded-[6px] p-3.5 transition-all duration-150 cursor-pointer ${
+                  className={`bg-[#131A26] hover:bg-[#1A2332] border rounded-[6px] p-3.5 transition-all duration-150 cursor-pointer ${
                     isExpanded 
                       ? 'border-[#D4A359] shadow-lg ring-1 ring-[#D4A359]/20' 
                       : 'border-[#222D3F] hover:border-[#2E3D55]'

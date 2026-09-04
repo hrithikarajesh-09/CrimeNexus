@@ -217,7 +217,7 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
             {/* Simulated Live Visual Graph Representation */}
             <div className="relative h-[360px] bg-[#0B0F17] rounded-[6px] border border-[#222D3F] p-6 flex items-center justify-center overflow-hidden">
               {/* Background grid lines */}
-              <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(#222D3F_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
 
               {/* Step-by-step Visual Network Diagram */}
               <div className="relative z-10 w-full max-w-md space-y-6">
