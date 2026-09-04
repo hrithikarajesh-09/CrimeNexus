@@ -36,6 +36,22 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   // Active workspace sub-tab: 'summary' (default), 'suspects', 'reconstruction', 'statutes'
   const [activeTab, setActiveTab] = useState('summary');
 
+  // Selected map node for in-place transformation from entity circle to detailed evidence card
+  const [selectedMapNode, setSelectedMapNode] = useState(null);
+
+  // Section 63B BSA Electronic Evidence Certificate Modal State
+  const [isBsaModalOpen, setIsBsaModalOpen] = useState(false);
+
+  // Expanded criminal statute violation item in list
+  const [expandedStatuteId, setExpandedStatuteId] = useState(null);
+  const toggleStatute = (id) => {
+    setExpandedStatuteId(prev => prev === id ? null : id);
+  };
+
+  // Spatial Hover Popover state for graph nodes
+  const [hoveredNode, setHoveredNode] = useState(null);
+  const [nodeHoverPos, setNodeHoverPos] = useState({ x: 0, y: 0, flipY: false });
+
   // Zoom and pan state for the Interactive Entity Graph
   const [graphZoom, setGraphZoom] = useState(1);
   const [graphPan, setGraphPan] = useState({ x: 0, y: 0 });
@@ -169,9 +185,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     setGraphPan({ x: 0, y: 0 });
   };
 
-  // Spatial Hover Popover state for graph nodes
-  const [hoveredNode, setHoveredNode] = useState(null);
-  const [nodeHoverPos, setNodeHoverPos] = useState({ x: 0, y: 0, flipY: false });
 
   const handleNodeHover = (e, node) => {
     if (isDraggingGraph) return;
@@ -428,7 +441,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   };
 
   // Advance to next stage smoothly
-  const advanceToNextStage = () => {
+  function advanceToNextStage() {
     setCurrentStep((prev) => {
       if (prev < reconstructionStages.length - 1) {
         const next = prev + 1;
@@ -441,19 +454,19 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
         return prev;
       }
     });
-  };
+  }
 
-  const scheduleNextStage = (delayMs = 1200) => {
+  function scheduleNextStage(delayMs = 1200) {
     clearAdvanceTimer();
     advanceTimeoutRef.current = setTimeout(() => {
       if (isPlayingRef.current) {
         advanceToNextStage();
       }
     }, delayMs / playbackSpeed);
-  };
+  }
 
   // Trigger audio playback and speech for a given stage
-  const triggerStagePlayback = (stageIdx) => {
+  function triggerStagePlayback(stageIdx) {
     clearAdvanceTimer();
     const stage = reconstructionStages[stageIdx];
     if (!stage) return;
