@@ -11,6 +11,14 @@ import { Button } from './ui/button';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from './ui/table';
 import { RAW_DATASET } from '../data/dataset';
+import { 
+  playPinStamp, 
+  playConduitSnap, 
+  playStageChime, 
+  speakNarration, 
+  stopNarration, 
+  unlockAudio 
+} from '../lib/soundEngine';
 
 export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCopilot }) {
   const caseData = RAW_DATASET.cases.find(c => c.case_id === caseId) || RAW_DATASET.cases[0];
@@ -190,6 +198,131 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     setHoveredNode(null);
   };
 
+  // =========================================================================
+  // GRAPH NODES (Semantic Dossier Tokens: steel = person/info, teal = account)
+  // =========================================================================
+  const allGraphNodes = [
+    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 90, y: 220, icon: User, color: '#6C93B8' },
+    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 285, y: 220, icon: CreditCard, color: '#4E9C93' },
+    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 485, y: 220, icon: CreditCard, color: '#4E9C93', isFraud: true },
+    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 385, y: 365, icon: User, color: '#6C93B8' },
+    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 590, y: 365, icon: CreditCard, color: '#4E9C93' },
+    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 510, y: 75, icon: User, color: '#6C93B8' },
+    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 695, y: 75, icon: Radio, color: '#6C93B8' },
+    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 880, y: 75, icon: Laptop, color: '#6C93B8' },
+    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 695, y: 220, icon: User, color: '#8B81C4', isBridge: true },
+    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 900, y: 220, icon: Building2, color: '#8B81C4', isBridge: true },
+    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 1090, y: 220, icon: User, color: '#6C93B8' },
+    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 1090, y: 365, icon: CreditCard, color: '#4E9C93' }
+  ];
+
+  // =========================================================================
+  // GRAPH EDGES (violet = cross-case, teal/brass = financial conduits)
+  // =========================================================================
+  const allGraphEdges = [
+    { from: 'PER-108', to: 'ACC-1001', label: 'Signatory', color: '#6C93B8' },
+    { from: 'ACC-1001', to: 'ACC-2201', label: '₹1.00 Cr RTGS', color: '#C68A46', strokeWidth: 2, animated: true },
+    { from: 'ACC-2201', to: 'PER-104', label: 'Registered To', color: '#6B7382' },
+    { from: 'ACC-2201', to: 'ACC-MULES', label: '5x ₹20L Tranches', color: '#4E9C93', animated: true },
+    { from: 'PER-101', to: 'LOC-101', label: 'Tower Presence', color: '#6B7382' },
+    { from: 'PER-102', to: 'LOC-101', label: 'IP / Dev Logs', color: '#6B7382' },
+    { from: 'ACC-MULES', to: 'PER-103', label: '₹70L Aggregated', color: '#C68A46', animated: true },
+    { from: 'LOC-101', to: 'PER-103', label: 'Voice Call', color: '#6B7382' },
+    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (Bridge)', color: '#8B81C4', strokeWidth: 2.5, animated: true, isBridge: true },
+    { from: 'ACC-7701', to: 'PER-105', label: '₹45L Cash Out', color: '#C1655A' },
+    { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#4E9C93', animated: true }
+  ];
+
+  // 6 Chronological Reconstruction Stages (Dynamic narrated materialization)
+  const reconstructionStages = [
+    {
+      stageNumber: 1,
+      phaseTitle: 'Spear-Phishing Infiltration & 2FA Theft',
+      timestamp: '09-JUN-2026 11:30 IST',
+      evidence: 'FIR 0018/2026 & Email Headers (EVD-001)',
+      narration: 'CFO Vikramaditya Rathore receives a spoofed email disguised as Zenith CEO Rajiv Singhania. Clicking the link takes him to a duplicate portal where hackers capture his corporate password and OTP token.',
+      nodes: ['PER-108', 'ACC-1001'],
+      edges: [{ from: 'PER-108', to: 'ACC-1001' }],
+      newNodes: ['PER-108', 'ACC-1001'],
+    },
+    {
+      stageNumber: 2,
+      phaseTitle: '₹1.00 Crore Corporate RTGS Heist',
+      timestamp: '09-JUN-2026 14:10 IST',
+      evidence: 'RTGS Transfer Slip TXN-1001',
+      narration: 'Using the stolen credentials, attackers execute an unauthorized ₹1.00 Crore RTGS transfer directly out of Zenith Technologies corporate account into primary mule Suman Roy\'s bank account.',
+      nodes: ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104'],
+      edges: [
+        { from: 'PER-108', to: 'ACC-1001' },
+        { from: 'ACC-1001', to: 'ACC-2201' },
+        { from: 'ACC-2201', to: 'PER-104' }
+      ],
+      newNodes: ['ACC-2201', 'PER-104'],
+    },
+    {
+      stageNumber: 3,
+      phaseTitle: 'Rapid 5-Account Mule Fan-Out Layering',
+      timestamp: '09-JUN-2026 14:35 IST',
+      evidence: 'IMPS Bank Slips TXN-1002 to 1006',
+      narration: 'Within 25 minutes, Suman Roy rapidly divides the ₹1.00 Crore across five secondary student and shell accounts in ₹20 Lakh tranches to avoid automated banking AML security freezes.',
+      nodes: ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES'],
+      edges: [
+        { from: 'PER-108', to: 'ACC-1001' },
+        { from: 'ACC-1001', to: 'ACC-2201' },
+        { from: 'ACC-2201', to: 'PER-104' },
+        { from: 'ACC-2201', to: 'ACC-MULES' }
+      ],
+      newNodes: ['ACC-MULES'],
+    },
+    {
+      stageNumber: 4,
+      phaseTitle: 'Cell Tower Telephony & Syndicate Call Dump',
+      timestamp: '09-JUN-2026 14:45 IST',
+      evidence: 'Sector 44 Tower T-4401 Dump (EVD-003)',
+      narration: 'Cell tower records in Gurugram prove syndicate boss Rajesh Verma and technician Kunal Shah were on active phone calls coordinating with mule handlers while the heist took place.',
+      nodes: ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102'],
+      edges: [
+        { from: 'PER-108', to: 'ACC-1001' },
+        { from: 'ACC-1001', to: 'ACC-2201' },
+        { from: 'ACC-2201', to: 'PER-104' },
+        { from: 'ACC-2201', to: 'ACC-MULES' },
+        { from: 'PER-101', to: 'LOC-101' },
+        { from: 'PER-102', to: 'LOC-101' }
+      ],
+      newNodes: ['LOC-101', 'PER-101', 'PER-102'],
+    },
+    {
+      stageNumber: 5,
+      phaseTitle: 'Broker Devrat Sharma & Cross-Case Bridge (TXN_552)',
+      timestamp: '07-AUG-2026 15:30 IST',
+      evidence: 'FIU-IND Advisory STR-88912 & TXN_552',
+      narration: 'Strategic money broker Devrat Sharma collects ₹70 Lakhs from the mules and sends ₹50 Lakhs via transfer TXN_552 directly into Mumbai company Apex Trade Solutions, bridging Case 018 with Case 041.',
+      nodes: ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102', 'PER-103', 'ACC-7701'],
+      edges: [
+        { from: 'PER-108', to: 'ACC-1001' },
+        { from: 'ACC-1001', to: 'ACC-2201' },
+        { from: 'ACC-2201', to: 'PER-104' },
+        { from: 'ACC-2201', to: 'ACC-MULES' },
+        { from: 'PER-101', to: 'LOC-101' },
+        { from: 'PER-102', to: 'LOC-101' },
+        { from: 'ACC-MULES', to: 'PER-103' },
+        { from: 'LOC-101', to: 'PER-103' },
+        { from: 'PER-103', to: 'ACC-7701' }
+      ],
+      newNodes: ['PER-103', 'ACC-7701'],
+    },
+    {
+      stageNumber: 6,
+      phaseTitle: 'Hawala Cash-Out & Offshore Flight to Dubai',
+      timestamp: '10-AUG-2026 12:00 IST',
+      evidence: 'SWIFT MT-103 International Wire Records',
+      narration: 'Apex Trade Solutions cashes out ₹45 Lakhs to hawala operator Tariq Merchant, who wires the proceeds via SWIFT into a Dubai bullion account to convert the stolen cash into offshore gold.',
+      nodes: ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102', 'PER-103', 'ACC-7701', 'PER-105', 'ACC-7705'],
+      edges: allGraphEdges,
+      newNodes: ['PER-105', 'ACC-7705'],
+    }
+  ];
+
   // Wikipedia-style tooltip hover state
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
@@ -200,6 +333,13 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [voiceAudio, setVoiceAudio] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [progressPercent, setProgressPercent] = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [audioTestStatus, setAudioTestStatus] = useState(null);
+
+  const currentStage = reconstructionStages[Math.min(currentStep, reconstructionStages.length - 1)] || reconstructionStages[0];
+  const activeReplayNodes = currentStage.nodes;
+  const activeReplayEdges = currentStage.edges;
+  const newlyMaterializedNodes = currentStage.newNodes;
 
   // BSA Certificate Modal state
   const [isBsaModalOpen, setIsBsaModalOpen] = useState(false);
@@ -240,38 +380,26 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     };
   }, [selectedMapNode]);
 
-  // Play subtle sonic audio chime
-  const playAudioChime = () => {
-    if (!voiceAudio) return;
-    try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(480, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(720, audioCtx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.22);
-    } catch (e) {
-      // AudioContext policy fallback
-    }
-  };
+  // Trigger audio playback and speech for a given stage
+  const triggerStagePlayback = (stageIdx) => {
+    const stage = reconstructionStages[stageIdx];
+    if (!stage) return;
 
-  // Speak narration
-  const speakNarration = (text) => {
-    if (!voiceAudio || !('speechSynthesis' in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.05 * playbackSpeed;
-      utterance.pitch = 0.98;
-      window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.error(e);
+    // 1. Play sound effects
+    playStageChime();
+    setTimeout(() => {
+      playPinStamp();
+    }, 100);
+
+    // 2. Speak narration if voice audio is enabled
+    if (voiceAudio) {
+      setIsSpeaking(true);
+      speakNarration(stage.narration, {
+        speed: playbackSpeed,
+        onStart: () => setIsSpeaking(true),
+        onEnd: () => setIsSpeaking(false),
+        onError: () => setIsSpeaking(false),
+      });
     }
   };
 
@@ -279,32 +407,27 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   useEffect(() => {
     let timer = null;
     if (isPlaying) {
-      const durationPerStep = 6000 / playbackSpeed;
+      const durationPerStep = 8000 / playbackSpeed;
       const intervalMs = 100;
       let elapsed = 0;
 
-      // Trigger narration and chime for current step
-      playAudioChime();
-      if (caseEvents[currentStep]) {
-        speakNarration(caseEvents[currentStep].narration);
-      }
-
       timer = setInterval(() => {
         elapsed += intervalMs;
-        const totalDuration = caseEvents.length * durationPerStep;
+        const totalDuration = reconstructionStages.length * durationPerStep;
         const currentTotalElapsed = currentStep * durationPerStep + elapsed;
         setProgressPercent(Math.min(100, (currentTotalElapsed / totalDuration) * 100));
 
         if (elapsed >= durationPerStep) {
           elapsed = 0;
           setCurrentStep((prev) => {
-            if (prev < caseEvents.length - 1) {
+            if (prev < reconstructionStages.length - 1) {
               const next = prev + 1;
-              playAudioChime();
-              speakNarration(caseEvents[next].narration);
+              triggerStagePlayback(next);
               return next;
             } else {
               setIsPlaying(false);
+              stopNarration();
+              setIsSpeaking(false);
               setProgressPercent(100);
               return prev;
             }
@@ -313,30 +436,58 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       }, intervalMs);
     }
     return () => clearInterval(timer);
-  }, [isPlaying, currentStep, playbackSpeed, voiceAudio, caseEvents]);
+  }, [isPlaying, playbackSpeed, voiceAudio, reconstructionStages.length]);
 
   const handleStartVideo = () => {
-    if (currentStep >= caseEvents.length - 1) {
+    unlockAudio();
+    let startStep = currentStep;
+    if (currentStep >= reconstructionStages.length - 1) {
+      startStep = 0;
       setCurrentStep(0);
       setProgressPercent(0);
     }
     setIsPlaying(true);
+    triggerStagePlayback(startStep);
   };
 
   const handleResetVideo = () => {
     setIsPlaying(false);
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    stopNarration();
+    setIsSpeaking(false);
     setCurrentStep(0);
     setProgressPercent(0);
   };
 
   const handleScrub = (index) => {
     setIsPlaying(false);
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    stopNarration();
+    unlockAudio();
     setCurrentStep(index);
-    setProgressPercent(((index) / (caseEvents.length - 1)) * 100);
-    playAudioChime();
-    speakNarration(caseEvents[index].narration);
+    setProgressPercent(((index) / (reconstructionStages.length - 1)) * 100);
+    triggerStagePlayback(index);
+  };
+
+  const handleTestAudio = () => {
+    unlockAudio();
+    playStageChime();
+    setAudioTestStatus('Testing...');
+    speakNarration('CrimeNexus audio system online. Speech narration and evidence sound effects operational.', {
+      speed: 1,
+      onStart: () => {
+        setIsSpeaking(true);
+        setAudioTestStatus('Playing');
+      },
+      onEnd: () => {
+        setIsSpeaking(false);
+        setAudioTestStatus('OK');
+        setTimeout(() => setAudioTestStatus(null), 2500);
+      },
+      onError: () => {
+        setIsSpeaking(false);
+        setAudioTestStatus('Error');
+        setTimeout(() => setAudioTestStatus(null), 2500);
+      }
+    });
   };
 
   // Wikipedia hover helper dictionary
@@ -486,62 +637,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     }
   ];
 
-  // =========================================================================
-  // GRAPH NODES (Semantic Dossier Tokens: steel = person/info, teal = account)
-  // =========================================================================
-  const allGraphNodes = [
-    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 90, y: 220, icon: User, color: '#6C93B8' },
-    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 285, y: 220, icon: CreditCard, color: '#4E9C93' },
-    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 485, y: 220, icon: CreditCard, color: '#4E9C93', isFraud: true },
-    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 385, y: 365, icon: User, color: '#6C93B8' },
-    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 590, y: 365, icon: CreditCard, color: '#4E9C93' },
-    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 510, y: 75, icon: User, color: '#6C93B8' },
-    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 695, y: 75, icon: Radio, color: '#6C93B8' },
-    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 880, y: 75, icon: Laptop, color: '#6C93B8' },
-    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 695, y: 220, icon: User, color: '#8B81C4', isBridge: true },
-    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 900, y: 220, icon: Building2, color: '#8B81C4', isBridge: true },
-    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 1090, y: 220, icon: User, color: '#6C93B8' },
-    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 1090, y: 365, icon: CreditCard, color: '#4E9C93' }
-  ];
-
-  // =========================================================================
-  // GRAPH EDGES (violet = cross-case, teal/brass = financial conduits)
-  // =========================================================================
-  const allGraphEdges = [
-    { from: 'PER-108', to: 'ACC-1001', label: 'Signatory', color: '#6C93B8' },
-    { from: 'ACC-1001', to: 'ACC-2201', label: '₹1.00 Cr RTGS', color: '#C68A46', strokeWidth: 2, animated: true },
-    { from: 'ACC-2201', to: 'PER-104', label: 'Registered To', color: '#6B7382' },
-    { from: 'ACC-2201', to: 'ACC-MULES', label: '5x ₹20L Tranches', color: '#4E9C93', animated: true },
-    { from: 'PER-101', to: 'LOC-101', label: 'Tower Presence', color: '#6B7382' },
-    { from: 'PER-102', to: 'LOC-101', label: 'IP / Dev Logs', color: '#6B7382' },
-    { from: 'ACC-MULES', to: 'PER-103', label: '₹70L Aggregated', color: '#C68A46', animated: true },
-    { from: 'LOC-101', to: 'PER-103', label: 'Voice Call', color: '#6B7382' },
-    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (Bridge)', color: '#8B81C4', strokeWidth: 2.5, animated: true, isBridge: true },
-    { from: 'ACC-7701', to: 'PER-105', label: '₹45L Cash Out', color: '#C1655A' },
-    { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#4E9C93', animated: true }
-  ];
-
-  // Replay steps
-  const stepNodes = [
-    ['PER-108', 'ACC-1001'],
-    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104'],
-    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES'],
-    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102'],
-    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102', 'PER-103', 'ACC-7701'],
-    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102', 'PER-103', 'ACC-7701', 'PER-105', 'ACC-7705']
-  ];
-
-  const stepEdges = [
-    [{ from: 'PER-108', to: 'ACC-1001' }],
-    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }],
-    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }, { from: 'ACC-2201', to: 'ACC-MULES' }],
-    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }, { from: 'ACC-2201', to: 'ACC-MULES' }, { from: 'PER-101', to: 'LOC-101' }, { from: 'PER-102', to: 'LOC-101' }],
-    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }, { from: 'ACC-2201', to: 'ACC-MULES' }, { from: 'PER-101', to: 'LOC-101' }, { from: 'PER-102', to: 'LOC-101' }, { from: 'ACC-MULES', to: 'PER-103' }, { from: 'LOC-101', to: 'PER-103' }, { from: 'PER-103', to: 'ACC-7701' }],
-    allGraphEdges
-  ];
-
-  const activeReplayNodes = stepNodes[Math.min(currentStep, stepNodes.length - 1)] || [];
-  const activeReplayEdges = stepEdges[Math.min(currentStep, stepEdges.length - 1)] || [];
+  // Dossier details for inspect drawer
 
   const entityDossierDetails = {
     'PER-108': {
@@ -1638,7 +1734,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               <button
                 onClick={handleResetVideo}
                 className="p-1 rounded-[4px] bg-[#181C24] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
-                title="Reset"
+                title="Reset to Stage 1"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
@@ -1648,10 +1744,21 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 className={`p-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 ${
                   voiceAudio ? 'bg-[#181C24] text-[#C68A46] border-[#2B313D]' : 'bg-[#181C24] text-[#6B7382] border-[#2B313D]'
                 }`}
-                title="Toggle Voice"
+                title="Toggle Voice Narration"
               >
                 {voiceAudio ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
                 <span className="hidden sm:inline text-[11px]">{voiceAudio ? 'Voice ON' : 'Muted'}</span>
+              </button>
+
+              <button
+                onClick={handleTestAudio}
+                className={`px-2 py-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 bg-[#181C24] border-[#2B313D] hover:border-[#C68A46] ${
+                  audioTestStatus ? 'text-[#C68A46]' : 'text-[#9AA3B2]'
+                }`}
+                title="Test voice synthesis and procedural sound effects"
+              >
+                <Volume2 className="w-3 h-3" />
+                <span className="text-[10.5px]">{audioTestStatus ? audioTestStatus : 'Test Voice'}</span>
               </button>
 
               <div className="flex items-center gap-0.5 px-1 text-xs font-mono">
@@ -1671,48 +1778,81 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           </div>
 
           {/* Timeline Progress Scrubber */}
-          <div className="space-y-1">
-            <div className="grid grid-cols-6 gap-1.5">
-              {caseEvents.map((evt, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleScrub(idx)}
-                  className={`h-1.5 rounded-[2px] transition-all duration-150 ${
-                    idx <= currentStep ? 'bg-[#C68A46]' : 'bg-[#1F2430] hover:bg-[#2B313D]'
-                  }`}
-                  title={`Event ${idx + 1}: ${evt.timestamp}`}
-                />
-              ))}
+          <div className="space-y-2">
+            <div className="grid grid-cols-6 gap-2">
+              {reconstructionStages.map((stg, idx) => {
+                const isPast = idx < currentStep;
+                const isCurrent = idx === currentStep;
+                return (
+                  <button
+                    key={stg.stageNumber}
+                    onClick={() => handleScrub(idx)}
+                    className={`h-2 rounded-[3px] transition-all duration-200 text-left relative overflow-hidden ${
+                      isCurrent
+                        ? 'bg-[#C68A46] ring-2 ring-[#C68A46]/40 shadow-sm'
+                        : isPast
+                        ? 'bg-[#8B2626]'
+                        : 'bg-[#1F2430] hover:bg-[#282F3F]'
+                    }`}
+                    title={`Stage ${stg.stageNumber}: ${stg.phaseTitle}`}
+                  />
+                );
+              })}
             </div>
-            <div className="flex items-center justify-between text-[11px] font-mono text-[#6B7382]">
-              <span>Event {currentStep + 1} of {caseEvents.length}: {caseEvents[currentStep]?.timestamp}</span>
-              <span>Source: <strong className="text-[#9AA3B2]">{caseEvents[currentStep]?.evidence_reference}</strong></span>
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="stamp-tag stamp-crimson px-1.5 py-0.5 text-[10px] font-bold">
+                  STAGE {currentStep + 1} OF {reconstructionStages.length}
+                </span>
+                <span className="font-semibold text-[#E8EAEE] tracking-wide font-sans text-xs">
+                  {currentStage.phaseTitle}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 text-[11px] text-[#9AA3B2]">
+                <span>Timestamp: <strong className="text-[#E8EAEE] font-mono">{currentStage.timestamp}</strong></span>
+                <span>Exhibit: <strong className="text-[#C68A46] font-mono">{currentStage.evidence}</strong></span>
+              </div>
             </div>
           </div>
 
           {/* Narration Subtitle Box */}
-          <div className="bg-[#1F2430] border border-[#2B313D] p-3.5 rounded-[5px] flex items-start gap-3">
-            <div className="mt-0.5 shrink-0">
-              {isPlaying && voiceAudio ? (
+          <div className="bg-[#181C24] border border-[#2B313D] p-4 rounded-[5px] flex items-start gap-3 relative shadow-md">
+            <div className="mt-1 shrink-0 flex items-center gap-1.5">
+              {isSpeaking ? (
                 <div className="flex items-center gap-0.5 h-4">
                   <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
-                  <span className="w-0.5 bg-[#6C93B8] rounded-full wave-bar" />
-                  <span className="w-0.5 bg-[#5FA876] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#8B2626] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#F4EFE6] rounded-full wave-bar" />
                   <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
                 </div>
               ) : (
-                <span className="w-2 h-2 rounded-full bg-[#C68A46] block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#C68A46] block" />
               )}
             </div>
-            <p className="text-sm font-medium text-[#E8EAEE] leading-relaxed font-sans">
-              "{caseEvents[currentStep]?.narration}"
-            </p>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#787167]">
+                <span>Narrated Sequence Dispatch &bull; Phase {currentStep + 1}</span>
+                {isSpeaking && (
+                  <span className="text-[#C68A46] flex items-center gap-1 font-mono text-[10px]">
+                    <Volume2 className="w-3 h-3 animate-pulse" />
+                    Audio Synthesizer Active
+                  </span>
+                )}
+              </div>
+              <p className="text-sm font-medium text-[#F4EFE6] leading-relaxed font-sans">
+                "{currentStage.narration}"
+              </p>
+            </div>
           </div>
 
           {/* LIVE GRAPH RECONSTRUCTION CANVAS: Entities and Lines Materialize One by One */}
           <div className="bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[350px] relative overflow-x-auto select-none">
-            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#6B7382] bg-[#181C24] px-2 py-0.5 rounded-[3px] border border-[#2B313D] z-10">
-              Materialized Graph: {activeReplayNodes.length} Nodes &bull; {activeReplayEdges.length} Conduits Active
+            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#787167] bg-[#181C24] px-2 py-0.5 rounded-[3px] border border-[#2B313D] z-10 flex items-center gap-2">
+              <span>Phase {currentStep + 1}: {currentStage.phaseTitle}</span>
+              <span className="text-[#2B313D]">&bull;</span>
+              <span className="text-[#C68A46]">{activeReplayNodes.length} Dossier Entities</span>
+              <span className="text-[#2B313D]">&bull;</span>
+              <span className="text-[#8B81C4]">{activeReplayEdges.length} Active Conduits</span>
             </div>
 
             <svg className="w-full min-w-[940px] h-[390px]" viewBox="0 0 1180 440">
@@ -1738,7 +1878,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       y2={tgtNode.y}
                       stroke={edge.color}
                       strokeWidth={edge.strokeWidth || 1.8}
-                      strokeOpacity={0.8}
+                      strokeOpacity={0.85}
                       className="line-draw-anim"
                     />
                     <rect
@@ -1757,7 +1897,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       textAnchor="middle"
                       fill={edge.color}
                       fontSize="8.5"
-                      fontFamily="IBM Plex Mono, monospace"
+                      fontFamily="Courier Prime, monospace"
                       fontWeight="500"
                       className="animate-in fade-in duration-300"
                     >
@@ -1772,9 +1912,11 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 const isVisible = activeReplayNodes.includes(node.id);
                 if (!isVisible) return null;
 
+                const isNewlyAdded = newlyMaterializedNodes && newlyMaterializedNodes.includes(node.id);
                 const NodeIcon = node.icon;
                 const r = node.isBridge ? 20 : 16;
-                const boxWidth = node.isBridge ? 112 : 98;
+                const boxWidth = node.isBridge ? 116 : 100;
+
                 return (
                   <g 
                     key={node.id}
@@ -1782,6 +1924,45 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     className="node-pop cursor-pointer"
                     onClick={() => onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge })}
                   >
+                    {/* Stage pulse ring around newly introduced entities */}
+                    {isNewlyAdded && (
+                      <circle
+                        r={r + 6}
+                        fill="none"
+                        stroke="#C68A46"
+                        strokeWidth="1.5"
+                        strokeDasharray="4 3"
+                        className="animate-spin"
+                        style={{ animationDuration: '6s' }}
+                      />
+                    )}
+
+                    {/* Newly Materialized Phase Tag */}
+                    {isNewlyAdded && (
+                      <g transform={`translate(0, -${r + 7})`}>
+                        <rect
+                          x="-28"
+                          y="-9"
+                          width="56"
+                          height="12"
+                          rx="2"
+                          fill="#8B2626"
+                          stroke="#B83232"
+                          strokeWidth="0.5"
+                        />
+                        <text
+                          textAnchor="middle"
+                          y="-0.5"
+                          fill="#F4EFE6"
+                          fontSize="6.5"
+                          fontWeight="700"
+                          fontFamily="Courier Prime, monospace"
+                        >
+                          PHASE {currentStep + 1}
+                        </text>
+                      </g>
+                    )}
+
                     <circle
                       r={r}
                       fill="#181C24"
@@ -1805,8 +1986,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       height={24}
                       rx={3}
                       fill="#12151B"
-                      stroke="#2B313D"
-                      strokeWidth="0.5"
+                      stroke={isNewlyAdded ? "#C68A46" : "#2B313D"}
+                      strokeWidth={isNewlyAdded ? "1" : "0.5"}
                     />
 
                     <text
@@ -1822,9 +2003,9 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <text
                       textAnchor="middle"
                       y={r + 23}
-                      fill="#6B7382"
+                      fill="#787167"
                       fontSize="8"
-                      fontFamily="IBM Plex Mono, monospace"
+                      fontFamily="Courier Prime, monospace"
                     >
                       {node.sub}
                     </text>

@@ -12,62 +12,60 @@ export default function Navbar({
   onOpenIntegrityModal
 }) {
   const regions = [
-    { id: "REG-NCR", name: "Region A (NCR / Gurugram)", badge: "Active Jurisdiction", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-    { id: "REG-MUM", name: "Region B (Mumbai HQ)", badge: "Active Jurisdiction", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
-    { id: "REG-BLR", name: "Region C (Bengaluru Cyber)", badge: "Read-Only / Isolation", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-    { id: "ALL-REGIONS", name: "Super-Admin (Cross-Regional)", badge: "Full Audit Scope", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" }
+    { id: "REG-NCR", name: "Region A (NCR / Gurugram)", badge: "Active Jurisdiction" },
+    { id: "REG-MUM", name: "Region B (Mumbai HQ)", badge: "Active Jurisdiction" },
+    { id: "REG-BLR", name: "Region C (Bengaluru Cyber)", badge: "Read-Only / Isolation" },
+    { id: "ALL-REGIONS", name: "Super-Admin (Cross-Regional)", badge: "Full Audit Scope" }
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0d1322]/90 backdrop-blur-md border-b border-slate-800">
+    <header className="sticky top-0 z-40 bg-[#181C24] border-b border-[#2B313D]">
       {/* Top Header Row */}
-      <div className="max-w-[1700px] mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div className="max-w-[1700px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-4">
         {/* Brand Logo & Tagline */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center">
-            <div className="w-full h-full bg-[#0b0f19] rounded-[10px] flex items-center justify-center">
-              <Shield className="w-5 h-5 text-cyan-400" />
-            </div>
+          <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#C68A46]">
+            <Shield className="w-5 h-5 text-[#C68A46]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+              <h1 className="text-lg font-serif font-bold text-[#E8EAEE] tracking-tight">
                 CrimeNexus
               </h1>
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-cyan-400 border border-blue-500/20">
-                SIH26189 PROTOTYPE
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[3px] bg-[#1F2430] text-[#787167] border border-[#2B313D]">
+                SIH26189 ARCHIVE
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-medium">
-              AI-Powered Criminal Network Analysis System &bull; <span className="text-slate-300">Where Every Clue Connects</span>
+            <p className="text-[11px] text-[#787167] font-sans">
+              Forensic Criminal Network Intelligence Platform
             </p>
           </div>
         </div>
 
         {/* Global Search Bar */}
         <div className="flex-1 max-w-md relative">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#787167]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Case ID, Person (e.g. Devrat), Phone, Account, Vehicle or IP..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-900/90 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
+            className="w-full pl-9 pr-4 py-1.5 bg-[#12151B] border border-[#2B313D] rounded-[5px] text-xs text-[#E8EAEE] placeholder-[#787167] focus:outline-none focus:border-[#C68A46] transition font-sans"
           />
         </div>
 
         {/* Regional Access Control Selector */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-900/90 border border-slate-800 rounded-lg p-1">
-            <Lock className="w-3.5 h-3.5 text-cyan-400 ml-2" />
-            <span className="text-xs text-slate-400 font-medium mr-1">Region RLS:</span>
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 bg-[#12151B] border border-[#2B313D] rounded-[5px] px-2 py-1">
+            <Lock className="w-3 h-3 text-[#C68A46]" />
+            <span className="text-[11px] text-[#787167] font-mono">RLS:</span>
             <select
               value={currentRegion}
               onChange={(e) => setCurrentRegion(e.target.value)}
-              className="bg-slate-800 text-xs font-semibold text-slate-200 rounded px-2 py-1 focus:outline-none cursor-pointer border border-slate-700"
+              className="bg-transparent text-xs font-medium text-[#E8EAEE] focus:outline-none cursor-pointer"
             >
               {regions.map((r) => (
-                <option key={r.id} value={r.id}>
+                <option key={r.id} value={r.id} className="bg-[#181C24] text-[#E8EAEE]">
                   {r.name}
                 </option>
               ))}
@@ -77,29 +75,29 @@ export default function Navbar({
           {/* Action Buttons */}
           <button
             onClick={onOpenUpload}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-600/20 transition active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#C68A46] hover:bg-[#D49855] text-[#12151B] text-xs font-semibold transition"
           >
             <Upload className="w-3.5 h-3.5" />
-            Upload Evidence Data
+            Upload Evidence
           </button>
 
           <button
             onClick={onOpenIntegrityModal}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-300 transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-xs font-medium text-[#9AA3B2] hover:text-[#E8EAEE] transition"
             title="Verify SHA-256 Blockchain Integrity"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>SHA-256 Integrity</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-[#5FA876]" />
+            <span className="font-mono text-[11px]">SHA-256 Audit</span>
           </button>
         </div>
       </div>
 
       {/* Navigation Tabs Bar */}
-      <div className="bg-[#0b0f19]/90 border-t border-slate-800/80 px-4">
+      <div className="bg-[#12151B] border-t border-[#2B313D] px-4">
         <div className="max-w-[1700px] mx-auto flex items-center gap-1 overflow-x-auto no-scrollbar py-1 text-xs font-medium">
           {[
             { id: 'cases', label: '1. Cases Workspace', icon: Database },
-            { id: 'reconstruction', label: '2. AI Reconstruction (Signature)', icon: Cpu, badge: 'FEATURE' },
+            { id: 'reconstruction', label: '2. Live Reconstruction', icon: Cpu, badge: 'NARRATED' },
             { id: 'graph', label: '3. Criminal Knowledge Graph', icon: GitBranch },
             { id: 'copilot', label: '4. AI Copilot Q&A', icon: HelpCircle },
             { id: 'gaps', label: '5. Gaps & Contradictions', icon: AlertTriangle },
@@ -113,16 +111,18 @@ export default function Navbar({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-md transition whitespace-nowrap ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-[4px] transition whitespace-nowrap text-xs ${
                   isActive
-                    ? 'bg-blue-600/20 text-cyan-300 border border-cyan-500/40 font-semibold shadow-sm shadow-blue-500/10'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-[#C68A46] text-[#12151B] font-semibold'
+                    : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#1F2430]'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#12151B]' : 'text-[#787167]'}`} />
                 <span>{tab.label}</span>
                 {tab.badge && (
-                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                  <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded font-mono ${
+                    isActive ? 'bg-[#12151B] text-[#C68A46]' : 'bg-[#8B2626] text-[#F4EFE6]'
+                  }`}>
                     {tab.badge}
                   </span>
                 )}

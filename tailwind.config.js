@@ -11,10 +11,27 @@ export default {
         panel: {
           DEFAULT: '#181C24',
           subtle: '#1F2430',
+          elevated: '#232834',
         },
-        border: '#2B313D',
+        border: {
+          DEFAULT: '#2B313D',
+          subtle: '#222733',
+          elevated: '#384152',
+        },
+        bone: '#F4EFE6',
+        taupe: {
+          DEFAULT: '#787167',
+          light: '#948B7E',
+          muted: '#5A534B',
+        },
+        crimson: {
+          DEFAULT: '#8B2626',
+          bright: '#B83232',
+          muted: 'rgba(139, 38, 38, 0.15)',
+        },
         ink: {
           DEFAULT: '#E8EAEE',
+          bone: '#F4EFE6',
           dim: '#9AA3B2',
           faint: '#6B7382',
         },
@@ -41,7 +58,8 @@ export default {
       fontFamily: {
         serif: ['"Source Serif 4"', 'Georgia', 'serif'],
         sans: ['"IBM Plex Sans"', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['"IBM Plex Mono"', 'JetBrains Mono', 'monospace'],
+        mono: ['"Courier Prime"', '"IBM Plex Mono"', 'Courier', 'monospace'],
+        typewriter: ['"Courier Prime"', 'Courier', 'monospace'],
       }
     },
   },
