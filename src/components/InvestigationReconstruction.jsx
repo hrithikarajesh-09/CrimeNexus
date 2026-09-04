@@ -45,18 +45,18 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
   return (
     <div className="space-y-6">
       {/* Signature Banner */}
-      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-cyan-500/30 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+      <div className="bg-[#131A26] border border-[#D4A359]/30 rounded-[8px] p-6 shadow-none relative overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-cyan-500/20 text-[#D4A359] border border-[#D4A359]/30 flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 text-[#D4A359]" />
                 SECTION 6 &bull; SIGNATURE AI FEATURE
               </span>
-              <span className="text-xs text-slate-400 font-medium">Fact-Strict Reconstruction Engine</span>
+              <span className="text-xs text-[#94A3B8] font-medium">Fact-Strict Reconstruction Engine</span>
             </div>
-            <h2 className="text-2xl font-black text-white mt-1">AI Investigation Reconstruction</h2>
-            <p className="text-xs text-slate-300 max-w-2xl mt-1 leading-relaxed">
+            <h2 className="text-2xl font-black text-[#F1F5F9] mt-1">AI Investigation Reconstruction</h2>
+            <p className="text-xs text-[#94A3B8] max-w-2xl mt-1 leading-relaxed">
               Progressively reconstructs criminal activity chronologically across multiple jurisdictions.
               As evidence-backed events are introduced, live narration appears and the knowledge graph expands automatically.
             </p>
@@ -66,10 +66,10 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
           <div className="flex items-center gap-3">
             <button
               onClick={isPlaying ? handlePause : handleStart}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs shadow-lg transition active:scale-95 ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-[6px] font-bold text-xs shadow-lg transition active:scale-95 ${
                 isPlaying
-                  ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20'
-                  : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/25'
+                  ? 'bg-[#D4A359] hover:bg-[#E0B268] text-[#0B0F17] '
+                  : 'bg-[#D4A359] hover:bg-[#E0B268] text-[#F1F5F9] '
               }`}
             >
               {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
@@ -78,7 +78,7 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
 
             <button
               onClick={handleReset}
-              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition"
+              className="p-2.5 rounded-[6px] bg-[#1A2332] hover:bg-[#1D2738] text-[#94A3B8] border border-[#222D3F] transition"
               title="Reset Timeline to Start"
             >
               <RotateCcw className="w-4 h-4" />
@@ -86,10 +86,10 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
 
             <button
               onClick={() => setAudioEnabled(!audioEnabled)}
-              className={`p-2.5 rounded-xl border transition ${
+              className={`p-2.5 rounded-[6px] border transition ${
                 audioEnabled
-                  ? 'bg-blue-500/20 text-cyan-300 border-cyan-500/30'
-                  : 'bg-slate-800 text-slate-500 border-slate-700'
+                  ? 'bg-[#D4A359]/15 text-[#D4A359] text-[#D4A359] border-[#D4A359]/30'
+                  : 'bg-[#1A2332] text-[#64748B] border-[#222D3F]'
               }`}
               title="Toggle Audio Simulation"
             >
@@ -99,18 +99,18 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
         </div>
 
         {/* AI Rule Notice */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+        <div className="mt-4 pt-3 border-t border-[#222D3F] text-[11px] text-[#94A3B8] flex items-center justify-between">
           <span className="italic">
             <strong>AI Guardrail Rule:</strong> The LLM narrates retrieved facts from evidence; it must not invent motives, guilt, or unsupported legal conclusions.
           </span>
-          <span className="font-mono text-cyan-400 font-semibold">
+          <span className="font-mono text-[#D4A359] font-semibold">
             Step {currentStepIndex + 1} of {events.length}
           </span>
         </div>
       </div>
 
       {/* Progress Bar & Timeline Stepper */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 backdrop-blur-md">
+      <div className="bg-[#131A26] border border-[#222D3F] rounded-[6px] p-4 ">
         <div className="flex items-center justify-between gap-2 overflow-x-auto pb-2">
           {events.map((ev, idx) => {
             const isPassed = idx <= currentStepIndex;
@@ -119,21 +119,21 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
               <button
                 key={ev.event_number}
                 onClick={() => setCurrentStepIndex(idx)}
-                className={`flex-1 min-w-[140px] p-2.5 rounded-lg border text-left transition ${
+                className={`flex-1 min-w-[140px] p-2.5 rounded-[4px] border text-left transition ${
                   isCurrent
-                    ? 'bg-blue-600/30 border-cyan-400 shadow-md shadow-cyan-500/10'
+                    ? 'bg-[#D4A359]/15 text-[#D4A359] border-[#D4A359] shadow-md shadow-cyan-500/10'
                     : isPassed
-                    ? 'bg-slate-800/80 border-slate-700 text-slate-300'
-                    : 'bg-slate-900/40 border-slate-800/60 text-slate-600'
+                    ? 'bg-[#1A2332] border-[#222D3F] text-[#94A3B8]'
+                    : 'bg-[#131A26] border-[#222D3F] text-[#64748B]'
                 }`}
               >
                 <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-                  <span className={isCurrent ? 'text-cyan-300 font-bold' : isPassed ? 'text-slate-400' : 'text-slate-600'}>
+                  <span className={isCurrent ? 'text-[#D4A359] font-bold' : isPassed ? 'text-[#94A3B8]' : 'text-[#64748B]'}>
                     EVENT #{ev.event_number}
                   </span>
-                  <span className="text-slate-500">{ev.timestamp.split(' ')[0]}</span>
+                  <span className="text-[#64748B]">{ev.timestamp.split(' ')[0]}</span>
                 </div>
-                <p className={`text-[11px] font-semibold truncate ${isCurrent ? 'text-white' : isPassed ? 'text-slate-300' : 'text-slate-500'}`}>
+                <p className={`text-[11px] font-semibold truncate ${isCurrent ? 'text-[#F1F5F9]' : isPassed ? 'text-[#94A3B8]' : 'text-[#64748B]'}`}>
                   {ev.narration.slice(0, 32)}...
                 </p>
               </button>
@@ -146,40 +146,40 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Live AI Narration Box */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="bg-[#131b2e] border border-cyan-500/40 rounded-xl p-6 shadow-2xl relative">
+          <div className="bg-[#131A26] border border-[#D4A359]/40 rounded-[6px] p-6 shadow-none relative">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-cyan-400 flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-cyan-400 animate-pulse" /> LIVE AI NARRATOR STREAM
+              <span className="text-xs font-bold text-[#D4A359] flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-[#D4A359] animate-pulse" /> LIVE AI NARRATOR STREAM
               </span>
-              <span className="text-[10px] font-mono bg-blue-500/20 text-cyan-300 px-2 py-0.5 rounded border border-blue-500/30">
+              <span className="text-[10px] font-mono bg-[#D4A359]/15 text-[#D4A359] text-[#D4A359] px-2 py-0.5 rounded border border-[#D4A359]/30">
                 EVIDENCE-BACKED
               </span>
             </div>
 
             {/* Narration Text Box */}
-            <div className="bg-slate-950/80 p-5 rounded-xl border border-slate-800 text-sm font-medium text-slate-100 leading-relaxed min-h-[160px] flex items-center">
+            <div className="bg-[#0B0F17] p-5 rounded-[6px] border border-[#222D3F] text-sm font-medium text-[#F1F5F9] leading-relaxed min-h-[160px] flex items-center">
               <p>"{currentEvent.narration}"</p>
             </div>
 
             {/* Supporting Evidence Citation Pill */}
-            <div className="mt-4 p-3 bg-slate-900/90 rounded-lg border border-slate-800 text-xs space-y-1">
-              <div className="flex items-center justify-between text-slate-400">
-                <span className="font-semibold text-slate-300">Supporting Evidence Record:</span>
-                <span className="font-mono text-cyan-400 font-bold">{currentEvent.evidence_reference}</span>
+            <div className="mt-4 p-3 bg-[#131A26] rounded-[4px] border border-[#222D3F] text-xs space-y-1">
+              <div className="flex items-center justify-between text-[#94A3B8]">
+                <span className="font-semibold text-[#94A3B8]">Supporting Evidence Record:</span>
+                <span className="font-mono text-[#D4A359] font-bold">{currentEvent.evidence_reference}</span>
               </div>
-              <p className="text-slate-400 text-[11px]">
-                Case Reference: <strong className="text-slate-200">{currentEvent.case_id}</strong>
+              <p className="text-[#94A3B8] text-[11px]">
+                Case Reference: <strong className="text-[#F1F5F9]">{currentEvent.case_id}</strong>
               </p>
             </div>
 
             {/* Cross-Case Connection Alert (Event 5 Signature Bridge) */}
             {currentEvent.event_number === 5 && (
-              <div className="mt-4 bg-red-950/60 border border-red-500/50 rounded-xl p-4 space-y-2 animate-in zoom-in-95 duration-300">
-                <div className="flex items-center gap-2 font-bold text-red-400 text-xs">
-                  <ShieldAlert className="w-4 h-4 text-red-400" />
+              <div className="mt-4 bg-[#E05252]/15 text-[#E05252] border border-[#E05252]/40 rounded-[6px] p-4 space-y-2 animate-in zoom-in-95 duration-300">
+                <div className="flex items-center gap-2 font-bold text-[#E05252] text-xs">
+                  <ShieldAlert className="w-4 h-4 text-[#E05252]" />
                   <span>SIGNATURE CROSS-CASE CONNECTION DETECTED!</span>
                 </div>
-                <p className="text-xs text-slate-200 leading-relaxed">
+                <p className="text-xs text-[#F1F5F9] leading-relaxed">
                   Devrat Sharma (PER-103) executes <strong>TXN_552</strong> sending ₹50,00,000 from Case 018 (Gurugram Phishing) directly into Apex Trade Solutions (Case 041 Mumbai Hawala Ring).
                 </p>
               </div>
@@ -187,14 +187,14 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
           </div>
 
           {/* Graph Delta Node Additions */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5 space-y-3">
-            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+          <div className="bg-[#131A26] border border-[#222D3F] rounded-[6px] p-5 space-y-3">
+            <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider block">
               Incremental Graph Expansion (Graph Delta)
             </span>
             <div className="space-y-1.5 font-mono text-xs">
               {currentEvent.graph_delta.map((delta, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800 text-cyan-300">
-                  <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+                <div key={idx} className="flex items-center gap-2 bg-[#0B0F17] p-2 rounded border border-[#222D3F] text-[#D4A359]">
+                  <ArrowRight className="w-3.5 h-3.5 text-[#D4A359]" />
                   <span>{delta}</span>
                 </div>
               ))}
@@ -203,38 +203,38 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
         </div>
 
         {/* Right Column: Reconstructed Knowledge Graph View */}
-        <div className="lg:col-span-7 bg-[#0b0f19] border border-slate-800 rounded-xl p-6 flex flex-col justify-between shadow-2xl relative min-h-[480px]">
+        <div className="lg:col-span-7 bg-[#0B0F17] border border-[#222D3F] rounded-[6px] p-6 flex flex-col justify-between shadow-none relative min-h-[480px]">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-slate-300 flex items-center gap-2">
+              <span className="text-xs font-bold text-[#94A3B8] flex items-center gap-2">
                 <GitBranch className="w-4 h-4 text-blue-400" /> RECONSTRUCTED LIVE KNOWLEDGE GRAPH
               </span>
-              <span className="text-xs text-slate-400">
-                Cumulative Nodes Active: <strong className="text-cyan-300">{currentStepIndex * 3 + 4}</strong>
+              <span className="text-xs text-[#94A3B8]">
+                Cumulative Nodes Active: <strong className="text-[#D4A359]">{currentStepIndex * 3 + 4}</strong>
               </span>
             </div>
 
             {/* Simulated Live Visual Graph Representation */}
-            <div className="relative h-[360px] bg-slate-950/90 rounded-xl border border-slate-800/80 p-6 flex items-center justify-center overflow-hidden">
+            <div className="relative h-[360px] bg-[#0B0F17] rounded-[6px] border border-[#222D3F] p-6 flex items-center justify-center overflow-hidden">
               {/* Background grid lines */}
               <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
 
               {/* Step-by-step Visual Network Diagram */}
               <div className="relative z-10 w-full max-w-md space-y-6">
                 {/* Heist Origin */}
-                <div className="flex items-center justify-between bg-blue-950/60 border border-blue-500/40 p-3 rounded-lg">
-                  <span className="text-xs font-bold text-cyan-300">ACC-1001 (Zenith Tech)</span>
-                  <span className="text-[11px] font-mono text-red-400 font-bold">₹1,00,00,000 RTGS</span>
-                  <span className="text-xs font-bold text-emerald-400">ACC-2201 (Suman Roy)</span>
+                <div className="flex items-center justify-between bg-blue-950/60 border border-blue-500/40 p-3 rounded-[4px]">
+                  <span className="text-xs font-bold text-[#D4A359]">ACC-1001 (Zenith Tech)</span>
+                  <span className="text-[11px] font-mono text-[#E05252] font-bold">₹1,00,00,000 RTGS</span>
+                  <span className="text-xs font-bold text-[#34D399]">ACC-2201 (Suman Roy)</span>
                 </div>
 
                 {/* Layering Tranche */}
                 {currentStepIndex >= 1 && (
                   <div className="grid grid-cols-2 gap-2 text-center text-[11px] font-mono">
-                    <div className="bg-slate-900 p-2 rounded border border-emerald-500/30 text-emerald-300">
+                    <div className="bg-[#131A26] p-2 rounded border border-[#34D399]/35 text-[#34D399]">
                       ACC-3301 (Meera Nair) ₹20L
                     </div>
-                    <div className="bg-slate-900 p-2 rounded border border-emerald-500/30 text-emerald-300">
+                    <div className="bg-[#131A26] p-2 rounded border border-[#34D399]/35 text-[#34D399]">
                       ACC-3302 (Student Tranche) ₹20L
                     </div>
                   </div>
@@ -242,27 +242,27 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
 
                 {/* Broker Aggregation */}
                 {currentStepIndex >= 2 && (
-                  <div className="bg-red-950/70 border border-red-500/50 p-3.5 rounded-lg text-center shadow-lg animate-in zoom-in-95">
-                    <span className="text-xs font-bold text-red-300 block">BROKER COLLECTION NODE</span>
-                    <span className="text-xs font-mono font-extrabold text-white">ACC-7702 (Devrat Sharma PER-103)</span>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Accumulated ₹70,00,000 from mule tranches</p>
+                  <div className="bg-[#E05252]/15 text-[#E05252] border border-[#E05252]/40 p-3.5 rounded-[4px] text-center shadow-lg animate-in zoom-in-95">
+                    <span className="text-xs font-bold text-[#E05252] block">BROKER COLLECTION NODE</span>
+                    <span className="text-xs font-mono font-extrabold text-[#F1F5F9]">ACC-7702 (Devrat Sharma PER-103)</span>
+                    <p className="text-[10px] text-[#94A3B8] mt-0.5">Accumulated ₹70,00,000 from mule tranches</p>
                   </div>
                 )}
 
                 {/* Cross-Case Bridge */}
                 {currentStepIndex >= 4 && (
-                  <div className="bg-gradient-to-r from-red-600 via-purple-600 to-emerald-600 p-0.5 rounded-xl shadow-xl">
-                    <div className="bg-slate-950 p-3.5 rounded-[10px] flex items-center justify-between">
+                  <div className="bg-gradient-to-r from-red-600 via-purple-600 to-emerald-600 p-0.5 rounded-[6px] shadow-none">
+                    <div className="bg-[#0B0F17] p-3.5 rounded-[10px] flex items-center justify-between">
                       <div className="text-left">
-                        <span className="text-[10px] font-bold text-cyan-400 uppercase">CASE-018 (Gurugram)</span>
-                        <p className="text-xs font-bold text-white">Devrat Sharma</p>
+                        <span className="text-[10px] font-bold text-[#D4A359] uppercase">CASE-018 (Gurugram)</span>
+                        <p className="text-xs font-bold text-[#F1F5F9]">Devrat Sharma</p>
                       </div>
-                      <div className="text-center font-mono font-bold text-red-400 text-xs px-2 py-1 rounded bg-slate-900 border border-red-500/40">
+                      <div className="text-center font-mono font-bold text-[#E05252] text-xs px-2 py-1 rounded bg-[#131A26] border border-[#E05252]/35">
                         TXN_552: ₹50,00,000 &rarr;
                       </div>
                       <div className="text-right">
-                        <span className="text-[10px] font-bold text-emerald-400 uppercase">CASE-041 (Mumbai)</span>
-                        <p className="text-xs font-bold text-white">Apex Trade Solutions</p>
+                        <span className="text-[10px] font-bold text-[#34D399] uppercase">CASE-041 (Mumbai)</span>
+                        <p className="text-xs font-bold text-[#F1F5F9]">Apex Trade Solutions</p>
                       </div>
                     </div>
                   </div>
@@ -272,13 +272,13 @@ export default function InvestigationReconstruction({ onSelectEntity, onOpenCase
           </div>
 
           {/* Bottom Action Footer */}
-          <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span className="text-xs text-slate-400">
-              Investigation Reconstruction Status: <strong className="text-emerald-400">Active Narration</strong>
+          <div className="mt-4 pt-3 border-t border-[#222D3F] flex items-center justify-between">
+            <span className="text-xs text-[#94A3B8]">
+              Investigation Reconstruction Status: <strong className="text-[#34D399]">Active Narration</strong>
             </span>
             <button
               onClick={() => onOpenCase(currentEvent.case_id.split(' ')[0])}
-              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+              className="text-xs font-semibold text-[#D4A359] hover:text-[#D4A359] flex items-center gap-1"
             >
               Open Full Case Workspace &rarr;
             </button>

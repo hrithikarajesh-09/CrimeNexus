@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 
 export function HoverCard({ children, openDelay = 150, closeDelay = 150 }) {
@@ -46,7 +46,7 @@ export function HoverCardContent({ className, side = 'bottom', children, ...prop
   return (
     <div
       className={cn(
-        "absolute z-50 w-72 rounded-[6px] border border-[#2B313D] bg-[#181C24] p-3 text-xs text-[#E8EAEE] shadow-2xl depth-floating outline-none animate-in fade-in zoom-in-95 duration-100",
+        "absolute z-50 w-72 rounded-[6px] border border-[#2E3D55] bg-[#1D2738] p-3 text-xs text-[#F1F5F9] shadow-2xl depth-floating outline-none animate-in fade-in zoom-in-95 duration-100",
         sideClasses[side],
         className
       )}

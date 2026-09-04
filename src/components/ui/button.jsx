@@ -2,12 +2,13 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 const buttonVariants = {
-  default: "bg-[#C68A46] text-[#12151B] font-semibold hover:bg-[#D49855] border border-transparent shadow-none",
-  brass: "bg-[#C68A46] text-[#12151B] font-semibold hover:bg-[#D49855] border border-transparent shadow-none",
-  secondary: "bg-[#1F2430] text-[#E8EAEE] hover:bg-[#282F3F] border border-[#2B313D]",
-  outline: "border border-[#2B313D] bg-transparent text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#4A5468]",
-  ghost: "text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#1F2430] border border-transparent",
-  destructive: "bg-[#C1655A] text-white hover:bg-[#D1766B] border border-transparent",
+  default: "bg-[#D4A359] text-[#0B0F17] font-semibold hover:bg-[#E0B268] border border-transparent shadow-none",
+  brass: "bg-[#D4A359] text-[#0B0F17] font-semibold hover:bg-[#E0B268] border border-transparent shadow-none",
+  amber: "bg-[#D4A359] text-[#0B0F17] font-semibold hover:bg-[#E0B268] border border-transparent shadow-none",
+  secondary: "bg-[#1A2332] text-[#F1F5F9] hover:bg-[#1D2738] border border-[#222D3F]",
+  outline: "border border-[#222D3F] bg-transparent text-[#94A3B8] hover:text-[#F1F5F9] hover:border-[#2E3D55]",
+  ghost: "text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1A2332] border border-transparent",
+  destructive: "bg-[#E05252] text-white hover:bg-[#EF4444] border border-transparent",
 };
 
 const buttonSizes = {
@@ -23,7 +24,7 @@ export const Button = React.forwardRef(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center gap-1.5 rounded-[5px] font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C68A46] disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none",
+          "inline-flex items-center justify-center gap-1.5 rounded-[6px] font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#D4A359] disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none",
           buttonVariants[variant] || buttonVariants.default,
           buttonSizes[size] || buttonSizes.default,
           className

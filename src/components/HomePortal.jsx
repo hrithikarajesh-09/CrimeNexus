@@ -22,9 +22,9 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
           onClick={onNavigateToCases}
           className="cursor-pointer"
         >
-          <Card className="h-full p-5 hover:border-[#4A5468] transition-colors flex flex-col justify-between">
+          <Card className="h-full p-5 hover:border-[#2E3D55] transition-colors flex flex-col justify-between">
             <div>
-              <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#C68A46] mb-3.5">
+              <div className="w-9 h-9 rounded-[6px] bg-[#1A2332] border border-[#222D3F] flex items-center justify-center text-[#D4A359] mb-3.5">
                 {/* Visual Case Folder / Dossier Icon */}
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
@@ -34,7 +34,7 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
               </div>
 
               <div className="flex items-center justify-between mb-1">
-                <h3 className="text-base font-serif font-bold text-[#E8EAEE]">
+                <h3 className="text-base font-serif font-bold text-[#F1F5F9]">
                   Cases Workspace
                 </h3>
                 <Badge variant="brass">
@@ -42,14 +42,14 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
                 </Badge>
               </div>
 
-              <p className="text-xs text-[#9AA3B2] leading-relaxed mt-1">
+              <p className="text-xs text-[#94A3B8] leading-relaxed mt-1">
                 Active incident dockets, evidence files, and case dossiers.
               </p>
             </div>
 
-            <div className="mt-5 pt-3 border-t border-[#2B313D] flex items-center justify-between">
-              <span className="text-xs text-[#6B7382] font-mono">Registry Index</span>
-              <div className="flex items-center gap-1 text-xs font-semibold text-[#C68A46]">
+            <div className="mt-5 pt-3 border-t border-[#222D3F] flex items-center justify-between">
+              <span className="text-xs text-[#64748B] font-mono">Registry Index</span>
+              <div className="flex items-center gap-1 text-xs font-semibold text-[#D4A359]">
                 <span>Open Cases</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -64,14 +64,14 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
           onClick={onNavigateToIntelligence}
           className="cursor-pointer"
         >
-          <Card className="h-full p-5 hover:border-[#4A5468] transition-colors flex flex-col justify-between">
+          <Card className="h-full p-5 hover:border-[#2E3D55] transition-colors flex flex-col justify-between">
             <div>
-              <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#8B81C4] mb-3.5">
+              <div className="w-9 h-9 rounded-[6px] bg-[#1A2332] border border-[#222D3F] flex items-center justify-center text-[#8B5CF6] mb-3.5">
                 <GitBranch className="w-5 h-5" />
               </div>
 
               <div className="flex items-center justify-between mb-1">
-                <h3 className="text-base font-serif font-bold text-[#E8EAEE]">
+                <h3 className="text-base font-serif font-bold text-[#F1F5F9]">
                   Network Intelligence
                 </h3>
                 <Badge variant="violet">
@@ -79,14 +79,14 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
                 </Badge>
               </div>
 
-              <p className="text-xs text-[#9AA3B2] leading-relaxed mt-1">
+              <p className="text-xs text-[#94A3B8] leading-relaxed mt-1">
                 Cross-jurisdiction entity graph and centrality metrics.
               </p>
             </div>
 
-            <div className="mt-5 pt-3 border-t border-[#2B313D] flex items-center justify-between">
-              <span className="text-xs text-[#8B81C4] font-medium font-mono">1 Bridge Broker Identified</span>
-              <div className="flex items-center gap-1 text-xs font-semibold text-[#8B81C4]">
+            <div className="mt-5 pt-3 border-t border-[#222D3F] flex items-center justify-between">
+              <span className="text-xs text-[#8B5CF6] font-medium font-mono">1 Bridge Broker Identified</span>
+              <div className="flex items-center gap-1 text-xs font-semibold text-[#8B5CF6]">
                 <span>Inspect Centrality</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -98,15 +98,15 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
       {/* Quick Access to Primary Case File */}
       <Card className="p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#E8EAEE] font-mono font-bold text-xs">
+          <div className="w-9 h-9 rounded-[6px] bg-[#1A2332] border border-[#222D3F] flex items-center justify-center text-[#F1F5F9] font-mono font-bold text-xs">
             018
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-semibold text-[#C68A46] uppercase">PRIMARY DOSSIER</span>
-              <span className="text-sm font-semibold text-[#E8EAEE]">CASE-018: Operation PhishNet</span>
+              <span className="text-[10px] font-mono font-semibold text-[#D4A359] uppercase">PRIMARY DOSSIER</span>
+              <span className="text-sm font-semibold text-[#F1F5F9]">CASE-018: Operation PhishNet</span>
             </div>
-            <p className="text-xs text-[#6B7382] mt-0.5">
+            <p className="text-xs text-[#64748B] mt-0.5">
               NCR Cyber PS &bull; INR 1.0 Cr RTGS fraud with cross-case bridge to Mumbai Hawala ring.
             </p>
           </div>
@@ -125,20 +125,20 @@ export default function HomePortal({ session, onNavigateToCases, onNavigateToInt
       {/* System Status Indicators */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
         <Card className="p-2.5">
-          <span className="text-[10px] text-[#6B7382] block font-mono">STATIONS</span>
-          <span className="text-sm font-mono font-semibold text-[#E8EAEE] mt-0.5 block">3 Regional Units</span>
+          <span className="text-[10px] text-[#64748B] block font-mono">STATIONS</span>
+          <span className="text-sm font-mono font-semibold text-[#F1F5F9] mt-0.5 block">3 Regional Units</span>
         </Card>
         <Card className="p-2.5">
-          <span className="text-[10px] text-[#6B7382] block font-mono">HASH INTEGRITY</span>
-          <span className="text-sm font-mono font-semibold text-[#5FA876] mt-0.5 block">100% Verified</span>
+          <span className="text-[10px] text-[#64748B] block font-mono">HASH INTEGRITY</span>
+          <span className="text-sm font-mono font-semibold text-[#34D399] mt-0.5 block">100% Verified</span>
         </Card>
         <Card className="p-2.5">
-          <span className="text-[10px] text-[#6B7382] block font-mono">BRIDGE BROKER</span>
-          <span className="text-sm font-mono font-semibold text-[#8B81C4] mt-0.5 block">PER-103 (Devrat)</span>
+          <span className="text-[10px] text-[#64748B] block font-mono">BRIDGE BROKER</span>
+          <span className="text-sm font-mono font-semibold text-[#8B5CF6] mt-0.5 block">PER-103 (Devrat)</span>
         </Card>
         <Card className="p-2.5">
-          <span className="text-[10px] text-[#6B7382] block font-mono">EVIDENCE STATUS</span>
-          <span className="text-sm font-mono font-semibold text-[#C68A46] mt-0.5 block">Sec 63B BSA Ready</span>
+          <span className="text-[10px] text-[#64748B] block font-mono">EVIDENCE STATUS</span>
+          <span className="text-sm font-mono font-semibold text-[#D4A359] mt-0.5 block">Sec 63B BSA Ready</span>
         </Card>
       </div>
     </div>

@@ -83,21 +83,21 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
           <div>
             <div className="flex items-center gap-2">
               <span className="stamp-tag stamp-amber">NEO4J GDS &bull; RECHARTS &bull; REACT FLOW</span>
-              <h2 className="text-xl font-serif font-bold text-[#E8EAEE] tracking-tight">Criminal Network Intelligence</h2>
+              <h2 className="text-xl font-serif font-bold text-[#F1F5F9] tracking-tight">Criminal Network Intelligence</h2>
             </div>
-            <p className="text-xs text-[#9AA3B2] mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs text-[#94A3B8] mt-1 max-w-2xl leading-relaxed">
               Computes Betweenness Centrality, PageRank, Degree Centrality, and Louvain Community Detection across multi-jurisdiction criminal networks.
             </p>
           </div>
 
           {/* Sub-tab Switcher: Overview / Recharts / React Flow */}
-          <div className="flex items-center gap-1 bg-[#12151B] border border-[#2B313D] p-1 rounded-[5px]">
+          <div className="flex items-center gap-1 bg-[#0B0F17] border border-[#222D3F] p-1 rounded-[6px]">
             <button
               onClick={() => setActiveSubTab('overview')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
                 activeSubTab === 'overview'
-                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
-                  : 'text-[#9AA3B2] hover:text-[#E8EAEE]'
+                  ? 'bg-[#D4A359] text-[#0B0F17] font-semibold'
+                  : 'text-[#94A3B8] hover:text-[#F1F5F9]'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -108,8 +108,8 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
               onClick={() => setActiveSubTab('charts')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
                 activeSubTab === 'charts'
-                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
-                  : 'text-[#9AA3B2] hover:text-[#E8EAEE]'
+                  ? 'bg-[#D4A359] text-[#0B0F17] font-semibold'
+                  : 'text-[#94A3B8] hover:text-[#F1F5F9]'
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
@@ -120,8 +120,8 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
               onClick={() => setActiveSubTab('flow')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
                 activeSubTab === 'flow'
-                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
-                  : 'text-[#9AA3B2] hover:text-[#E8EAEE]'
+                  ? 'bg-[#D4A359] text-[#0B0F17] font-semibold'
+                  : 'text-[#94A3B8] hover:text-[#F1F5F9]'
               }`}
             >
               <Network className="w-3.5 h-3.5" />
@@ -134,17 +134,17 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
       {/* SUB-TAB 1: RECHARTS VISUALIZATION */}
       {activeSubTab === 'charts' && (
         <Card className="p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-[#2B313D] pb-3">
+          <div className="flex items-center justify-between border-b border-[#222D3F] pb-3">
             <div>
-              <h3 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-[#C68A46]" />
+              <h3 className="text-sm font-serif font-bold text-[#F1F5F9] tracking-wide flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-[#D4A359]" />
                 Topological Centrality &amp; Brokerage Distribution (Recharts Analytics)
               </h3>
-              <p className="text-xs text-[#9AA3B2] mt-0.5 font-sans">
+              <p className="text-xs text-[#94A3B8] mt-0.5 font-sans">
                 Quantifies conspirator bridging roles and liquidity pipeline bottlenecks.
               </p>
             </div>
-            <span className="text-[10px] font-mono text-[#787167] bg-[#12151B] px-2.5 py-1 rounded border border-[#2B313D]">
+            <span className="text-[10px] font-mono text-[#64748B] bg-[#0B0F17] px-2.5 py-1 rounded border border-[#222D3F]">
               Normalized Scale 0–100%
             </span>
           </div>
@@ -152,24 +152,24 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
           <div className="h-[300px] w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={centralityChartData} margin={{ top: 15, right: 25, left: -5, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2B313D" opacity={0.6} />
-                <XAxis dataKey="name" stroke="#787167" fontSize={11} tickLine={false} fontFamily="IBM Plex Sans, sans-serif" />
-                <YAxis stroke="#787167" fontSize={10} tickLine={false} fontFamily="Courier Prime, monospace" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#222D3F" opacity={0.6} />
+                <XAxis dataKey="name" stroke="#64748B" fontSize={11} tickLine={false} fontFamily="IBM Plex Sans, sans-serif" />
+                <YAxis stroke="#64748B" fontSize={10} tickLine={false} fontFamily="Courier Prime, monospace" />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#181C24',
-                    borderColor: '#2B313D',
+                    backgroundColor: '#131A26',
+                    borderColor: '#222D3F',
                     borderRadius: '6px',
                     fontSize: '11px',
                     fontFamily: 'Courier Prime, monospace',
-                    color: '#E8EAEE',
+                    color: '#F1F5F9',
                     boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)'
                   }}
                 />
                 <Legend wrapperStyle={{ fontSize: '11px', fontFamily: 'Courier Prime, monospace', paddingTop: '10px' }} />
-                <Bar dataKey="betweenness" name="Betweenness Centrality (%)" fill="#C68A46" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="degree" name="Conduit Degree Count" fill="#6C93B8" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="pagerank" name="PageRank Score (x100)" fill="#5FA876" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="betweenness" name="Betweenness Centrality (%)" fill="#D4A359" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="degree" name="Conduit Degree Count" fill="#3B82F6" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="pagerank" name="PageRank Score (x100)" fill="#34D399" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -192,14 +192,14 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
               transition={{ duration: 0.2, delay: idx * 0.06 }}
               whileHover={{ y: -2 }}
             >
-              <Card className="p-4 space-y-3 hover:border-[#4A5468] transition-colors h-full flex flex-col justify-between">
+              <Card className="p-4 space-y-3 hover:border-[#2E3D55] transition-colors h-full flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <Badge variant="steel">
                         {item.person_id}
                       </Badge>
-                      <h3 className="text-base font-serif font-bold text-[#E8EAEE] mt-1">{item.name}</h3>
+                      <h3 className="text-base font-serif font-bold text-[#F1F5F9] mt-1">{item.name}</h3>
                     </div>
                     <Badge variant={item.badge_variant}>
                       {item.status_badge}
@@ -208,32 +208,32 @@ export default function NetworkIntelligenceView({ onSelectEntity, onAskCopilot }
 
                   {/* Metrics Breakdown Grid */}
                   <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                    <div className="bg-[#12151B] p-2 rounded-[4px] border border-[#2B313D]">
-                      <span className="text-[10px] text-[#787167] block font-mono uppercase">Betweenness</span>
-                      <span className="font-mono font-bold text-[#C68A46] text-xs">{item.betweenness}</span>
+                    <div className="bg-[#0B0F17] p-2 rounded-[4px] border border-[#222D3F]">
+                      <span className="text-[10px] text-[#64748B] block font-mono uppercase">Betweenness</span>
+                      <span className="font-mono font-bold text-[#D4A359] text-xs">{item.betweenness}</span>
                     </div>
-                    <div className="bg-[#12151B] p-2 rounded-[4px] border border-[#2B313D]">
-                      <span className="text-[10px] text-[#787167] block font-mono uppercase">PageRank</span>
-                      <span className="font-mono font-bold text-[#E8EAEE] text-xs">{item.pagerank}</span>
+                    <div className="bg-[#0B0F17] p-2 rounded-[4px] border border-[#222D3F]">
+                      <span className="text-[10px] text-[#64748B] block font-mono uppercase">PageRank</span>
+                      <span className="font-mono font-bold text-[#F1F5F9] text-xs">{item.pagerank}</span>
                     </div>
-                    <div className="bg-[#12151B] p-2 rounded-[4px] border border-[#2B313D]">
-                      <span className="text-[10px] text-[#787167] block font-mono uppercase">Degree</span>
-                      <span className="font-mono font-bold text-[#6C93B8] text-xs">{item.degree}</span>
+                    <div className="bg-[#0B0F17] p-2 rounded-[4px] border border-[#222D3F]">
+                      <span className="text-[10px] text-[#64748B] block font-mono uppercase">Degree</span>
+                      <span className="font-mono font-bold text-[#3B82F6] text-xs">{item.degree}</span>
                     </div>
                   </div>
 
-                  <p className="text-xs text-[#9AA3B2] leading-relaxed bg-[#1F2430] p-2.5 rounded-[4px] border border-[#2B313D]">
+                  <p className="text-xs text-[#94A3B8] leading-relaxed bg-[#1A2332] p-2.5 rounded-[4px] border border-[#222D3F]">
                     "{item.assessment}"
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-[#2B313D] flex items-center justify-between">
-                  <span className="text-xs text-[#6B7382]">Cluster: <strong className="text-[#E8EAEE]">{item.community}</strong></span>
+                <div className="pt-2 border-t border-[#222D3F] flex items-center justify-between">
+                  <span className="text-xs text-[#64748B]">Cluster: <strong className="text-[#F1F5F9]">{item.community}</strong></span>
                   <Button
                     onClick={() => onSelectEntity({ person_id: item.person_id, name: item.name, role: item.status_badge, is_bridge: item.person_id === 'PER-103' })}
                     variant="ghost"
                     size="sm"
-                    className="text-[#C68A46] hover:text-[#D49855]"
+                    className="text-[#D4A359] hover:text-[#E0B268]"
                   >
                     <span>Inspect Entity</span>
                     <ArrowRight className="w-3.5 h-3.5" />

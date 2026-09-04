@@ -2,14 +2,17 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 const badgeVariants = {
-  default: "bg-[#1F2430] text-[#9AA3B2] border-[#2B313D]",
-  brass: "bg-[#C68A46]/15 text-[#C68A46] border-[#C68A46]/35 font-semibold",
-  steel: "bg-[#6C93B8]/15 text-[#6C93B8] border-[#6C93B8]/35",
-  teal: "bg-[#4E9C93]/15 text-[#4E9C93] border-[#4E9C93]/35",
-  violet: "bg-[#8B81C4]/15 text-[#8B81C4] border-[#8B81C4]/35 font-semibold",
-  red: "bg-[#C1655A]/15 text-[#C1655A] border-[#C1655A]/35",
-  green: "bg-[#5FA876]/15 text-[#5FA876] border-[#5FA876]/35",
-  outline: "border-[#2B313D] text-[#E8EAEE]",
+  default: "bg-[#1A2332] text-[#94A3B8] border-[#222D3F]",
+  brass: "bg-[#D4A359]/15 text-[#D4A359] border-[#D4A359]/35 font-semibold",
+  amber: "bg-[#D4A359]/15 text-[#D4A359] border-[#D4A359]/35 font-semibold",
+  steel: "bg-[#3B82F6]/15 text-[#3B82F6] border-[#3B82F6]/35",
+  blue: "bg-[#3B82F6]/15 text-[#3B82F6] border-[#3B82F6]/35",
+  teal: "bg-[#14B8A6]/15 text-[#14B8A6] border-[#14B8A6]/35",
+  violet: "bg-[#8B5CF6]/15 text-[#8B5CF6] border-[#8B5CF6]/35 font-semibold",
+  purple: "bg-[#8B5CF6]/15 text-[#8B5CF6] border-[#8B5CF6]/35 font-semibold",
+  red: "bg-[#E05252]/15 text-[#E05252] border-[#E05252]/35",
+  green: "bg-[#34D399]/15 text-[#34D399] border-[#34D399]/35",
+  outline: "border-[#222D3F] text-[#F1F5F9]",
 };
 
 export function Badge({ className, variant = "default", ...props }) {

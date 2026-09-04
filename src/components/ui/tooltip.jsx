@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 
 export function TooltipProvider({ children }) {
@@ -26,7 +26,7 @@ export function Tooltip({ children, content, className, side = 'top' }) {
         <div
           role="tooltip"
           className={cn(
-            "absolute z-50 px-2.5 py-1 text-[11px] font-mono text-[#F4EFE6] bg-[#181C24] border border-[#2B313D] rounded-[4px] shadow-lg pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-95 duration-100",
+            "absolute z-50 px-2.5 py-1 text-[11px] font-mono text-[#F1F5F9] bg-[#1D2738] border border-[#2E3D55] rounded-[4px] shadow-lg pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-95 duration-100",
             sideClasses[side],
             className
           )}

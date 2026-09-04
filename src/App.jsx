@@ -46,9 +46,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#12151B] text-[#E8EAEE] flex flex-col font-sans selection:bg-[#C68A46] selection:text-[#12151B]">
+    <div className="min-h-screen bg-[#0B0F17] text-[#F1F5F9] flex flex-col font-sans selection:bg-[#D4A359] selection:text-[#0B0F17]">
       {/* Dossier Top Navigation Header */}
-      <header className="sticky top-0 z-40 bg-[#181C24] border-b border-[#2B313D]">
+      <header className="sticky top-0 z-40 bg-[#131A26] border-b border-[#222D3F]">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
           
           {/* Logo & Dossier Identifier */}
@@ -56,32 +56,32 @@ export default function App() {
             onClick={() => setActiveView('home')} 
             className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#C68A46]">
-              <Shield className="w-4 h-4 text-[#C68A46]" />
+            <div className="w-8 h-8 rounded-[6px] bg-[#1A2332] border border-[#222D3F] flex items-center justify-center text-[#D4A359]">
+              <Shield className="w-4 h-4 text-[#D4A359]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base font-serif font-semibold tracking-tight text-[#E8EAEE] group-hover:text-[#C68A46] transition">
+                <span className="text-base font-serif font-semibold tracking-tight text-[#F1F5F9] group-hover:text-[#D4A359] transition">
                   CrimeNexus
                 </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[4px] bg-[#1F2430] text-[#6B7382] border border-[#2B313D]">
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[4px] bg-[#1A2332] text-[#64748B] border border-[#222D3F]">
                   SIH26189
                 </span>
               </div>
-              <p className="text-[11px] text-[#6B7382] font-sans">
+              <p className="text-[11px] text-[#64748B] font-sans">
                 Criminal Network Analysis Platform
               </p>
             </div>
           </div>
 
           {/* Unopinionated Shadcn-style Tabs */}
-          <nav className="flex items-center gap-1 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
+          <nav className="flex items-center gap-1 bg-[#1A2332] border border-[#222D3F] p-1 rounded-[6px]">
             <button
               onClick={() => setActiveView('home')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition cursor-pointer ${
                 activeView === 'home'
-                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
-                  : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
+                  ? 'bg-[#D4A359] text-[#0B0F17] font-semibold'
+                  : 'text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D2738]'
               }`}
             >
               <Home className="w-3.5 h-3.5" />
@@ -90,10 +90,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveView('cases')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition cursor-pointer ${
                 activeView === 'cases' || activeView === 'case_workspace'
-                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
-                  : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
+                  ? 'bg-[#D4A359] text-[#0B0F17] font-semibold'
+                  : 'text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D2738]'
               }`}
             >
               <CaseFolderIcon className="w-3.5 h-3.5" />
@@ -102,10 +102,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveView('intelligence')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium transition cursor-pointer ${
                 activeView === 'intelligence'
-                  ? 'bg-[#C68A46] text-[#12151B] font-semibold'
-                  : 'text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F]'
+                  ? 'bg-[#D4A359] text-[#0B0F17] font-semibold'
+                  : 'text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D2738]'
               }`}
             >
               <GitBranch className="w-3.5 h-3.5" />
@@ -117,19 +117,19 @@ export default function App() {
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block text-xs">
               <div className="flex items-center justify-end gap-1.5">
-                <span className="font-medium text-[#E8EAEE]">{session.officerName}</span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[4px] bg-[#1F2430] text-[#9AA3B2] border border-[#2B313D]">
+                <span className="font-medium text-[#F1F5F9]">{session.officerName}</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[4px] bg-[#1A2332] text-[#94A3B8] border border-[#222D3F]">
                   {session.badgeNumber}
                 </span>
               </div>
-              <span className="text-[11px] text-[#6B7382] block truncate max-w-[200px]">
+              <span className="text-[11px] text-[#64748B] block truncate max-w-[200px]">
                 {session.isSuperAdmin ? 'Super-Admin' : session.regionName}
               </span>
             </div>
 
             <button
               onClick={() => setSession(null)}
-              className="p-1.5 rounded-[5px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[#9AA3B2] hover:text-[#E8EAEE] transition flex items-center gap-1.5 text-xs font-medium"
+              className="p-1.5 rounded-[6px] bg-[#1A2332] hover:bg-[#1D2738] border border-[#222D3F] text-[#94A3B8] hover:text-[#F1F5F9] transition flex items-center gap-1.5 text-xs font-medium cursor-pointer"
               title="Switch Jurisdiction or Log Out"
             >
               <LogOut className="w-3.5 h-3.5" />

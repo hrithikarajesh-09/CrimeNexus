@@ -103,26 +103,26 @@ export default function AICopilot({ onSelectEntity, onOpenCase, initialQuery }) 
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 backdrop-blur-md">
+      <div className="bg-[#131A26] border border-[#222D3F] rounded-[6px] p-5 ">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-cyan-300 border border-blue-500/30">
+          <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#D4A359]/15 text-[#D4A359] text-[#D4A359] border border-[#D4A359]/30">
             SECTION 9 &bull; AI INVESTIGATION COPILOT
           </span>
-          <h2 className="text-xl font-bold text-white">Natural-Language Criminal Intelligence Assistant</h2>
+          <h2 className="text-xl font-bold text-[#F1F5F9]">Natural-Language Criminal Intelligence Assistant</h2>
         </div>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#94A3B8] mt-1">
           Ask questions about cases, entities, money trails, cell tower logs, and cross-case connections. Powered by Cypher graph query validation & evidence retrieval.
         </p>
       </div>
 
       {/* Preset Questions Chips */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold text-slate-400">Suggested Investigator Queries:</span>
+        <span className="text-xs font-semibold text-[#94A3B8]">Suggested Investigator Queries:</span>
         {presetQuestions.map((pq, idx) => (
           <button
             key={idx}
             onClick={() => handleSendQuery(pq)}
-            className="text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-lg transition"
+            className="text-xs font-medium bg-[#1A2332] hover:bg-[#1D2738] text-[#D4A359] border border-[#222D3F] px-3 py-1.5 rounded-[4px] transition"
           >
             "{pq}"
           </button>
@@ -132,44 +132,44 @@ export default function AICopilot({ onSelectEntity, onOpenCase, initialQuery }) 
       {/* Chat Messages Feed */}
       <div className="space-y-4">
         {chatHistory.map((msg) => (
-          <div key={msg.id} className="bg-[#131b2e] border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+          <div key={msg.id} className="bg-[#131A26] border border-[#222D3F] rounded-[6px] p-6 shadow-none space-y-4">
             {msg.type !== 'assistant' && (
-              <div className="flex items-center gap-2 text-xs font-bold text-cyan-400 bg-slate-900/80 px-3 py-2 rounded-lg border border-slate-800">
-                <HelpCircle className="w-4 h-4 text-cyan-400" />
+              <div className="flex items-center gap-2 text-xs font-bold text-[#D4A359] bg-[#131A26] px-3 py-2 rounded-[4px] border border-[#222D3F]">
+                <HelpCircle className="w-4 h-4 text-[#D4A359]" />
                 <span>Investigator Question: "{msg.question}"</span>
               </div>
             )}
 
             {/* Answer Text */}
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-cyan-500/30 flex items-center justify-center shrink-0">
-                <Sparkles className="w-4 h-4 text-cyan-400" />
+              <div className="w-8 h-8 rounded-[4px] bg-[#D4A359]/15 text-[#D4A359] border border-[#D4A359]/30 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4 text-[#D4A359]" />
               </div>
               <div className="flex-1 space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-200">CrimeNexus Copilot Response</span>
-                  <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 flex items-center gap-1">
+                  <span className="font-bold text-[#F1F5F9]">CrimeNexus Copilot Response</span>
+                  <span className="text-[10px] font-mono bg-[#34D399]/15 text-[#34D399] text-[#34D399] px-2 py-0.5 rounded border border-[#34D399]/25 flex items-center gap-1">
                     <ShieldCheck className="w-3 h-3" /> VERIFIED EVIDENCE-BACKED
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/80 p-4 rounded-xl border border-slate-800">
+                <p className="text-xs text-[#94A3B8] leading-relaxed bg-[#0B0F17] p-4 rounded-[6px] border border-[#222D3F]">
                   {msg.answer}
                 </p>
 
                 {/* Graph Path Visual Result Card */}
                 {msg.graphPath && (
-                  <div className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
-                    <span className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <GitBranch className="w-3.5 h-3.5 text-cyan-400" /> Visual Knowledge Graph Connection Path:
+                  <div className="bg-[#131A26] p-3.5 rounded-[6px] border border-[#222D3F] space-y-2">
+                    <span className="text-[11px] font-bold text-[#D4A359] uppercase tracking-wider flex items-center gap-1.5">
+                      <GitBranch className="w-3.5 h-3.5 text-[#D4A359]" /> Visual Knowledge Graph Connection Path:
                     </span>
                     <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
                       {msg.graphPath.map((step, idx) => (
                         <React.Fragment key={idx}>
-                          <span className="bg-slate-950 px-2.5 py-1 rounded border border-cyan-500/30 text-cyan-300 font-semibold">
+                          <span className="bg-[#0B0F17] px-2.5 py-1 rounded border border-[#D4A359]/30 text-[#D4A359] font-semibold">
                             {step}
                           </span>
                           {idx < msg.graphPath.length - 1 && (
-                            <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                            <ArrowRight className="w-3.5 h-3.5 text-[#64748B]" />
                           )}
                         </React.Fragment>
                       ))}
@@ -180,9 +180,9 @@ export default function AICopilot({ onSelectEntity, onOpenCase, initialQuery }) 
                 {/* Evidence Citations */}
                 {msg.evidenceCitations && msg.evidenceCitations.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
-                    <span className="text-slate-400 font-semibold">Supporting Source Records:</span>
+                    <span className="text-[#94A3B8] font-semibold">Supporting Source Records:</span>
                     {msg.evidenceCitations.map((c, idx) => (
-                      <span key={idx} className="bg-blue-500/10 text-cyan-300 border border-blue-500/20 px-2 py-0.5 rounded font-mono">
+                      <span key={idx} className="bg-[#D4A359]/15 text-[#D4A359] text-[#D4A359] border border-[#D4A359]/20 px-2 py-0.5 rounded font-mono">
                         {c.code}: {c.record}
                       </span>
                     ))}
@@ -194,27 +194,27 @@ export default function AICopilot({ onSelectEntity, onOpenCase, initialQuery }) 
         ))}
 
         {isProcessing && (
-          <div className="bg-[#131b2e] border border-cyan-500/30 rounded-xl p-6 text-center space-y-2">
-            <Cpu className="w-6 h-6 text-cyan-400 animate-spin mx-auto" />
-            <p className="text-xs font-semibold text-cyan-300">Validating Structured Cypher & SQL Query against Neo4j & Supabase...</p>
+          <div className="bg-[#131A26] border border-[#D4A359]/30 rounded-[6px] p-6 text-center space-y-2">
+            <Cpu className="w-6 h-6 text-[#D4A359] animate-spin mx-auto" />
+            <p className="text-xs font-semibold text-[#D4A359]">Validating Structured Cypher & SQL Query against Neo4j & Supabase...</p>
           </div>
         )}
       </div>
 
       {/* Query Input Box */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex items-center gap-3 backdrop-blur-md sticky bottom-4 shadow-2xl">
+      <div className="bg-[#131A26] border border-[#222D3F] rounded-[6px] p-3 flex items-center gap-3  sticky bottom-4 shadow-none">
         <input
           type="text"
           value={inputQuery}
           onChange={(e) => setInputQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSendQuery()}
           placeholder="Ask Copilot a question (e.g. 'Show everyone connected to Devrat Sharma')..."
-          className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
+          className="flex-1 bg-[#0B0F17] border border-[#222D3F] rounded-[4px] px-4 py-2.5 text-xs text-[#F1F5F9] placeholder-[#64748B] focus:outline-none focus:border-[#D4A359] transition"
         />
         <button
           onClick={() => handleSendQuery()}
           disabled={isProcessing || !inputQuery.trim()}
-          className="px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-50"
+          className="px-4 py-2.5 rounded-[4px] bg-[#D4A359] hover:bg-[#E0B268] text-[#0B0F17] font-semibold text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-50"
         >
           <span>Ask Copilot</span>
           <Send className="w-3.5 h-3.5" />

@@ -84,7 +84,7 @@ export default function LoginView({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#12151B] text-[#E8EAEE] flex flex-col justify-center items-center p-4 font-sans selection:bg-[#C68A46] selection:text-[#12151B]">
+    <div className="min-h-screen bg-[#0B0F17] text-[#F1F5F9] flex flex-col justify-center items-center p-4 font-sans selection:bg-[#D4A359] selection:text-[#0B0F17]">
       {/* Dossier Terminal Container with smooth motion entrance */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98, y: 8 }}
@@ -95,29 +95,29 @@ export default function LoginView({ onLogin }) {
         <Card className="p-6 space-y-5">
         
         {/* Header Branding */}
-        <div className="flex items-center gap-3 border-b border-[#2B313D] pb-4">
-          <div className="w-9 h-9 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-center justify-center text-[#C68A46]">
+        <div className="flex items-center gap-3 border-b border-[#222D3F] pb-4">
+          <div className="w-9 h-9 rounded-[6px] bg-[#1A2332] border border-[#222D3F] flex items-center justify-center text-[#D4A359]">
             <Shield className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-serif font-bold text-[#E8EAEE] tracking-tight">
+              <h1 className="text-base font-serif font-bold text-[#F1F5F9] tracking-tight">
                 CrimeNexus
               </h1>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[3px] bg-[#1F2430] text-[#6B7382] border border-[#2B313D]">
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[3px] bg-[#1A2332] text-[#64748B] border border-[#222D3F]">
                 AUTH-TERMINAL
               </span>
             </div>
-            <p className="text-xs text-[#6B7382]">
+            <p className="text-xs text-[#64748B]">
               Criminal Network Analysis Platform
             </p>
           </div>
         </div>
 
         {/* Security Advisory */}
-        <div className="p-2.5 rounded-[5px] bg-[#1F2430] border border-[#2B313D] flex items-start gap-2 text-xs">
-          <Fingerprint className="w-4 h-4 text-[#C68A46] shrink-0 mt-0.5" />
-          <span className="text-[11px] leading-relaxed text-[#9AA3B2]">
+        <div className="p-2.5 rounded-[6px] bg-[#1A2332] border border-[#222D3F] flex items-start gap-2 text-xs">
+          <Fingerprint className="w-4 h-4 text-[#D4A359] shrink-0 mt-0.5" />
+          <span className="text-[11px] leading-relaxed text-[#94A3B8]">
             Restricted law-enforcement portal. Row-Level Security (RLS) cryptographically restricts intelligence access to authenticated jurisdictions.
           </span>
         </div>
@@ -126,9 +126,9 @@ export default function LoginView({ onLogin }) {
         <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
           {/* Jurisdiction Selection */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-[#E8EAEE] flex items-center justify-between">
+            <label className="text-xs font-medium text-[#F1F5F9] flex items-center justify-between">
               <span>Jurisdiction:</span>
-              <span className="text-[10px] text-[#C68A46] font-mono">[ RLS ENFORCED ]</span>
+              <span className="text-[10px] text-[#D4A359] font-mono">[ RLS ENFORCED ]</span>
             </label>
             <div className="space-y-1.5">
               {jurisdictions.map((j) => {
@@ -138,24 +138,24 @@ export default function LoginView({ onLogin }) {
                     type="button"
                     key={j.id}
                     onClick={() => handleRegionSelect(j.id)}
-                    className={`w-full text-left p-2.5 rounded-[5px] border transition flex items-center justify-between ${
+                    className={`w-full text-left p-2.5 rounded-[6px] border transition flex items-center justify-between ${
                       isSelected
-                        ? 'bg-[#1F2430] border-[#C68A46] text-[#E8EAEE]'
-                        : 'bg-[#12151B] border-[#2B313D] text-[#9AA3B2] hover:border-[#3E4657] hover:text-[#E8EAEE]'
+                        ? 'bg-[#1A2332] border-[#D4A359] text-[#F1F5F9]'
+                        : 'bg-[#0B0F17] border-[#222D3F] text-[#94A3B8] hover:border-[#2E3D55] hover:text-[#F1F5F9]'
                     }`}
                   >
                     <div>
                       <div className="text-xs font-medium flex items-center gap-1.5">
-                        <span className={isSelected ? 'text-[#E8EAEE] font-semibold' : 'text-[#9AA3B2]'}>{j.name}</span>
+                        <span className={isSelected ? 'text-[#F1F5F9] font-semibold' : 'text-[#94A3B8]'}>{j.name}</span>
                       </div>
-                      <div className="text-[11px] text-[#6B7382] font-mono mt-0.5">
+                      <div className="text-[11px] text-[#64748B] font-mono mt-0.5">
                         {j.officer} &bull; {j.badge}
                       </div>
                     </div>
                     <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                      isSelected ? 'border-[#C68A46] bg-[#C68A46]' : 'border-[#2B313D] bg-[#12151B]'
+                      isSelected ? 'border-[#D4A359] bg-[#D4A359]' : 'border-[#222D3F] bg-[#0B0F17]'
                     }`}>
-                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#12151B]" />}
+                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#0B0F17]" />}
                     </div>
                   </button>
                 );
@@ -165,30 +165,30 @@ export default function LoginView({ onLogin }) {
 
           {/* Badge ID Input */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[#E8EAEE]">Investigator Badge ID:</label>
+            <label className="text-xs font-medium text-[#F1F5F9]">Investigator Badge ID:</label>
             <div className="relative">
-              <UserCheck className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7382]" />
+              <UserCheck className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
               <input
                 type="text"
                 value={badgeId}
                 onChange={(e) => setBadgeId(e.target.value)}
                 required
-                className="w-full pl-8 pr-3 py-1.5 bg-[#1F2430] border border-[#2B313D] rounded-[5px] text-xs font-mono text-[#E8EAEE] focus:outline-none focus:border-[#C68A46]"
+                className="w-full pl-8 pr-3 py-1.5 bg-[#1A2332] border border-[#222D3F] rounded-[6px] text-xs font-mono text-[#F1F5F9] focus:outline-none focus:border-[#D4A359]"
               />
             </div>
           </div>
 
           {/* Passkey */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[#E8EAEE]">Clearance Passkey:</label>
+            <label className="text-xs font-medium text-[#F1F5F9]">Clearance Passkey:</label>
             <div className="relative">
-              <KeyRound className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7382]" />
+              <KeyRound className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full pl-8 pr-3 py-1.5 bg-[#1F2430] border border-[#2B313D] rounded-[5px] text-xs text-[#E8EAEE] focus:outline-none focus:border-[#C68A46]"
+                className="w-full pl-8 pr-3 py-1.5 bg-[#1A2332] border border-[#222D3F] rounded-[6px] text-xs text-[#F1F5F9] focus:outline-none focus:border-[#D4A359]"
               />
             </div>
           </div>
@@ -196,7 +196,7 @@ export default function LoginView({ onLogin }) {
           {/* Submit Button (Brass Accent) */}
           <button
             type="submit"
-            className="w-full py-2 px-3 bg-[#C68A46] hover:bg-[#D49855] text-[#12151B] rounded-[5px] text-xs font-semibold tracking-wide transition flex items-center justify-center gap-1.5 mt-2"
+            className="w-full py-2 px-3 bg-[#D4A359] hover:bg-[#E0B268] text-[#0B0F17] rounded-[6px] text-xs font-semibold tracking-wide transition flex items-center justify-center gap-1.5 mt-2"
           >
             <Lock className="w-3.5 h-3.5" />
             <span>Authenticate &amp; Open Dossier</span>
@@ -205,24 +205,24 @@ export default function LoginView({ onLogin }) {
         </form>
 
         {/* Demo Fast-Login Shortcuts */}
-        <div className="pt-3 border-t border-[#2B313D] space-y-2">
-          <div className="text-[10px] font-mono text-[#6B7382] uppercase tracking-wider text-center">
+        <div className="pt-3 border-t border-[#222D3F] space-y-2">
+          <div className="text-[10px] font-mono text-[#64748B] uppercase tracking-wider text-center">
             One-Click Demonstration Clearance
           </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => handleQuickLogin('REG-NCR')}
-              className="py-1.5 px-2.5 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[11px] text-[#9AA3B2] hover:text-[#E8EAEE] transition flex items-center justify-between"
+              className="py-1.5 px-2.5 rounded-[4px] bg-[#1A2332] hover:bg-[#1D2738] border border-[#222D3F] text-[11px] text-[#94A3B8] hover:text-[#F1F5F9] transition flex items-center justify-between"
             >
               <span>Region A (NCR)</span>
-              <span className="text-[10px] text-[#C68A46] font-mono">INV-101</span>
+              <span className="text-[10px] text-[#D4A359] font-mono">INV-101</span>
             </button>
             <button
               onClick={() => handleQuickLogin('SUPER-ADMIN')}
-              className="py-1.5 px-2.5 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] border border-[#2B313D] text-[11px] text-[#9AA3B2] hover:text-[#E8EAEE] transition flex items-center justify-between"
+              className="py-1.5 px-2.5 rounded-[4px] bg-[#1A2332] hover:bg-[#1D2738] border border-[#222D3F] text-[11px] text-[#94A3B8] hover:text-[#F1F5F9] transition flex items-center justify-between"
             >
               <span>Super-Admin</span>
-              <span className="text-[10px] text-[#8B81C4] font-mono">ALL CASES</span>
+              <span className="text-[10px] text-[#8B5CF6] font-mono">ALL CASES</span>
             </button>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function LoginView({ onLogin }) {
         </Card>
       </motion.div>
 
-      <div className="mt-4 text-center text-[11px] text-[#6B7382] font-mono">
+      <div className="mt-4 text-center text-[11px] text-[#64748B] font-mono">
         CRIMENEXUS &bull; SMART INDIA HACKATHON 2026
       </div>
     </div>

@@ -206,35 +206,35 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   // GRAPH NODES (Semantic Dossier Tokens: steel = person/info, teal = account)
   // =========================================================================
   const allGraphNodes = [
-    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 90, y: 220, icon: User, color: '#6C93B8' },
-    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 285, y: 220, icon: CreditCard, color: '#4E9C93' },
-    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 485, y: 220, icon: CreditCard, color: '#4E9C93', isFraud: true },
-    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 385, y: 365, icon: User, color: '#6C93B8' },
-    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 590, y: 365, icon: CreditCard, color: '#4E9C93' },
-    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 510, y: 75, icon: User, color: '#6C93B8' },
-    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 695, y: 75, icon: Radio, color: '#6C93B8' },
-    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 880, y: 75, icon: Laptop, color: '#6C93B8' },
-    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 695, y: 220, icon: User, color: '#8B81C4', isBridge: true },
-    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 900, y: 220, icon: Building2, color: '#8B81C4', isBridge: true },
-    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 1090, y: 220, icon: User, color: '#6C93B8' },
-    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 1090, y: 365, icon: CreditCard, color: '#4E9C93' }
+    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 90, y: 220, icon: User, color: '#3B82F6' },
+    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 285, y: 220, icon: CreditCard, color: '#14B8A6' },
+    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 485, y: 220, icon: CreditCard, color: '#14B8A6', isFraud: true },
+    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 385, y: 365, icon: User, color: '#3B82F6' },
+    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 590, y: 365, icon: CreditCard, color: '#14B8A6' },
+    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 510, y: 75, icon: User, color: '#3B82F6' },
+    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 695, y: 75, icon: Radio, color: '#D4A359' },
+    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 880, y: 75, icon: Laptop, color: '#3B82F6' },
+    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 695, y: 220, icon: User, color: '#8B5CF6', isBridge: true },
+    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 900, y: 220, icon: Building2, color: '#8B5CF6', isBridge: true },
+    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 1090, y: 220, icon: User, color: '#E05252' },
+    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 1090, y: 365, icon: CreditCard, color: '#14B8A6' }
   ];
 
   // =========================================================================
   // GRAPH EDGES (violet = cross-case, teal/brass = financial conduits)
   // =========================================================================
   const allGraphEdges = [
-    { from: 'PER-108', to: 'ACC-1001', label: 'Signatory', color: '#6C93B8' },
-    { from: 'ACC-1001', to: 'ACC-2201', label: '₹1.00 Cr RTGS', color: '#C68A46', strokeWidth: 2, animated: true },
-    { from: 'ACC-2201', to: 'PER-104', label: 'Registered To', color: '#6B7382' },
-    { from: 'ACC-2201', to: 'ACC-MULES', label: '5x ₹20L Tranches', color: '#4E9C93', animated: true },
-    { from: 'PER-101', to: 'LOC-101', label: 'Tower Presence', color: '#6B7382' },
-    { from: 'PER-102', to: 'LOC-101', label: 'IP / Dev Logs', color: '#6B7382' },
-    { from: 'ACC-MULES', to: 'PER-103', label: '₹70L Aggregated', color: '#C68A46', animated: true },
-    { from: 'LOC-101', to: 'PER-103', label: 'Voice Call', color: '#6B7382' },
-    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (Bridge)', color: '#8B81C4', strokeWidth: 2.5, animated: true, isBridge: true },
-    { from: 'ACC-7701', to: 'PER-105', label: '₹45L Cash Out', color: '#C1655A' },
-    { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#4E9C93', animated: true }
+    { from: 'PER-108', to: 'ACC-1001', label: 'Signatory', color: '#3B82F6' },
+    { from: 'ACC-1001', to: 'ACC-2201', label: '₹1.00 Cr RTGS', color: '#D4A359', strokeWidth: 2, animated: true },
+    { from: 'ACC-2201', to: 'PER-104', label: 'Registered To', color: '#64748B' },
+    { from: 'ACC-2201', to: 'ACC-MULES', label: '5x ₹20L Tranches', color: '#14B8A6', animated: true },
+    { from: 'PER-101', to: 'LOC-101', label: 'Tower Presence', color: '#64748B' },
+    { from: 'PER-102', to: 'LOC-101', label: 'IP / Dev Logs', color: '#64748B' },
+    { from: 'ACC-MULES', to: 'PER-103', label: '₹70L Aggregated', color: '#D4A359', animated: true },
+    { from: 'LOC-101', to: 'PER-103', label: 'Voice Call', color: '#64748B' },
+    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (Bridge)', color: '#8B5CF6', strokeWidth: 2.5, animated: true, isBridge: true },
+    { from: 'ACC-7701', to: 'PER-105', label: '₹45L Cash Out', color: '#E05252' },
+    { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#14B8A6', animated: true }
   ];
 
   // 6 Chronological Reconstruction Stages (Plus Stage 0: Initial Board Cleared)
@@ -1032,14 +1032,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               variant="secondary"
               size="sm"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-[#C68A46]" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[#D4A359]" />
               <span>Back</span>
             </Button>
-            <div className="h-4 w-px bg-[#2B313D]" />
+            <div className="h-4 w-px bg-[#222D3F]" />
             <Badge variant="brass">
               {caseData.case_id}
             </Badge>
-            <span className="text-xs font-mono text-[#6B7382]">
+            <span className="text-xs font-mono text-[#64748B]">
               {caseData.case_number}
             </span>
           </div>
@@ -1049,7 +1049,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               onClick={() => setIsBsaModalOpen(true)}
               variant="secondary"
               size="default"
-              className="text-[#5FA876] hover:text-[#5FA876]"
+              className="text-[#34D399] hover:text-[#34D399]"
             >
               <Scale className="w-3.5 h-3.5" />
               <span>Sec 63B BSA Certificate</span>
@@ -1067,29 +1067,29 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
         </div>
 
         <div>
-          <h1 className="text-xl font-serif font-bold text-[#E8EAEE] tracking-tight">{caseData.title}</h1>
-          <p className="text-xs text-[#9AA3B2] mt-0.5">
-            Category: <strong className="text-[#E8EAEE]">{caseData.category}</strong> &bull; Jurisdiction: <strong className="text-[#C68A46]">{caseData.region_name}</strong> &bull; Registered: <span className="font-mono text-[#6B7382]">{caseData.registration_date}</span>
+          <h1 className="text-xl font-serif font-bold text-[#F1F5F9] tracking-tight">{caseData.title}</h1>
+          <p className="text-xs text-[#94A3B8] mt-0.5">
+            Category: <strong className="text-[#F1F5F9]">{caseData.category}</strong> &bull; Jurisdiction: <strong className="text-[#D4A359]">{caseData.region_name}</strong> &bull; Registered: <span className="font-mono text-[#64748B]">{caseData.registration_date}</span>
           </p>
         </div>
 
         {/* Minimal Officer Metadata Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2.5 border-t border-[#2B313D] text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2.5 border-t border-[#222D3F] text-xs">
           <div>
-            <span className="text-[#6B7382] block text-[11px] font-mono">LEAD OFFICER</span>
-            <span className="font-medium text-[#E8EAEE] mt-0.5 block">{caseData.investigator_name}</span>
+            <span className="text-[#64748B] block text-[11px] font-mono">LEAD OFFICER</span>
+            <span className="font-medium text-[#F1F5F9] mt-0.5 block">{caseData.investigator_name}</span>
           </div>
           <div>
-            <span className="text-[#6B7382] block text-[11px] font-mono">STATUS</span>
-            <span className="font-medium text-[#C68A46] mt-0.5 block">{caseData.status}</span>
+            <span className="text-[#64748B] block text-[11px] font-mono">STATUS</span>
+            <span className="font-medium text-[#D4A359] mt-0.5 block">{caseData.status}</span>
           </div>
           <div>
-            <span className="text-[#6B7382] block text-[11px] font-mono">EVIDENCE FILES</span>
-            <span className="font-medium text-[#5FA876] mt-0.5 block">{caseData.stats.evidence} Verified Records</span>
+            <span className="text-[#64748B] block text-[11px] font-mono">EVIDENCE FILES</span>
+            <span className="font-medium text-[#34D399] mt-0.5 block">{caseData.stats.evidence} Verified Records</span>
           </div>
           <div>
-            <span className="text-[#6B7382] block text-[11px] font-mono">CROSS-CASE LINK</span>
-            <span className="font-medium text-[#8B81C4] mt-0.5 block">Bridge to CASE-041 (TXN_552)</span>
+            <span className="text-[#64748B] block text-[11px] font-mono">CROSS-CASE LINK</span>
+            <span className="font-medium text-[#8B5CF6] mt-0.5 block">Bridge to CASE-041 (TXN_552)</span>
           </div>
         </div>
       </Card>
@@ -1097,8 +1097,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       {/* ========================================================= */}
       {/* WORKSPACE SUB-TABS NAVIGATION BAR                         */}
       {/* ========================================================= */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-3">
-        <TabsList className="bg-[#181C24]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#222D3F] pb-3">
+        <TabsList className="bg-[#131A26]">
           <TabsTrigger 
             isActive={activeTab === 'summary'} 
             onClick={() => setActiveTab('summary')}
@@ -1149,35 +1149,35 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           {/* LEFT COLUMN: ZOOMABLE INTERACTIVE ENTITY GRAPH (lg:col-span-7) */}
           <div className="lg:col-span-7 space-y-3">
             <Card className="p-4 space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2B313D] pb-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#222D3F] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <Radio className="w-4 h-4 text-[#C68A46]" />
-                  <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Interactive Entity Graph Map</h2>
+                  <Radio className="w-4 h-4 text-[#D4A359]" />
+                  <h2 className="text-sm font-serif font-bold text-[#F1F5F9] tracking-wide">Interactive Entity Graph Map</h2>
                 </div>
 
                 {/* Canvas Zoom & Pan Controls */}
-                <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[4px] text-xs font-mono">
+                <div className="flex items-center gap-1.5 bg-[#1A2332] border border-[#222D3F] p-1 rounded-[4px] text-xs font-mono">
                   <button
                     onClick={handleZoomOut}
-                    className="p-1 rounded-[3px] text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F] transition"
+                    className="p-1 rounded-[3px] text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D2738] transition"
                     title="Zoom Out"
                   >
                     <ZoomOut className="w-3.5 h-3.5" />
                   </button>
-                  <span className="px-1 text-[11px] text-[#C68A46] font-semibold min-w-[42px] text-center">
+                  <span className="px-1 text-[11px] text-[#D4A359] font-semibold min-w-[42px] text-center">
                     {Math.round(graphZoom * 100)}%
                   </span>
                   <button
                     onClick={handleZoomIn}
-                    className="p-1 rounded-[3px] text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F] transition"
+                    className="p-1 rounded-[3px] text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D2738] transition"
                     title="Zoom In"
                   >
                     <ZoomIn className="w-3.5 h-3.5" />
                   </button>
-                  <div className="w-px h-3.5 bg-[#2B313D] mx-0.5" />
+                  <div className="w-px h-3.5 bg-[#222D3F] mx-0.5" />
                   <button
                     onClick={handleResetZoom}
-                    className="px-2 py-0.5 rounded-[3px] text-[10px] text-[#9AA3B2] hover:text-[#E8EAEE] hover:bg-[#282F3F] transition"
+                    className="px-2 py-0.5 rounded-[3px] text-[10px] text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D2738] transition"
                   >
                     Reset
                   </button>
@@ -1185,22 +1185,22 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               </div>
 
               {/* Legend Strip */}
-              <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-[#6B7382]">
-                <span className="flex items-center gap-1.5 text-[#9AA3B2]">
-                  <span className="w-2 h-2 rounded-full bg-[#6C93B8]" /> Person / Info
+              <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-[#64748B]">
+                <span className="flex items-center gap-1.5 text-[#94A3B8]">
+                  <span className="w-2 h-2 rounded-full bg-[#3B82F6]" /> Person / Info
                 </span>
-                <span className="flex items-center gap-1.5 text-[#9AA3B2]">
-                  <span className="w-2 h-2 rounded-full bg-[#4E9C93]" /> Account / Mule
+                <span className="flex items-center gap-1.5 text-[#94A3B8]">
+                  <span className="w-2 h-2 rounded-full bg-[#14B8A6]" /> Account / Mule
                 </span>
-                <span className="flex items-center gap-1.5 text-[#8B81C4] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#8B81C4]" /> Cross-Case Link
+                <span className="flex items-center gap-1.5 text-[#8B5CF6] font-medium">
+                  <span className="w-2 h-2 rounded-full bg-[#8B5CF6]" /> Cross-Case Link
                 </span>
               </div>
 
               {/* Zoomable / Pannable SVG Canvas Container */}
               <div 
                 ref={graphContainerRef}
-                className="bg-[#12151B] border border-[#2B313D] rounded-[5px] h-[400px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
+                className="bg-[#0B0F17] border border-[#222D3F] rounded-[6px] h-[400px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
                 style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
                 onMouseDown={handleGraphMouseDown}
                 onMouseMove={handleGraphMouseMove}
@@ -1248,8 +1248,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             width={labelWidth}
                             height={16}
                             rx={3}
-                            fill="#12151B"
-                            stroke="#2B313D"
+                            fill="#0B0F17"
+                            stroke="#222D3F"
                             strokeWidth="0.75"
                           />
                           <text
@@ -1287,8 +1287,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                               setSelectedMapNode(null); // Declick on re-click
                             }}
                           >
-                            <circle r={8} fill="#C68A46" opacity="0.35" className="animate-ping" />
-                            <circle r={5} fill="#C68A46" />
+                            <circle r={8} fill="#D4A359" opacity="0.35" className="animate-ping" />
+                            <circle r={5} fill="#D4A359" />
                           </g>
                         );
                       }
@@ -1308,7 +1308,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         >
                           <circle
                             r={r}
-                            fill="#181C24"
+                            fill="#131A26"
                             stroke={node.color}
                             strokeWidth={node.isBridge ? "2" : "1.5"}
                           />
@@ -1330,15 +1330,15 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             width={boxWidth}
                             height={24}
                             rx={3}
-                            fill="#12151B"
-                            stroke="#2B313D"
+                            fill="#0B0F17"
+                            stroke="#222D3F"
                             strokeWidth="0.5"
                           />
 
                           <text
                             textAnchor="middle"
                             y={r + 13.5}
-                            fill="#E8EAEE"
+                            fill="#F1F5F9"
                             fontSize="9.5"
                             fontWeight="600"
                             fontFamily="IBM Plex Sans, sans-serif"
@@ -1348,7 +1348,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                           <text
                             textAnchor="middle"
                             y={r + 23}
-                            fill="#6B7382"
+                            fill="#64748B"
                             fontSize="8"
                             fontFamily="IBM Plex Mono, monospace"
                           >
@@ -1392,18 +1392,18 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.15, ease: 'easeOut' }}
                         style={{ left: `${pos.left}px`, top: `${pos.top}px` }}
-                        className="absolute z-30 w-[355px] bg-[#181C24] border border-[#C68A46] rounded-[8px] p-3.5 space-y-2.5 text-xs shadow-2xl depth-floating select-text"
+                        className="absolute z-30 w-[355px] bg-[#131A26] border border-[#D4A359] rounded-[8px] p-3.5 space-y-2.5 text-xs shadow-2xl depth-floating select-text"
                         onClick={(e) => e.stopPropagation()}
                         onMouseDown={(e) => e.stopPropagation()}
                       >
                         {/* Top Banner with Badges and Declick Button */}
-                        <div className="flex items-center justify-between border-b border-[#2B313D] pb-2">
+                        <div className="flex items-center justify-between border-b border-[#222D3F] pb-2">
                           <div className="flex items-center gap-2">
                             <Badge variant={dossier.categoryVariant || 'brass'} className="text-[10px] px-2 py-0.5 font-mono">
                               {dossier.category}
                             </Badge>
-                            <span className="text-[10.5px] font-mono text-[#5FA876] flex items-center gap-1 font-medium">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-[#5FA876]" />
+                            <span className="text-[10.5px] font-mono text-[#34D399] flex items-center gap-1 font-medium">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#34D399]" />
                               {dossier.status}
                             </span>
                           </div>
@@ -1414,7 +1414,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                               e.stopPropagation();
                               setSelectedMapNode(null);
                             }}
-                            className="stamp-tag stamp-crimson hover:bg-[#8B2626] hover:text-[#F4EFE6] transition flex items-center gap-1 cursor-pointer"
+                            className="stamp-tag stamp-crimson hover:bg-[#E05252] hover:text-[#F1F5F9] transition flex items-center gap-1 cursor-pointer"
                             title="Declick / Collapse back to entity"
                           >
                             <span className="text-[9.5px]">DECLICK</span>
@@ -1425,37 +1425,37 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         {/* Name & Alias & Subtitle */}
                         <div>
                           <div className="flex items-baseline justify-between gap-1.5 flex-wrap">
-                            <h4 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight">
+                            <h4 className="font-serif font-bold text-[#F1F5F9] text-sm tracking-tight">
                               {dossier.name}
                             </h4>
-                            <span className="text-[11px] font-mono text-[#C68A46]">
+                            <span className="text-[11px] font-mono text-[#D4A359]">
                               "{dossier.alias}"
                             </span>
                           </div>
-                          <p className="text-[11px] text-[#9AA3B2] font-sans mt-0.5 leading-snug">
+                          <p className="text-[11px] text-[#94A3B8] font-sans mt-0.5 leading-snug">
                             {dossier.role}
                           </p>
                         </div>
 
                         {/* 2-Column Meta Grid: LOCATION & IDENTIFIER */}
-                        <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#12151B] p-2 rounded-[5px] border border-[#2B313D]">
+                        <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#0B0F17] p-2 rounded-[6px] border border-[#222D3F]">
                           <div>
-                            <span className="text-[#787167] block text-[9px] font-mono uppercase tracking-wider">LOCATION</span>
-                            <span className="text-[#E8EAEE] block truncate mt-0.5 font-sans">{dossier.location}</span>
+                            <span className="text-[#64748B] block text-[9px] font-mono uppercase tracking-wider">LOCATION</span>
+                            <span className="text-[#F1F5F9] block truncate mt-0.5 font-sans">{dossier.location}</span>
                           </div>
                           <div>
-                            <span className="text-[#787167] block text-[9px] font-mono uppercase tracking-wider">IDENTIFIER</span>
-                            <span className="text-[#6C93B8] font-mono block truncate mt-0.5">{dossier.idNumber}</span>
+                            <span className="text-[#64748B] block text-[9px] font-mono uppercase tracking-wider">IDENTIFIER</span>
+                            <span className="text-[#3B82F6] font-mono block truncate mt-0.5">{dossier.idNumber}</span>
                           </div>
                         </div>
 
                         {/* WHAT HAPPENED Section */}
-                        <div className="bg-[#1F2430] p-2.5 rounded-[5px] border border-[#2B313D] space-y-1">
-                          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#C68A46] font-bold tracking-wide">
-                            <Info className="w-3.5 h-3.5 text-[#C68A46]" />
+                        <div className="bg-[#1A2332] p-2.5 rounded-[6px] border border-[#222D3F] space-y-1">
+                          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#D4A359] font-bold tracking-wide">
+                            <Info className="w-3.5 h-3.5 text-[#D4A359]" />
                             <span>WHAT HAPPENED</span>
                           </div>
-                          <p className="text-[11px] text-[#E8EAEE] leading-relaxed font-sans line-clamp-4">
+                          <p className="text-[11px] text-[#F1F5F9] leading-relaxed font-sans line-clamp-4">
                             {dossier.whatHappened}
                           </p>
                         </div>
@@ -1463,7 +1463,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         {/* Connected Conduits Quick Jump */}
                         {directConduits.length > 0 && (
                           <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
-                            <span className="text-[9.5px] font-mono text-[#787167] uppercase">LINKS:</span>
+                            <span className="text-[9.5px] font-mono text-[#64748B] uppercase">LINKS:</span>
                             {directConduits.slice(0, 3).map((edge, idx) => {
                               const isOutgoing = edge.from === node.id;
                               const otherNodeId = isOutgoing ? edge.to : edge.from;
@@ -1476,10 +1476,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                                     setSelectedMapNode(otherNodeId);
                                     playPinStamp();
                                   }}
-                                  className="px-1.5 py-0.2 rounded bg-[#12151B] border border-[#2B313D] hover:border-[#C68A46] text-[9.5px] text-[#9AA3B2] hover:text-[#E8EAEE] flex items-center gap-1 transition"
+                                  className="px-1.5 py-0.2 rounded bg-[#0B0F17] border border-[#222D3F] hover:border-[#D4A359] text-[9.5px] text-[#94A3B8] hover:text-[#F1F5F9] flex items-center gap-1 transition"
                                   title={`Switch to ${otherNode?.label || otherNodeId}`}
                                 >
-                                  <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
+                                  <strong className="text-[#F1F5F9]">{otherNode?.label || otherNodeId}</strong>
                                 </button>
                               );
                             })}
@@ -1487,9 +1487,9 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         )}
 
                         {/* Footer Strip with Risk Index and Actions */}
-                        <div className="flex items-center justify-between text-[10px] font-mono text-[#787167] pt-1.5 border-t border-[#2B313D]">
+                        <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] pt-1.5 border-t border-[#222D3F]">
                           <div>
-                            Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}>
+                            Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#E05252]' : dossier.riskScore >= 40 ? 'text-[#D4A359]' : 'text-[#34D399]'}>
                               {dossier.riskScore}%
                             </strong>
                           </div>
@@ -1505,20 +1505,20 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                                   is_bridge: node.isBridge
                                 });
                               }}
-                              className="text-[#C68A46] hover:text-[#D49855] text-[10.5px] font-medium underline underline-offset-2 flex items-center gap-0.5 transition"
+                              className="text-[#D4A359] hover:text-[#E0B268] text-[10.5px] font-medium underline underline-offset-2 flex items-center gap-0.5 transition"
                             >
                               <span>Full Dossier</span>
                               <ArrowRight className="w-2.5 h-2.5" />
                             </button>
 
-                            <span className="text-[#2B313D]">&bull;</span>
+                            <span className="text-[#222D3F]">&bull;</span>
 
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedMapNode(null);
                               }}
-                              className="hover:text-[#E8EAEE] text-[10px] transition"
+                              className="hover:text-[#F1F5F9] text-[10px] transition"
                               title="Declick back to entity"
                             >
                               Declick [✕]
@@ -1556,15 +1556,15 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.12 }}
                       style={{ top: `${nodeHoverPos.y}px`, left: `${nodeHoverPos.x}px` }}
-                      className="fixed z-50 w-[350px] bg-[#181C24] border border-[#C68A46] rounded-[6px] p-3.5 space-y-2.5 text-xs shadow-2xl pointer-events-none"
+                      className="fixed z-50 w-[350px] bg-[#131A26] border border-[#D4A359] rounded-[6px] p-3.5 space-y-2.5 text-xs shadow-2xl pointer-events-none"
                     >
                       {/* Header */}
-                      <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
+                      <div className="flex items-center justify-between border-b border-[#222D3F] pb-1.5">
                         <Badge variant={dossier.categoryVariant || 'brass'} className="text-[10px] px-1.5 py-0.5">
                           {dossier.category}
                         </Badge>
-                        <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1 font-medium">
-                          <CheckCircle2 className="w-3 h-3 text-[#5FA876]" />
+                        <span className="text-[10px] font-mono text-[#34D399] flex items-center gap-1 font-medium">
+                          <CheckCircle2 className="w-3 h-3 text-[#34D399]" />
                           {dossier.status}
                         </span>
                       </div>
@@ -1572,45 +1572,45 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       {/* Name & Role */}
                       <div>
                         <div className="flex items-baseline justify-between gap-1">
-                          <h4 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight">
+                          <h4 className="font-serif font-bold text-[#F1F5F9] text-sm tracking-tight">
                             {dossier.name}
                           </h4>
-                          <span className="text-[11px] font-mono text-[#C68A46]">
+                          <span className="text-[11px] font-mono text-[#D4A359]">
                             "{dossier.alias}"
                           </span>
                         </div>
-                        <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">
+                        <p className="text-[11px] text-[#94A3B8] font-mono mt-0.5">
                           {dossier.role}
                         </p>
                       </div>
 
                       {/* 2-Column Meta Grid */}
-                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#12151B] p-2 rounded-[4px] border border-[#2B313D]">
+                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#0B0F17] p-2 rounded-[4px] border border-[#222D3F]">
                         <div>
-                          <span className="text-[#6B7382] block text-[9px] font-mono uppercase">LOCATION</span>
-                          <span className="text-[#E8EAEE] block truncate">{dossier.location}</span>
+                          <span className="text-[#64748B] block text-[9px] font-mono uppercase">LOCATION</span>
+                          <span className="text-[#F1F5F9] block truncate">{dossier.location}</span>
                         </div>
                         <div>
-                          <span className="text-[#6B7382] block text-[9px] font-mono uppercase">IDENTIFIER</span>
-                          <span className="text-[#6C93B8] font-mono block truncate">{dossier.idNumber}</span>
+                          <span className="text-[#64748B] block text-[9px] font-mono uppercase">IDENTIFIER</span>
+                          <span className="text-[#3B82F6] font-mono block truncate">{dossier.idNumber}</span>
                         </div>
                       </div>
 
                       {/* Incident Narrative / What Happened snippet */}
-                      <div className="bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D] space-y-1">
-                        <span className="text-[10px] font-mono text-[#C68A46] font-semibold flex items-center gap-1">
-                          <Info className="w-3 h-3 text-[#C68A46]" />
+                      <div className="bg-[#1A2332] p-2 rounded-[4px] border border-[#222D3F] space-y-1">
+                        <span className="text-[10px] font-mono text-[#D4A359] font-semibold flex items-center gap-1">
+                          <Info className="w-3 h-3 text-[#D4A359]" />
                           WHAT HAPPENED
                         </span>
-                        <p className="text-[11px] text-[#E8EAEE] leading-snug line-clamp-4">
+                        <p className="text-[11px] text-[#F1F5F9] leading-snug line-clamp-4">
                           {dossier.whatHappened}
                         </p>
                       </div>
 
                       {/* Footer info strip */}
-                      <div className="flex items-center justify-between text-[10px] font-mono text-[#6B7382] pt-0.5 border-t border-[#2B313D]">
-                        <span>Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}>{dossier.riskScore}%</strong></span>
-                        <span className="text-[#9AA3B2]">{dossier.category}</span>
+                      <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] pt-0.5 border-t border-[#222D3F]">
+                        <span>Risk Index: <strong className={dossier.riskScore >= 80 ? 'text-[#E05252]' : dossier.riskScore >= 40 ? 'text-[#D4A359]' : 'text-[#34D399]'}>{dossier.riskScore}%</strong></span>
+                        <span className="text-[#94A3B8]">{dossier.category}</span>
                       </div>
                     </motion.div>
                   );
@@ -1622,10 +1622,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           {/* RIGHT COLUMN: POINT-WISE CASE SUMMARY & INVESTIGATION BRIEFING (lg:col-span-5) */}
           <div className="lg:col-span-5 space-y-3">
             <Card className="p-5 space-y-3.5 relative">
-              <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+              <div className="flex items-center justify-between border-b border-[#222D3F] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-[#C68A46]" />
-                  <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Case Summary &amp; Briefing</h2>
+                  <FileText className="w-4 h-4 text-[#D4A359]" />
+                  <h2 className="text-sm font-serif font-bold text-[#F1F5F9] tracking-wide">Case Summary &amp; Briefing</h2>
                 </div>
                 <Badge variant="green">
                   Verified FIR
@@ -1633,14 +1633,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               </div>
 
               {/* Point-wise natural readable chronological flow */}
-              <div className="space-y-3 text-xs text-[#9AA3B2] leading-relaxed">
+              <div className="space-y-3 text-xs text-[#94A3B8] leading-relaxed">
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'PER-108')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#6C93B8] font-semibold hover:underline cursor-pointer border-b border-[#6C93B8]/50"
+                      className="text-[#3B82F6] font-semibold hover:underline cursor-pointer border-b border-[#3B82F6]/50"
                     >
                       CFO Vikramaditya Rathore
                     </span>{' '}
@@ -1649,13 +1649,13 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     Then he was directed to duplicate phishing portal{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'DOMAIN-AUTH')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#6C93B8] hover:underline font-mono cursor-pointer border-b border-[#6C93B8]/50"
+                      className="text-[#3B82F6] hover:underline font-mono cursor-pointer border-b border-[#3B82F6]/50"
                     >
                       secure-zenithcorp-auth.com
                     </span>
@@ -1664,13 +1664,13 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     Then an unauthorized RTGS debit of{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#E8EAEE] font-semibold hover:underline cursor-pointer border-b border-[#E8EAEE]/50"
+                      className="text-[#F1F5F9] font-semibold hover:underline cursor-pointer border-b border-[#F1F5F9]/50"
                     >
                       ₹1,00,00,000 (One Crore INR)
                     </span>{' '}
@@ -1678,7 +1678,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#4E9C93] font-mono hover:underline cursor-pointer border-b border-[#4E9C93]/50"
+                      className="text-[#14B8A6] font-mono hover:underline cursor-pointer border-b border-[#14B8A6]/50"
                     >
                       Zenith Corporate Account ACC-1001
                     </span>{' '}
@@ -1686,7 +1686,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-2201')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#C1655A] font-mono hover:underline cursor-pointer border-b border-[#C1655A]/50"
+                      className="text-[#E05252] font-mono hover:underline cursor-pointer border-b border-[#E05252]/50"
                     >
                       ACC-2201 (Suman Roy)
                     </span>
@@ -1694,7 +1694,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'EVD-001')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#5FA876] font-mono font-medium hover:underline cursor-pointer border-b border-[#5FA876]/50"
+                      className="text-[#34D399] font-mono font-medium hover:underline cursor-pointer border-b border-[#34D399]/50"
                     >
                       FIR 0018/2026 (EVD-001)
                     </span>
@@ -1703,20 +1703,20 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     Then within 25 minutes, Suman Roy rapidly split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
                   </p>
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     Then ₹70,00,000 was funneled into broker account ACC-7702 controlled by{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'PER-103')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#C68A46] font-semibold hover:underline cursor-pointer border-b border-[#C68A46]/50"
+                      className="text-[#D4A359] font-semibold hover:underline cursor-pointer border-b border-[#D4A359]/50"
                     >
                       Devrat Sharma (PER-103, alias Broker D)
                     </span>
@@ -1724,7 +1724,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'EVD-003')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#6C93B8] font-mono hover:underline cursor-pointer border-b border-[#6C93B8]/50"
+                      className="text-[#3B82F6] font-mono hover:underline cursor-pointer border-b border-[#3B82F6]/50"
                     >
                       T-4401 (EVD-003)
                     </span>{' '}
@@ -1733,13 +1733,13 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     Then Devrat Sharma executed cross-case bridge transfer{' '}
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'TXN_552')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#8B81C4] font-mono font-semibold hover:underline cursor-pointer border-b border-[#8B81C4]/50"
+                      className="text-[#8B5CF6] font-mono font-semibold hover:underline cursor-pointer border-b border-[#8B5CF6]/50"
                     >
                       TXN_552 (₹50,00,000)
                     </span>{' '}
@@ -1747,7 +1747,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'ACC-7701')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#8B81C4] font-mono hover:underline cursor-pointer border-b border-[#8B81C4]/50"
+                      className="text-[#8B5CF6] font-mono hover:underline cursor-pointer border-b border-[#8B5CF6]/50"
                     >
                       Apex Trade Solutions (ACC-7701)
                     </span>
@@ -1755,7 +1755,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <span
                       onMouseEnter={(e) => handleWikiHover(e, 'EVD-002')}
                       onMouseLeave={handleWikiLeave}
-                      className="text-[#5FA876] font-mono font-medium hover:underline cursor-pointer border-b border-[#5FA876]/50"
+                      className="text-[#34D399] font-mono font-medium hover:underline cursor-pointer border-b border-[#34D399]/50"
                     >
                       FIU Advisory STR-88912 (EVD-002)
                     </span>
@@ -1764,7 +1764,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <span className="text-[#C68A46] font-mono text-sm leading-none mt-0.5">•</span>
+                  <span className="text-[#D4A359] font-mono text-sm leading-none mt-0.5">•</span>
                   <p>
                     Then Apex Trade Solutions cashed out ₹45,00,000 to hawala operator Tariq Merchant, who wired the proceeds via international SWIFT transfer into Dubai Bullion Account ACC-7705.
                   </p>
@@ -1780,24 +1780,24 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     exit={{ opacity: 0, scale: 0.96 }}
                     transition={{ duration: 0.12 }}
                     style={{ top: `${tooltipPos.y}px`, left: `${tooltipPos.x}px` }}
-                    className="fixed z-50 w-80 bg-[#181C24] border border-[#2B313D] rounded-[5px] p-3.5 space-y-2 text-xs pointer-events-none shadow-none"
+                    className="fixed z-50 w-80 bg-[#131A26] border border-[#222D3F] rounded-[6px] p-3.5 space-y-2 text-xs pointer-events-none shadow-none"
                   >
-                    <div className="flex items-center justify-between border-b border-[#2B313D] pb-1.5">
+                    <div className="flex items-center justify-between border-b border-[#222D3F] pb-1.5">
                       <Badge variant="brass">
                         {activeTooltip.type}
                       </Badge>
-                      <span className="text-[10px] font-mono text-[#5FA876] flex items-center gap-1">
+                      <span className="text-[10px] font-mono text-[#34D399] flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" />
                         {activeTooltip.status}
                       </span>
                     </div>
 
                     <div>
-                      <h4 className="font-serif font-bold text-[#E8EAEE] text-sm">{activeTooltip.title}</h4>
-                      <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">{activeTooltip.docId}</p>
+                      <h4 className="font-serif font-bold text-[#F1F5F9] text-sm">{activeTooltip.title}</h4>
+                      <p className="text-[11px] text-[#94A3B8] font-mono mt-0.5">{activeTooltip.docId}</p>
                     </div>
 
-                    <p className="text-[11px] text-[#9AA3B2] leading-snug bg-[#1F2430] p-2 rounded-[4px] border border-[#2B313D]">
+                    <p className="text-[11px] text-[#94A3B8] leading-snug bg-[#1A2332] p-2 rounded-[4px] border border-[#222D3F]">
                       "{activeTooltip.snippet}"
                     </p>
                   </motion.div>
@@ -1814,12 +1814,12 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       {/* ========================================================= */}
       {activeTab === 'suspects' && (
         <Card className="p-5 space-y-3">
-          <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+          <div className="flex items-center justify-between border-b border-[#222D3F] pb-2.5">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-[#C68A46]" />
-              <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Prime Suspects Roster</h2>
+              <User className="w-4 h-4 text-[#D4A359]" />
+              <h2 className="text-sm font-serif font-bold text-[#F1F5F9] tracking-wide">Prime Suspects Roster</h2>
             </div>
-            <span className="text-xs font-mono text-[#6B7382]">
+            <span className="text-xs font-mono text-[#64748B]">
               {primeSuspects.length} Identified Persons of Interest
             </span>
           </div>
@@ -1839,10 +1839,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             <TableBody>
               {primeSuspects.map((suspect) => (
                 <TableRow key={suspect.person_id}>
-                  <TableCell className="font-medium text-[#E8EAEE]">
+                  <TableCell className="font-medium text-[#F1F5F9]">
                     {suspect.name}
                   </TableCell>
-                  <TableCell className="font-mono text-[#C68A46]">
+                  <TableCell className="font-mono text-[#D4A359]">
                     "{suspect.alias}"
                   </TableCell>
                   <TableCell>
@@ -1855,20 +1855,20 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     )}
                   </TableCell>
                   <TableCell className="font-mono text-[11px]">
-                    <span className="text-[#E8EAEE] block">{suspect.phone}</span>
-                    <span className="text-[#6B7382]">{suspect.location}</span>
+                    <span className="text-[#F1F5F9] block">{suspect.phone}</span>
+                    <span className="text-[#64748B]">{suspect.location}</span>
                   </TableCell>
                   <TableCell className="font-mono text-[11px]">
                     {suspect.pan || 'N/A'}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-[#C1655A]' : 'text-[#C68A46]'}`}>
+                      <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-[#E05252]' : 'text-[#D4A359]'}`}>
                         {suspect.risk_score}%
                       </span>
-                      <div className="w-16 bg-[#12151B] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
+                      <div className="w-16 bg-[#0B0F17] h-1.5 rounded-[2px] overflow-hidden border border-[#222D3F]">
                         <div 
-                          className={`h-full ${suspect.risk_score >= 90 ? 'bg-[#C1655A]' : 'bg-[#C68A46]'}`}
+                          className={`h-full ${suspect.risk_score >= 90 ? 'bg-[#E05252]' : 'bg-[#D4A359]'}`}
                           style={{ width: `${suspect.risk_score}%` }}
                         />
                       </div>
@@ -1895,27 +1895,27 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       {/* ========================================================= */}
       {activeTab === 'reconstruction' && (
         <Card className="p-5 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#222D3F] pb-2.5">
             <div>
               <div className="flex items-center gap-2">
-                <Film className="w-4 h-4 text-[#C68A46]" />
-                <h2 className="text-sm font-serif font-bold text-[#E8EAEE] tracking-wide">Review Investigation</h2>
+                <Film className="w-4 h-4 text-[#D4A359]" />
+                <h2 className="text-sm font-serif font-bold text-[#F1F5F9] tracking-wide">Review Investigation</h2>
               </div>
-              <p className="text-xs text-[#9AA3B2] mt-0.5">
+              <p className="text-xs text-[#94A3B8] mt-0.5">
                 Chronological incident reconstruction and topological entity graph sequence.
               </p>
             </div>
 
             {/* Player Controls Bar */}
-            <div className="flex items-center gap-1.5 bg-[#1F2430] border border-[#2B313D] p-1 rounded-[5px]">
+            <div className="flex items-center gap-1.5 bg-[#1A2332] border border-[#222D3F] p-1 rounded-[6px]">
               <button
                 onClick={isPlaying ? handlePauseVideo : isPaused ? handleResumeVideo : handleStartVideo}
                 className={`px-3 py-1 rounded-[4px] font-semibold text-xs transition flex items-center gap-1.5 ${
                   isPlaying
-                    ? 'bg-[#C68A46] text-[#12151B]'
+                    ? 'bg-[#D4A359] text-[#0B0F17]'
                     : isPaused
-                    ? 'bg-[#8B2626] text-[#F4EFE6] hover:bg-[#A32E2E]'
-                    : 'bg-[#C68A46] text-[#12151B] hover:bg-[#D49855]'
+                    ? 'bg-[#E05252] text-[#F1F5F9] hover:bg-[#A32E2E]'
+                    : 'bg-[#D4A359] text-[#0B0F17] hover:bg-[#E0B268]'
                 }`}
               >
                 {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
@@ -1924,7 +1924,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
               <button
                 onClick={handleResetVideo}
-                className="p-1 rounded-[4px] bg-[#181C24] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                className="p-1 rounded-[4px] bg-[#131A26] hover:bg-[#1D2738] text-[#94A3B8] hover:text-[#F1F5F9] transition"
                 title="Reset to Empty Board"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -1933,7 +1933,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               <button
                 onClick={() => setVoiceAudio(!voiceAudio)}
                 className={`p-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 ${
-                  voiceAudio ? 'bg-[#181C24] text-[#C68A46] border-[#2B313D]' : 'bg-[#181C24] text-[#6B7382] border-[#2B313D]'
+                  voiceAudio ? 'bg-[#131A26] text-[#D4A359] border-[#222D3F]' : 'bg-[#131A26] text-[#64748B] border-[#222D3F]'
                 }`}
                 title="Toggle Voice Narration"
               >
@@ -1943,8 +1943,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
               <button
                 onClick={handleTestAudio}
-                className={`px-2 py-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 bg-[#181C24] border-[#2B313D] hover:border-[#C68A46] ${
-                  audioTestStatus ? 'text-[#C68A46]' : 'text-[#9AA3B2]'
+                className={`px-2 py-1 rounded-[4px] border text-xs font-mono transition flex items-center gap-1 bg-[#131A26] border-[#222D3F] hover:border-[#D4A359] ${
+                  audioTestStatus ? 'text-[#D4A359]' : 'text-[#94A3B8]'
                 }`}
                 title="Test voice synthesis and procedural sound effects"
               >
@@ -1958,7 +1958,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     key={s}
                     onClick={() => setPlaybackSpeed(s)}
                     className={`px-1.5 py-0.2 rounded-[3px] text-[10px] font-medium ${
-                      playbackSpeed === s ? 'bg-[#C68A46] text-[#12151B] font-bold' : 'text-[#6B7382] hover:text-[#E8EAEE]'
+                      playbackSpeed === s ? 'bg-[#D4A359] text-[#0B0F17] font-bold' : 'text-[#64748B] hover:text-[#F1F5F9]'
                     }`}
                   >
                     {s}x
@@ -1981,10 +1981,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     onClick={() => handleScrub(stageNum)}
                     className={`h-2 rounded-[3px] transition-all duration-200 text-left relative overflow-hidden ${
                       isCurrent
-                        ? 'bg-[#C68A46] ring-2 ring-[#C68A46]/40 shadow-sm'
+                        ? 'bg-[#D4A359] ring-2 ring-[#D4A359]/40 shadow-sm'
                         : isPast
-                        ? 'bg-[#8B2626]'
-                        : 'bg-[#1F2430] hover:bg-[#282F3F]'
+                        ? 'bg-[#E05252]'
+                        : 'bg-[#1A2332] hover:bg-[#1D2738]'
                     }`}
                     title={`Stage ${stg.stageNumber}: ${stg.phaseTitle}`}
                   />
@@ -1997,7 +1997,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                   <span className="stamp-tag stamp-brass px-1.5 py-0.5 text-[10px] font-bold">
                     BOARD CLEARED
                   </span>
-                  <span className="font-semibold text-[#E8EAEE] tracking-wide font-sans text-xs">
+                  <span className="font-semibold text-[#F1F5F9] tracking-wide font-sans text-xs">
                     Awaiting Investigation Recreation
                   </span>
                 </div>
@@ -2006,54 +2006,54 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                   <span className="stamp-tag stamp-crimson px-1.5 py-0.5 text-[10px] font-bold">
                     STAGE {currentStep} OF 6
                   </span>
-                  <span className="font-semibold text-[#E8EAEE] tracking-wide font-sans text-xs">
+                  <span className="font-semibold text-[#F1F5F9] tracking-wide font-sans text-xs">
                     {currentStage.phaseTitle}
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-3 text-[11px] text-[#9AA3B2]">
-                <span>Timestamp: <strong className="text-[#E8EAEE] font-mono">{currentStage.timestamp}</strong></span>
-                <span>Exhibit: <strong className="text-[#C68A46] font-mono">{currentStage.evidence}</strong></span>
+              <div className="flex items-center gap-3 text-[11px] text-[#94A3B8]">
+                <span>Timestamp: <strong className="text-[#F1F5F9] font-mono">{currentStage.timestamp}</strong></span>
+                <span>Exhibit: <strong className="text-[#D4A359] font-mono">{currentStage.evidence}</strong></span>
               </div>
             </div>
           </div>
 
           {/* Narration Subtitle Box with Voice Description */}
-          <div className="bg-[#181C24] border border-[#2B313D] p-4 rounded-[5px] flex items-start gap-3 relative shadow-md">
+          <div className="bg-[#131A26] border border-[#222D3F] p-4 rounded-[6px] flex items-start gap-3 relative shadow-md">
             <div className="mt-1 shrink-0 flex items-center gap-1.5">
               {isSpeaking ? (
                 <div className="flex items-center gap-0.5 h-4">
-                  <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
-                  <span className="w-0.5 bg-[#8B2626] rounded-full wave-bar" />
-                  <span className="w-0.5 bg-[#F4EFE6] rounded-full wave-bar" />
-                  <span className="w-0.5 bg-[#C68A46] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#D4A359] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#E05252] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#F1F5F9] rounded-full wave-bar" />
+                  <span className="w-0.5 bg-[#D4A359] rounded-full wave-bar" />
                 </div>
               ) : (
-                <span className="w-2.5 h-2.5 rounded-full bg-[#C68A46] block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#D4A359] block" />
               )}
             </div>
             <div className="flex-1 space-y-1">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono uppercase tracking-wider text-[#787167]">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono uppercase tracking-wider text-[#64748B]">
                 <span>Narrated Sequence Dispatch &bull; {currentStep === 0 ? 'Ready' : `Phase ${currentStep}`}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#C68A46] bg-[#12151B] px-2 py-0.5 rounded border border-[#2B313D] flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-[#C68A46]" />
+                  <span className="text-[#D4A359] bg-[#0B0F17] px-2 py-0.5 rounded border border-[#222D3F] flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-[#D4A359]" />
                     {getActiveVoiceDescription()}
                   </span>
                   {isPaused ? (
-                    <span className="text-[#C1655A] bg-[#8B2626]/20 px-2 py-0.5 rounded border border-[#8B2626]/40 flex items-center gap-1 font-mono text-[10px]">
-                      <Pause className="w-3 h-3 text-[#C1655A]" />
+                    <span className="text-[#E05252] bg-[#E05252]/20 px-2 py-0.5 rounded border border-[#E05252]/40 flex items-center gap-1 font-mono text-[10px]">
+                      <Pause className="w-3 h-3 text-[#E05252]" />
                       Paused
                     </span>
                   ) : isSpeaking && (
-                    <span className="text-[#5FA876] flex items-center gap-1 font-mono text-[10px]">
+                    <span className="text-[#34D399] flex items-center gap-1 font-mono text-[10px]">
                       <Volume2 className="w-3 h-3 animate-pulse" />
                       Speaking
                     </span>
                   )}
                 </div>
               </div>
-              <p className="text-sm font-medium text-[#F4EFE6] leading-relaxed font-sans">
+              <p className="text-sm font-medium text-[#F1F5F9] leading-relaxed font-sans">
                 "{currentStage.narration}"
               </p>
             </div>
@@ -2066,49 +2066,49 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
             onMouseMove={handleReconMouseMove}
             onMouseUp={handleReconMouseUp}
             onMouseLeave={handleReconMouseUp}
-            className={`bg-[#12151B] border border-[#2B313D] rounded-[5px] p-2 min-h-[410px] relative overflow-hidden select-none ${
+            className={`bg-[#0B0F17] border border-[#222D3F] rounded-[6px] p-2 min-h-[410px] relative overflow-hidden select-none ${
               isDraggingRecon ? 'cursor-grabbing' : 'cursor-grab'
             }`}
           >
             {/* Zoom Controls Toolbar */}
-            <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 bg-[#181C24]/95 backdrop-blur-sm border border-[#2B313D] p-1 rounded-[5px] text-xs font-mono shadow-lg">
+            <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 bg-[#131A26]/95 backdrop-blur-sm border border-[#222D3F] p-1 rounded-[6px] text-xs font-mono shadow-lg">
               <button
                 onClick={handleReconZoomOut}
-                className="p-1 rounded-[3px] hover:bg-[#232834] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                className="p-1 rounded-[3px] hover:bg-[#1D2738] text-[#94A3B8] hover:text-[#F1F5F9] transition"
                 title="Zoom Out"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
-              <span className="px-1 text-[11px] text-[#C68A46] font-semibold min-w-[38px] text-center select-none">
+              <span className="px-1 text-[11px] text-[#D4A359] font-semibold min-w-[38px] text-center select-none">
                 {Math.round(reconZoom * 100)}%
               </span>
               <button
                 onClick={handleReconZoomIn}
-                className="p-1 rounded-[3px] hover:bg-[#232834] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                className="p-1 rounded-[3px] hover:bg-[#1D2738] text-[#94A3B8] hover:text-[#F1F5F9] transition"
                 title="Zoom In"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
               </button>
-              <div className="w-px h-3.5 bg-[#2B313D] mx-0.5" />
+              <div className="w-px h-3.5 bg-[#222D3F] mx-0.5" />
               <button
                 onClick={handleReconResetZoom}
-                className="px-1.5 py-0.5 rounded-[3px] hover:bg-[#232834] text-[10px] text-[#9AA3B2] hover:text-[#E8EAEE] transition"
+                className="px-1.5 py-0.5 rounded-[3px] hover:bg-[#1D2738] text-[10px] text-[#94A3B8] hover:text-[#F1F5F9] transition"
                 title="Reset Zoom and Pan to Center"
               >
                 Reset
               </button>
-              <span className="hidden md:inline text-[9.5px] text-[#6B7382] border-l border-[#2B313D] pl-1.5 ml-0.5">
+              <span className="hidden md:inline text-[9.5px] text-[#64748B] border-l border-[#222D3F] pl-1.5 ml-0.5">
                 Scroll to Zoom &bull; Drag to Pan
               </span>
             </div>
 
             {/* Stage & Count Status Badge */}
-            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#787167] bg-[#181C24]/95 backdrop-blur-sm px-2.5 py-1 rounded-[4px] border border-[#2B313D] z-10 flex items-center gap-2 shadow-lg">
+            <div className="absolute top-2.5 right-2.5 text-[10px] font-mono text-[#64748B] bg-[#131A26]/95 backdrop-blur-sm px-2.5 py-1 rounded-[4px] border border-[#222D3F] z-10 flex items-center gap-2 shadow-lg">
               <span>{currentStep === 0 ? 'Board Cleared' : `Phase ${currentStep}: ${currentStage.phaseTitle}`}</span>
-              <span className="text-[#2B313D]">&bull;</span>
-              <span className="text-[#C68A46]">{activeReplayNodes.length} Dossier Entities</span>
-              <span className="text-[#2B313D]">&bull;</span>
-              <span className="text-[#8B81C4]">{activeReplayEdges.length} Active Conduits</span>
+              <span className="text-[#222D3F]">&bull;</span>
+              <span className="text-[#D4A359]">{activeReplayNodes.length} Dossier Entities</span>
+              <span className="text-[#222D3F]">&bull;</span>
+              <span className="text-[#8B5CF6]">{activeReplayEdges.length} Active Conduits</span>
             </div>
 
             <svg className="w-full h-[400px]" viewBox="0 0 1180 440" preserveAspectRatio="xMidYMid meet">
@@ -2122,16 +2122,16 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 {/* Empty State Watermark: Displayed when Board is Initialized / Cleared */}
                 {activeReplayNodes.length === 0 && (
                   <g transform="translate(590, 210)" className="pointer-events-none select-none">
-                    <circle r="44" fill="#181C24" stroke="#C68A46" strokeWidth="1.5" strokeDasharray="5 3" strokeOpacity="0.6" />
+                    <circle r="44" fill="#131A26" stroke="#D4A359" strokeWidth="1.5" strokeDasharray="5 3" strokeOpacity="0.6" />
                     <foreignObject x="-20" y="-20" width="40" height="40">
-                      <div className="w-full h-full flex items-center justify-center text-[#C68A46]">
+                      <div className="w-full h-full flex items-center justify-center text-[#D4A359]">
                         <Film className="w-7 h-7" />
                       </div>
                     </foreignObject>
-                    <text textAnchor="middle" y="70" fill="#E8EAEE" fontSize="13" fontWeight="600" fontFamily="Source Serif 4, serif">
+                    <text textAnchor="middle" y="70" fill="#F1F5F9" fontSize="13" fontWeight="600" fontFamily="Source Serif 4, serif">
                       Investigation Evidence Board Cleared
                     </text>
-                    <text textAnchor="middle" y="90" fill="#787167" fontSize="10.5" fontFamily="Courier Prime, monospace">
+                    <text textAnchor="middle" y="90" fill="#64748B" fontSize="10.5" fontFamily="Courier Prime, monospace">
                       Click "Play Reconstruction" above to generate live chronological graph and Indian English narration
                     </text>
                   </g>
@@ -2168,8 +2168,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         width={labelWidth}
                         height={16}
                         rx={3}
-                        fill="#12151B"
-                        stroke="#2B313D"
+                        fill="#0B0F17"
+                        stroke="#222D3F"
                         strokeWidth="0.75"
                       />
                       <text
@@ -2210,7 +2210,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         <circle
                           r={r + 6}
                           fill="none"
-                          stroke="#C68A46"
+                          stroke="#D4A359"
                           strokeWidth="1.5"
                           strokeDasharray="4 3"
                           className="animate-spin"
@@ -2227,14 +2227,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                             width="56"
                             height="12"
                             rx="2"
-                            fill="#8B2626"
-                            stroke="#B83232"
+                            fill="#E05252"
+                            stroke="#E05252"
                             strokeWidth="0.5"
                           />
                           <text
                             textAnchor="middle"
                             y="-0.5"
-                            fill="#F4EFE6"
+                            fill="#F1F5F9"
                             fontSize="6.5"
                             fontWeight="700"
                             fontFamily="Courier Prime, monospace"
@@ -2247,7 +2247,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       <g className="transition-transform duration-200 group-hover:scale-105">
                         <circle
                           r={r}
-                          fill="#181C24"
+                          fill="#131A26"
                           stroke={node.color}
                           strokeWidth={node.isBridge ? "2" : "1.5"}
                         />
@@ -2267,15 +2267,15 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                           width={boxWidth}
                           height={24}
                           rx={3}
-                          fill="#12151B"
-                          stroke={isNewlyAdded ? "#C68A46" : "#2B313D"}
+                          fill="#0B0F17"
+                          stroke={isNewlyAdded ? "#D4A359" : "#222D3F"}
                           strokeWidth={isNewlyAdded ? "1" : "0.5"}
                         />
 
                         <text
                           textAnchor="middle"
                           y={r + 13.5}
-                          fill="#E8EAEE"
+                          fill="#F1F5F9"
                           fontSize="9.5"
                           fontWeight="600"
                           fontFamily="IBM Plex Sans, sans-serif"
@@ -2285,7 +2285,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         <text
                           textAnchor="middle"
                           y={r + 23}
-                          fill="#787167"
+                          fill="#64748B"
                           fontSize="8"
                           fontFamily="Courier Prime, monospace"
                         >
@@ -2306,15 +2306,15 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       {/* ========================================================= */}
       {activeTab === 'statutes' && (
         <Card className="p-5 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#222D3F] pb-3">
             <div>
               <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-[#C68A46]" />
-                <h2 className="text-base font-serif font-bold text-[#E8EAEE] tracking-tight">
+                <Scale className="w-4 h-4 text-[#D4A359]" />
+                <h2 className="text-base font-serif font-bold text-[#F1F5F9] tracking-tight">
                   Statutory Criminal Law Violations
                 </h2>
               </div>
-              <p className="text-xs text-[#9AA3B2] mt-0.5 font-sans">
+              <p className="text-xs text-[#94A3B8] mt-0.5 font-sans">
                 List of violated legal articles, why each law was broken, and linked digital evidence. Click any article to view exhibits.
               </p>
             </div>
@@ -2344,10 +2344,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 <div
                   key={law.id}
                   onClick={() => toggleStatute(law.id)}
-                  className={`bg-[#181C24] hover:bg-[#1C212B] border rounded-[6px] p-3.5 transition-all duration-150 cursor-pointer ${
+                  className={`bg-[#131A26] hover:bg-[#1C212B] border rounded-[6px] p-3.5 transition-all duration-150 cursor-pointer ${
                     isExpanded 
-                      ? 'border-[#C68A46] shadow-lg ring-1 ring-[#C68A46]/20' 
-                      : 'border-[#2B313D] hover:border-[#3E4759]'
+                      ? 'border-[#D4A359] shadow-lg ring-1 ring-[#D4A359]/20' 
+                      : 'border-[#222D3F] hover:border-[#2E3D55]'
                   }`}
                 >
                   {/* Collapsed List Row: Article Section + Plain-English Reason Why Violated + Action */}
@@ -2357,13 +2357,13 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                       <span className="stamp-tag stamp-crimson text-[10.5px] font-bold tracking-wider">
                         {law.section}
                       </span>
-                      <span className="text-[11px] font-mono text-[#787167]">
+                      <span className="text-[11px] font-mono text-[#64748B]">
                         {law.actShort}
                       </span>
                     </div>
 
                     {/* Middle: Why Violated in Simple Words */}
-                    <div className="flex-1 text-xs text-[#E8EAEE] font-sans font-medium leading-relaxed sm:px-2">
+                    <div className="flex-1 text-xs text-[#F1F5F9] font-sans font-medium leading-relaxed sm:px-2">
                       {law.simpleWhy}
                     </div>
 
@@ -2371,8 +2371,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
                       <span className={`text-[10px] font-mono px-2 py-0.5 rounded border transition flex items-center gap-1.5 ${
                         isExpanded
-                          ? 'bg-[#C68A46] text-[#12151B] border-[#C68A46] font-bold'
-                          : 'bg-[#12151B] text-[#C68A46] border-[#2B313D] hover:border-[#C68A46]'
+                          ? 'bg-[#D4A359] text-[#0B0F17] border-[#D4A359] font-bold'
+                          : 'bg-[#0B0F17] text-[#D4A359] border-[#222D3F] hover:border-[#D4A359]'
                       }`}>
                         <span>{isExpanded ? 'Hide Details' : 'View Evidence'}</span>
                         {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -2388,38 +2388,38 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.15 }}
-                        className="pt-3.5 mt-3 border-t border-[#2B313D] space-y-3"
+                        className="pt-3.5 mt-3 border-t border-[#222D3F] space-y-3"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {/* Legal Act & Penalty Strip */}
-                        <div className="flex flex-wrap items-center justify-between gap-2.5 bg-[#12151B] p-2.5 rounded-[5px] border border-[#2B313D]">
+                        <div className="flex flex-wrap items-center justify-between gap-2.5 bg-[#0B0F17] p-2.5 rounded-[6px] border border-[#222D3F]">
                           <div>
-                            <span className="text-[9.5px] font-mono uppercase text-[#787167] block">LEGAL OFFENCE TITLE</span>
-                            <span className="text-xs font-serif font-bold text-[#E8EAEE]">{law.title}</span>
+                            <span className="text-[9.5px] font-mono uppercase text-[#64748B] block">LEGAL OFFENCE TITLE</span>
+                            <span className="text-xs font-serif font-bold text-[#F1F5F9]">{law.title}</span>
                           </div>
                           <div className="text-right">
-                            <span className="text-[9.5px] font-mono uppercase text-[#787167] block">STATUTORY PENALTY</span>
-                            <span className="text-[11px] font-mono font-semibold text-[#5FA876]">{law.penalty}</span>
+                            <span className="text-[9.5px] font-mono uppercase text-[#64748B] block">STATUTORY PENALTY</span>
+                            <span className="text-[11px] font-mono font-semibold text-[#34D399]">{law.penalty}</span>
                           </div>
                         </div>
 
                         {/* Full Forensic Description */}
                         <div className="space-y-1">
-                          <span className="text-[9.5px] font-mono uppercase text-[#787167] block">HOW IT WAS VIOLATED IN THIS CASE</span>
-                          <p className="text-xs text-[#9AA3B2] leading-relaxed font-sans bg-[#1F2430] p-2.5 rounded-[4px] border border-[#2B313D]">
+                          <span className="text-[9.5px] font-mono uppercase text-[#64748B] block">HOW IT WAS VIOLATED IN THIS CASE</span>
+                          <p className="text-xs text-[#94A3B8] leading-relaxed font-sans bg-[#1A2332] p-2.5 rounded-[4px] border border-[#222D3F]">
                             {law.description}
                           </p>
                         </div>
 
                         {/* Direct Evidence Box */}
-                        <div className="bg-[#12151B] p-3 rounded-[5px] border border-[#2B313D] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="bg-[#0B0F17] p-3 rounded-[6px] border border-[#222D3F] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div className="space-y-0.5">
-                            <div className="flex items-center gap-1.5 text-[10.5px] font-mono text-[#C68A46] font-semibold">
-                              <FileCheck className="w-3.5 h-3.5 text-[#C68A46]" />
+                            <div className="flex items-center gap-1.5 text-[10.5px] font-mono text-[#D4A359] font-semibold">
+                              <FileCheck className="w-3.5 h-3.5 text-[#D4A359]" />
                               <span>EVIDENCE EXHIBIT: {law.evidenceRef}</span>
                             </div>
-                            <div className="text-xs text-[#E8EAEE] font-sans font-medium">{law.evidenceDoc}</div>
-                            <div className="text-[10px] font-mono text-[#787167]">{law.evidenceHash}</div>
+                            <div className="text-xs text-[#F1F5F9] font-sans font-medium">{law.evidenceDoc}</div>
+                            <div className="text-[10px] font-mono text-[#64748B]">{law.evidenceHash}</div>
                           </div>
 
                           <div className="flex items-center gap-2 shrink-0">
@@ -2438,10 +2438,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                         {/* Accused Suspects */}
                         {law.suspects && (
                           <div className="flex items-center gap-2 text-xs pt-0.5">
-                            <span className="text-[10px] font-mono text-[#787167] uppercase">ACCUSED:</span>
+                            <span className="text-[10px] font-mono text-[#64748B] uppercase">ACCUSED:</span>
                             <div className="flex flex-wrap gap-1.5">
                               {law.suspects.map((s, i) => (
-                                <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181C24] text-[#E8EAEE] border border-[#2B313D]">
+                                <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#131A26] text-[#F1F5F9] border border-[#222D3F]">
                                   {s}
                                 </span>
                               ))}
@@ -2474,43 +2474,43 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.15 }}
-              className="bg-[#181C24] border border-[#2B313D] w-full max-w-2xl rounded-[5px] shadow-none p-5 space-y-4 max-h-[90vh] overflow-y-auto text-xs"
+              className="bg-[#131A26] border border-[#222D3F] w-full max-w-2xl rounded-[6px] shadow-none p-5 space-y-4 max-h-[90vh] overflow-y-auto text-xs"
             >
-              <div className="flex items-center justify-between border-b border-[#2B313D] pb-2.5">
+              <div className="flex items-center justify-between border-b border-[#222D3F] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <Scale className="w-4 h-4 text-[#5FA876]" />
-                  <h3 className="text-base font-serif font-bold text-[#E8EAEE]">Section 63B BSA Certificate of Electronic Evidence</h3>
+                  <Scale className="w-4 h-4 text-[#34D399]" />
+                  <h3 className="text-base font-serif font-bold text-[#F1F5F9]">Section 63B BSA Certificate of Electronic Evidence</h3>
                 </div>
                 <button 
                   onClick={() => setIsBsaModalOpen(false)}
-                  className="p-1 rounded-[4px] bg-[#1F2430] hover:bg-[#282F3F] text-[#9AA3B2] hover:text-[#E8EAEE]"
+                  className="p-1 rounded-[4px] bg-[#1A2332] hover:bg-[#1D2738] text-[#94A3B8] hover:text-[#F1F5F9]"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="space-y-3 text-[#9AA3B2] leading-relaxed font-serif text-[13px] bg-[#1F2430] p-4 rounded-[5px] border border-[#2B313D]">
-                <p className="text-center font-bold text-[#E8EAEE] uppercase tracking-wider text-sm">
+              <div className="space-y-3 text-[#94A3B8] leading-relaxed font-serif text-[13px] bg-[#1A2332] p-4 rounded-[6px] border border-[#222D3F]">
+                <p className="text-center font-bold text-[#F1F5F9] uppercase tracking-wider text-sm">
                   IN THE COURT OF THE PRINCIPAL DISTRICT &amp; SESSIONS JUDGE<br />
                   CYBER JURISDICTION &amp; COMMERCIAL OFFENCES
                 </p>
-                <p className="text-center text-xs text-[#6B7382] font-mono">
+                <p className="text-center text-xs text-[#64748B] font-mono">
                   CERTIFICATE UNDER SECTION 63B OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023
                 </p>
-                <hr className="border-[#2B313D] my-2.5" />
+                <hr className="border-[#222D3F] my-2.5" />
                 <p>
-                  I, <strong className="text-[#E8EAEE]">{caseData.investigator_name}</strong>, holding Badge ID <strong className="text-[#E8EAEE]">{caseData.investigator_badge}</strong>, Lead Investigating Officer at <strong className="text-[#E8EAEE]">{caseData.region_name}</strong>, hereby certify under Section 63B of the Bharatiya Sakshya Adhiniyam, 2023 that:
+                  I, <strong className="text-[#F1F5F9]">{caseData.investigator_name}</strong>, holding Badge ID <strong className="text-[#F1F5F9]">{caseData.investigator_badge}</strong>, Lead Investigating Officer at <strong className="text-[#F1F5F9]">{caseData.region_name}</strong>, hereby certify under Section 63B of the Bharatiya Sakshya Adhiniyam, 2023 that:
                 </p>
                 <ol className="list-decimal pl-5 space-y-1.5 font-sans text-xs">
                   <li>
-                    The digital evidence records associated with <strong className="text-[#E8EAEE]">{caseData.case_id} ({caseData.title})</strong> were lawfully extracted, cryptographically hashed at the time of seizure, and preserved on the Hyperledger immutable evidence registry.
+                    The digital evidence records associated with <strong className="text-[#F1F5F9]">{caseData.case_id} ({caseData.title})</strong> were lawfully extracted, cryptographically hashed at the time of seizure, and preserved on the Hyperledger immutable evidence registry.
                   </li>
                   <li>
                     The computer systems and cloud capture gateways were operating normally during the extraction window and no unauthorized alterations occurred.
                   </li>
                   <li>
                     Hash verification check against SHA-256 baseline confirmed zero tampering:
-                    <div className="bg-[#12151B] p-2 rounded-[4px] font-mono text-[10px] mt-1 text-[#5FA876] border border-[#2B313D]">
+                    <div className="bg-[#0B0F17] p-2 rounded-[4px] font-mono text-[10px] mt-1 text-[#34D399] border border-[#222D3F]">
                       EVD-001 (FIR 0018/2026): d4c56ad10356cf2cc8ddfdc26fd4c04f... [MATCH]<br />
                       EVD-002 (STR-88912): afeb4ed06feb8f55c8a7028172dec410... [MATCH]<br />
                       EVD-003 (CDR Tower T-4401): ccfb08874fc7038d541678894b70eee7... [MATCH]
@@ -2520,14 +2520,14 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
                 <p className="pt-1">
                   Executed under my hand and digital signature on this 5th day of September, 2026.
                 </p>
-                <div className="flex justify-between pt-3 border-t border-[#2B313D] font-sans text-xs">
+                <div className="flex justify-between pt-3 border-t border-[#222D3F] font-sans text-xs">
                   <div>
-                    <span className="text-[#6B7382] block text-[10px] font-mono">REGISTRY DIGEST</span>
-                    <span className="font-mono text-[#C68A46]">FABRIC-BLOCK-992144</span>
+                    <span className="text-[#64748B] block text-[10px] font-mono">REGISTRY DIGEST</span>
+                    <span className="font-mono text-[#D4A359]">FABRIC-BLOCK-992144</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-[#E8EAEE] font-bold block">{caseData.investigator_name}</span>
-                    <span className="text-[#6B7382] text-[10px]">Lead Cyber Investigator, NCR Cyber PS</span>
+                    <span className="text-[#F1F5F9] font-bold block">{caseData.investigator_name}</span>
+                    <span className="text-[#64748B] text-[10px]">Lead Cyber Investigator, NCR Cyber PS</span>
                   </div>
                 </div>
               </div>

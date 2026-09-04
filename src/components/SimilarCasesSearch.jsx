@@ -52,29 +52,29 @@ export default function SimilarCasesSearch({ onOpenCase }) {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 backdrop-blur-md">
+      <div className="bg-[#131A26] border border-[#222D3F] rounded-[6px] p-5 ">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-cyan-300 border border-blue-500/30">
+          <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#D4A359]/15 text-[#D4A359] text-[#D4A359] border border-[#D4A359]/30">
             SECTION 8 &bull; SIMILAR CASES / M.O. SEARCH
           </span>
-          <h2 className="text-xl font-bold text-white">Semantic Incident Pattern Matching</h2>
+          <h2 className="text-xl font-bold text-[#F1F5F9]">Semantic Incident Pattern Matching</h2>
         </div>
-        <p className="text-xs text-slate-400 mt-1">
-          Powered by Supabase <strong className="text-cyan-300">pgvector</strong> & Sentence Transformers. Finds historically similar cases based on semantic Modus Operandi (M.O.), even when there is no shared person or phone number.
+        <p className="text-xs text-[#94A3B8] mt-1">
+          Powered by Supabase <strong className="text-[#D4A359]">pgvector</strong> & Sentence Transformers. Finds historically similar cases based on semantic Modus Operandi (M.O.), even when there is no shared person or phone number.
         </p>
       </div>
 
       {/* Pattern Filter Chips */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold text-slate-400">Filter by M.O. Pattern:</span>
+        <span className="text-xs font-semibold text-[#94A3B8]">Filter by M.O. Pattern:</span>
         {patterns.map((p) => (
           <button
             key={p.id}
             onClick={() => setActivePattern(p.id)}
-            className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition ${
+            className={`text-xs font-medium px-3 py-1.5 rounded-[4px] border transition ${
               activePattern === p.id
-                ? 'bg-blue-600 text-white border-cyan-400 font-semibold'
-                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                ? 'bg-[#D4A359] text-[#0B0F17] font-semibold border-[#D4A359] font-semibold'
+                : 'bg-[#1A2332] text-[#94A3B8] border-[#222D3F] hover:bg-[#1D2738]'
             }`}
           >
             {p.name}
@@ -85,30 +85,30 @@ export default function SimilarCasesSearch({ onOpenCase }) {
       {/* Semantic Results List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {historicalCases.map((hc) => (
-          <div key={hc.case_id} className="bg-[#131b2e] border border-slate-800 hover:border-cyan-500/50 rounded-xl p-6 shadow-xl space-y-4 transition">
+          <div key={hc.case_id} className="bg-[#131A26] border border-[#222D3F] hover:border-[#D4A359]/40 rounded-[6px] p-6 shadow-none space-y-4 transition">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-blue-600/20 text-cyan-300 border border-blue-500/30">
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-[#D4A359]/15 text-[#D4A359] text-[#D4A359] border border-[#D4A359]/30">
                 {hc.case_id}
               </span>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/30 flex items-center gap-1">
+              <span className="text-xs font-mono font-bold text-[#34D399] bg-[#34D399]/15 text-[#34D399] px-2.5 py-1 rounded border border-[#34D399]/35 flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5" /> {hc.similarity_score}
               </span>
             </div>
 
             <div>
-              <h3 className="text-base font-bold text-white">{hc.title}</h3>
-              <span className="text-xs text-slate-400">Jurisdiction: {hc.jurisdiction}</span>
+              <h3 className="text-base font-bold text-[#F1F5F9]">{hc.title}</h3>
+              <span className="text-xs text-[#94A3B8]">Jurisdiction: {hc.jurisdiction}</span>
             </div>
 
-            <p className="text-xs text-slate-300 bg-slate-950/80 p-3.5 rounded-lg border border-slate-800 leading-relaxed">
+            <p className="text-xs text-[#94A3B8] bg-[#0B0F17] p-3.5 rounded-[4px] border border-[#222D3F] leading-relaxed">
               <strong>Modus Operandi Summary:</strong> {hc.mo_summary}
             </p>
 
-            <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-              <span className="text-[11px] text-slate-400 font-mono">pgvector Cosine Distance: {hc.vector_distance}</span>
+            <div className="pt-3 border-t border-[#222D3F] flex items-center justify-between">
+              <span className="text-[11px] text-[#94A3B8] font-mono">pgvector Cosine Distance: {hc.vector_distance}</span>
               <button
                 onClick={() => onOpenCase(hc.case_id)}
-                className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-1 transition"
+                className="px-3 py-1.5 rounded-[4px] bg-[#D4A359] hover:bg-[#E0B268] text-[#0B0F17] font-semibold text-xs font-semibold flex items-center gap-1 transition"
               >
                 Compare Workspace <ArrowRight className="w-3.5 h-3.5" />
               </button>

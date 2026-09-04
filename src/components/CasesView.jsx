@@ -57,23 +57,23 @@ export default function CasesView({ session, onOpenCase }) {
               <Badge variant="brass">
                 CHRONOLOGICAL REGISTRY
               </Badge>
-              <span className="text-xs text-[#6B7382] font-mono">[ Most Recent First ]</span>
+              <span className="text-xs text-[#64748B] font-mono">[ Most Recent First ]</span>
             </div>
-            <h2 className="text-xl font-serif font-bold text-[#E8EAEE] mt-1 tracking-tight">
+            <h2 className="text-xl font-serif font-bold text-[#F1F5F9] mt-1 tracking-tight">
               Active Investigations
             </h2>
-            <p className="text-xs text-[#9AA3B2]">
+            <p className="text-xs text-[#94A3B8]">
               Authorized incident dockets and case dossiers.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#6B7382]">Filter Station:</span>
+            <span className="text-xs text-[#64748B]">Filter Station:</span>
             <select
               value={selectedJurisdiction}
               onChange={(e) => setSelectedJurisdiction(e.target.value)}
               disabled={!session.isSuperAdmin}
-              className="bg-[#1F2430] border border-[#2B313D] text-xs text-[#E8EAEE] rounded-[5px] px-2.5 py-1.5 focus:outline-none focus:border-[#C68A46] cursor-pointer disabled:opacity-50"
+              className="bg-[#1A2332] border border-[#222D3F] text-xs text-[#F1F5F9] rounded-[6px] px-2.5 py-1.5 focus:outline-none focus:border-[#D4A359] cursor-pointer disabled:opacity-50"
             >
               <option value="ALL">All Authorized ({session.isSuperAdmin ? '3 Regions' : session.regionId})</option>
               <option value="REG-NCR">Region A — NCR / Gurugram</option>
@@ -85,13 +85,13 @@ export default function CasesView({ session, onOpenCase }) {
 
         {/* Search Bar Input */}
         <div className="relative">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7382]" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by Case ID, Case Number, Suspect Name (e.g. Devrat, Rajesh), Phone, Account, or PAN..."
-            className="w-full pl-9 pr-3 py-2 bg-[#1F2430] border border-[#2B313D] rounded-[5px] text-xs text-[#E8EAEE] placeholder-[#6B7382] focus:outline-none focus:border-[#C68A46]"
+            className="w-full pl-9 pr-3 py-2 bg-[#1A2332] border border-[#222D3F] rounded-[6px] text-xs text-[#F1F5F9] placeholder-[#64748B] focus:outline-none focus:border-[#D4A359]"
           />
         </div>
       </Card>
@@ -100,7 +100,7 @@ export default function CasesView({ session, onOpenCase }) {
       <div className="space-y-3">
         {sortedCases.length === 0 ? (
           <Card className="text-center py-10">
-            <p className="text-xs text-[#6B7382]">No cases match your search query or regional jurisdiction.</p>
+            <p className="text-xs text-[#64748B]">No cases match your search query or regional jurisdiction.</p>
           </Card>
         ) : (
           sortedCases.map((c, index) => (
@@ -113,18 +113,18 @@ export default function CasesView({ session, onOpenCase }) {
               onClick={() => onOpenCase(c.case_id)}
               className="cursor-pointer"
             >
-              <Card className="p-4 hover:border-[#4A5468] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <Card className="p-4 hover:border-[#2E3D55] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
                 {/* Left: Case Info */}
                 <div className="flex-1 space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="brass">
                       {c.case_id}
                     </Badge>
-                    <span className="text-xs font-mono text-[#6B7382]">
+                    <span className="text-xs font-mono text-[#64748B]">
                       {c.case_number}
                     </span>
-                    <span className="text-[11px] font-mono text-[#6B7382] flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-[#6B7382]" />
+                    <span className="text-[11px] font-mono text-[#64748B] flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-[#64748B]" />
                       {c.registration_date}
                     </span>
                     <Badge variant="default">
@@ -133,46 +133,46 @@ export default function CasesView({ session, onOpenCase }) {
                   </div>
 
                   <div>
-                    <h3 className="text-base font-serif font-bold text-[#E8EAEE] group-hover:text-[#C68A46] transition">
+                    <h3 className="text-base font-serif font-bold text-[#F1F5F9] group-hover:text-[#D4A359] transition">
                       {c.title}
                     </h3>
-                    <p className="text-xs text-[#6B7382]">{c.category} &bull; Jurisdiction: <strong className="text-[#E8EAEE]">{c.region_name}</strong></p>
+                    <p className="text-xs text-[#64748B]">{c.category} &bull; Jurisdiction: <strong className="text-[#F1F5F9]">{c.region_name}</strong></p>
                   </div>
 
-                  <p className="text-xs text-[#9AA3B2] leading-relaxed line-clamp-2">
+                  <p className="text-xs text-[#94A3B8] leading-relaxed line-clamp-2">
                     {c.description}
                   </p>
 
                   {/* Metadata */}
-                  <div className="flex flex-wrap items-center gap-3 pt-0.5 text-xs text-[#6B7382] font-mono text-[11px]">
+                  <div className="flex flex-wrap items-center gap-3 pt-0.5 text-xs text-[#64748B] font-mono text-[11px]">
                     <span className="flex items-center gap-1">
-                      <FileText className="w-3 h-3 text-[#4E9C93]" />
-                      <span>Evidence: <strong className="text-[#E8EAEE]">{c.stats.evidence}</strong></span>
+                      <FileText className="w-3 h-3 text-[#14B8A6]" />
+                      <span>Evidence: <strong className="text-[#F1F5F9]">{c.stats.evidence}</strong></span>
                     </span>
                     <span>&bull;</span>
                     <span className="flex items-center gap-1">
-                      <User className="w-3 h-3 text-[#6C93B8]" />
-                      <span>People: <strong className="text-[#E8EAEE]">{c.stats.people}</strong></span>
+                      <User className="w-3 h-3 text-[#3B82F6]" />
+                      <span>People: <strong className="text-[#F1F5F9]">{c.stats.people}</strong></span>
                     </span>
                     <span>&bull;</span>
                     <span className="flex items-center gap-1">
-                      <CreditCard className="w-3 h-3 text-[#4E9C93]" />
-                      <span>Accounts: <strong className="text-[#E8EAEE]">{c.stats.accounts}</strong></span>
+                      <CreditCard className="w-3 h-3 text-[#14B8A6]" />
+                      <span>Accounts: <strong className="text-[#F1F5F9]">{c.stats.accounts}</strong></span>
                     </span>
                     <span>&bull;</span>
                     <span className="flex items-center gap-1">
-                      <Phone className="w-3 h-3 text-[#8B81C4]" />
-                      <span>Phones: <strong className="text-[#E8EAEE]">{c.stats.phones}</strong></span>
+                      <Phone className="w-3 h-3 text-[#8B5CF6]" />
+                      <span>Phones: <strong className="text-[#F1F5F9]">{c.stats.phones}</strong></span>
                     </span>
                   </div>
                 </div>
 
                 {/* Right: Lead Investigator & Action Button */}
-                <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-2.5 shrink-0 border-t md:border-t-0 pt-2.5 md:pt-0 border-[#2B313D]">
+                <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-2.5 shrink-0 border-t md:border-t-0 pt-2.5 md:pt-0 border-[#222D3F]">
                   <div className="text-left md:text-right text-xs">
-                    <span className="text-[#6B7382] block text-[11px] font-mono">LEAD OFFICER</span>
-                    <span className="font-medium text-[#E8EAEE]">{c.investigator_name}</span>
-                    <span className="text-[#C68A46] font-mono block text-[10px]">{c.investigator_id}</span>
+                    <span className="text-[#64748B] block text-[11px] font-mono">LEAD OFFICER</span>
+                    <span className="font-medium text-[#F1F5F9]">{c.investigator_name}</span>
+                    <span className="text-[#D4A359] font-mono block text-[10px]">{c.investigator_id}</span>
                   </div>
 
                   <Button
