@@ -29,7 +29,9 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [graphPan, setGraphPan] = useState({ x: 0, y: 0 });
   const [isDraggingGraph, setIsDraggingGraph] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const hasDraggedGraphRef = useRef(false);
   const graphContainerRef = useRef(null);
+  const inspectorDrawerRef = useRef(null);
   const touchDistRef = useRef(null);
 
   // Native non-passive event listener: PREVENTS THE WHOLE WEBPAGE FROM ZOOMING
@@ -107,7 +109,8 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
   const handleGraphMouseDown = (e) => {
     setHoveredNode(null);
-    if (e.target.tagName === 'circle' || e.target.tagName === 'text' || e.target.tagName === 'path') {
+    hasDraggedGraphRef.current = false;
+    if (e.target.closest && e.target.closest('.group')) {
       return;
     }
     setIsDraggingGraph(true);
@@ -123,6 +126,9 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     if (!isDraggingGraph) return;
     const dx = e.clientX - dragStartRef.current.x;
     const dy = e.clientY - dragStartRef.current.y;
+    if (Math.hypot(dx, dy) > 4) {
+      hasDraggedGraphRef.current = true;
+    }
     setGraphPan({
       x: dragStartRef.current.panX + dx,
       y: dragStartRef.current.panY + dy,
@@ -130,6 +136,10 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   };
 
   const handleGraphMouseUp = () => {
+    if (isDraggingGraph && !hasDraggedGraphRef.current) {
+      // Clicked on empty canvas background!
+      setSelectedMapNode(null);
+    }
     setIsDraggingGraph(false);
   };
 
@@ -196,6 +206,39 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
 
   // Network Map state
   const [selectedMapNode, setSelectedMapNode] = useState(null);
+
+  // Deselect node when clicking outside the graph window or outside inspector drawer
+  useEffect(() => {
+    if (!selectedMapNode) return;
+
+    const handleGlobalClick = (e) => {
+      // If clicking inside the inspector drawer itself, keep selection
+      if (inspectorDrawerRef.current && inspectorDrawerRef.current.contains(e.target)) {
+        return;
+      }
+      // If clicking inside the graph container
+      if (graphContainerRef.current && graphContainerRef.current.contains(e.target)) {
+        // If clicking on an entity node, the node's onClick handles it
+        if (e.target.closest && e.target.closest('.group')) {
+          return;
+        }
+        // Clicking on canvas background
+        setSelectedMapNode(null);
+        return;
+      }
+      // Clicking anywhere outside the graph window (e.g. page, summary briefing, navbar)
+      setSelectedMapNode(null);
+    };
+
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleGlobalClick);
+    }, 50);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleGlobalClick);
+    };
+  }, [selectedMapNode]);
 
   // Play subtle sonic audio chime
   const playAudioChime = () => {
@@ -1182,130 +1225,132 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               const directConduits = allGraphEdges.filter(e => e.from === selectedNodeData.id || e.to === selectedNodeData.id);
 
               return (
-                <Card className="p-4 bg-[#181C24] border border-[#C68A46]/70 rounded-[5px] space-y-3 shadow-lg">
-                  {/* Top Banner with Name, Badges, and Action Buttons */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant={dossier.categoryVariant || "brass"}>
-                        {dossier.category}
-                      </Badge>
-                      <div>
-                        <h3 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight flex items-center gap-2">
-                          {dossier.name}
-                          <span className="text-xs font-mono text-[#C68A46] font-normal">
-                            "{dossier.alias}"
-                          </span>
-                        </h3>
-                        <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">
-                          ID: <strong className="text-[#E8EAEE]">{selectedNodeData.id}</strong> &bull; Status: <span className="text-[#5FA876] font-medium">{dossier.status}</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        onClick={() => onSelectEntity({ 
-                          person_id: selectedNodeData.id, 
-                          name: dossier.name, 
-                          role: dossier.role, 
-                          is_bridge: selectedNodeData.isBridge 
-                        })}
-                        variant="brass"
-                        size="sm"
-                        className="text-xs"
-                      >
-                        <span>Inspect Full Dossier</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </Button>
-                      <button 
-                        onClick={() => setSelectedMapNode(null)}
-                        className="p-1 rounded-[3px] text-[#6B7382] hover:text-[#E8EAEE] hover:bg-[#1F2430] border border-[#2B313D]"
-                        title="Collapse entity drawer"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Profile & Metadata 4-Column Strip */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs bg-[#12151B] p-3 rounded-[4px] border border-[#2B313D]">
-                    <div>
-                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DESIGNATION / ROLE</span>
-                      <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.role}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LOCATION / ADDRESS</span>
-                      <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.location}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">CONTACT &amp; IDENTIFIERS</span>
-                      <span className="text-[#6C93B8] font-mono block mt-0.5">{dossier.phone}</span>
-                      <span className="text-[#6B7382] font-mono text-[10px] block">{dossier.idNumber}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">RISK INDEX &amp; STATUS</span>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className={`font-mono font-bold ${dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}`}>
-                          {dossier.riskScore}%
-                        </span>
-                        <div className="w-16 bg-[#1F2430] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
-                          <div 
-                            className={`h-full ${dossier.riskScore >= 80 ? 'bg-[#C1655A]' : dossier.riskScore >= 40 ? 'bg-[#C68A46]' : 'bg-[#5FA876]'}`}
-                            style={{ width: `${dossier.riskScore}%` }}
-                          />
+                <div ref={inspectorDrawerRef}>
+                  <Card className="p-4 bg-[#181C24] border border-[#C68A46]/70 rounded-[5px] space-y-3 shadow-lg">
+                    {/* Top Banner with Name, Badges, and Action Buttons */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2B313D] pb-2.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant={dossier.categoryVariant || "brass"}>
+                          {dossier.category}
+                        </Badge>
+                        <div>
+                          <h3 className="font-serif font-bold text-[#E8EAEE] text-sm tracking-tight flex items-center gap-2">
+                            {dossier.name}
+                            <span className="text-xs font-mono text-[#C68A46] font-normal">
+                              "{dossier.alias}"
+                            </span>
+                          </h3>
+                          <p className="text-[11px] text-[#9AA3B2] font-mono mt-0.5">
+                            ID: <strong className="text-[#E8EAEE]">{selectedNodeData.id}</strong> &bull; Status: <span className="text-[#5FA876] font-medium">{dossier.status}</span>
+                          </p>
                         </div>
                       </div>
-                      <span className="text-[10px] text-[#9AA3B2] block mt-0.5 truncate">{dossier.riskLevel}</span>
-                    </div>
-                  </div>
 
-                  {/* "WHAT HAPPENED" SECTION (Requested by User) */}
-                  <div className="space-y-1 bg-[#1F2430] p-3 rounded-[4px] border border-[#2B313D]">
-                    <div className="flex items-center gap-1.5 text-xs font-mono text-[#C68A46] font-semibold">
-                      <Info className="w-3.5 h-3.5" />
-                      <span>WHAT HAPPENED (INCIDENT &amp; FORENSIC NARRATIVE)</span>
-                    </div>
-                    <p className="text-xs text-[#E8EAEE] leading-relaxed font-sans font-normal">
-                      {dossier.whatHappened}
-                    </p>
-                  </div>
-
-                  {/* Evidence & Connected Conduits Strip */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-0.5">
-                    <div className="space-y-1">
-                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LEGAL EVIDENCE &amp; ACTIONS TAKEN</span>
-                      <p className="text-[#9AA3B2] leading-snug">
-                        <strong className="text-[#E8EAEE] font-mono">{dossier.legalEvidence}</strong>
-                      </p>
-                      <p className="text-[#6B7382] text-[11px] leading-snug">
-                        {dossier.actionTaken}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DIRECT CONDUIT LINKS ({directConduits.length})</span>
-                      <div className="flex flex-wrap gap-1.5 pt-0.5">
-                        {directConduits.map((edge, idx) => {
-                          const isOutgoing = edge.from === selectedNodeData.id;
-                          const otherNodeId = isOutgoing ? edge.to : edge.from;
-                          const otherNode = allGraphNodes.find(n => n.id === otherNodeId);
-                          return (
-                            <button
-                              key={idx}
-                              type="button"
-                              onClick={() => setSelectedMapNode(otherNodeId)}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[3px] bg-[#12151B] border border-[#2B313D] text-[11px] font-mono text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#C68A46] cursor-pointer transition"
-                            >
-                              <span className="text-[#C68A46]">{isOutgoing ? '→' : '←'}</span>
-                              <span>{edge.label}:</span>
-                              <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
-                            </button>
-                          );
-                        })}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          onClick={() => onSelectEntity({ 
+                            person_id: selectedNodeData.id, 
+                            name: dossier.name, 
+                            role: dossier.role, 
+                            is_bridge: selectedNodeData.isBridge 
+                          })}
+                          variant="brass"
+                          size="sm"
+                          className="text-xs"
+                        >
+                          <span>Inspect Full Dossier</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Button>
+                        <button 
+                          onClick={() => setSelectedMapNode(null)}
+                          className="p-1 rounded-[3px] text-[#6B7382] hover:text-[#E8EAEE] hover:bg-[#1F2430] border border-[#2B313D]"
+                          title="Collapse entity drawer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </Card>
+
+                    {/* Profile & Metadata 4-Column Strip */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs bg-[#12151B] p-3 rounded-[4px] border border-[#2B313D]">
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DESIGNATION / ROLE</span>
+                        <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.role}</span>
+                      </div>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LOCATION / ADDRESS</span>
+                        <span className="text-[#E8EAEE] font-medium mt-0.5 block leading-snug">{dossier.location}</span>
+                      </div>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">CONTACT &amp; IDENTIFIERS</span>
+                        <span className="text-[#6C93B8] font-mono block mt-0.5">{dossier.phone}</span>
+                        <span className="text-[#6B7382] font-mono text-[10px] block">{dossier.idNumber}</span>
+                      </div>
+                      <div>
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">RISK INDEX &amp; STATUS</span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className={`font-mono font-bold ${dossier.riskScore >= 80 ? 'text-[#C1655A]' : dossier.riskScore >= 40 ? 'text-[#C68A46]' : 'text-[#5FA876]'}`}>
+                            {dossier.riskScore}%
+                          </span>
+                          <div className="w-16 bg-[#1F2430] h-1.5 rounded-[2px] overflow-hidden border border-[#2B313D]">
+                            <div 
+                              className={`h-full ${dossier.riskScore >= 80 ? 'bg-[#C1655A]' : dossier.riskScore >= 40 ? 'bg-[#C68A46]' : 'bg-[#5FA876]'}`}
+                              style={{ width: `${dossier.riskScore}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-[#9AA3B2] block mt-0.5 truncate">{dossier.riskLevel}</span>
+                      </div>
+                    </div>
+
+                    {/* "WHAT HAPPENED" SECTION (Requested by User) */}
+                    <div className="space-y-1 bg-[#1F2430] p-3 rounded-[4px] border border-[#2B313D]">
+                      <div className="flex items-center gap-1.5 text-xs font-mono text-[#C68A46] font-semibold">
+                        <Info className="w-3.5 h-3.5" />
+                        <span>WHAT HAPPENED (INCIDENT &amp; FORENSIC NARRATIVE)</span>
+                      </div>
+                      <p className="text-xs text-[#E8EAEE] leading-relaxed font-sans font-normal">
+                        {dossier.whatHappened}
+                      </p>
+                    </div>
+
+                    {/* Evidence & Connected Conduits Strip */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-0.5">
+                      <div className="space-y-1">
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">LEGAL EVIDENCE &amp; ACTIONS TAKEN</span>
+                        <p className="text-[#9AA3B2] leading-snug">
+                          <strong className="text-[#E8EAEE] font-mono">{dossier.legalEvidence}</strong>
+                        </p>
+                        <p className="text-[#6B7382] text-[11px] leading-snug">
+                          {dossier.actionTaken}
+                        </p>
+                      </div>
+
+                      <div className="space-y-1">
+                        <span className="text-[#6B7382] block text-[10px] font-mono uppercase">DIRECT CONDUIT LINKS ({directConduits.length})</span>
+                        <div className="flex flex-wrap gap-1.5 pt-0.5">
+                          {directConduits.map((edge, idx) => {
+                            const isOutgoing = edge.from === selectedNodeData.id;
+                            const otherNodeId = isOutgoing ? edge.to : edge.from;
+                            const otherNode = allGraphNodes.find(n => n.id === otherNodeId);
+                            return (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => setSelectedMapNode(otherNodeId)}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[3px] bg-[#12151B] border border-[#2B313D] text-[11px] font-mono text-[#9AA3B2] hover:text-[#E8EAEE] hover:border-[#C68A46] cursor-pointer transition"
+                              >
+                                <span className="text-[#C68A46]">{isOutgoing ? '→' : '←'}</span>
+                                <span>{edge.label}:</span>
+                                <strong className="text-[#E8EAEE]">{otherNode?.label || otherNodeId}</strong>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
               );
             })() : null}
           </div>
