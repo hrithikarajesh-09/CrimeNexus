@@ -34,44 +34,42 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080c18] text-[#C1C8E4] flex flex-col font-sans selection:bg-[#5680E9] selection:text-white ethereal-aura-bg">
-      {/* Sleek Top Header */}
-      <header className="sticky top-0 z-40 bg-[#0f1629]/90 backdrop-blur-md border-b border-[#5680E9]/25">
-        <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-dark-bg text-slate-300 flex flex-col font-sans selection:bg-brand-primary selection:text-white">
+      {/* Sleek Minimalist Top Header */}
+      <header className="sticky top-0 z-40 bg-dark-surface/95 backdrop-blur-md border-b border-dark-border">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           
           {/* Logo & Platform Tagline */}
           <div 
             onClick={() => setActiveView('home')} 
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#5680E9] to-[#8860D0] p-0.5 shadow-lg shadow-[#5680E9]/20 flex items-center justify-center">
-              <div className="w-full h-full bg-[#080c18] rounded-[14px] flex items-center justify-center group-hover:bg-transparent transition">
-                <Shield className="w-5 h-5 text-[#84CEEB] group-hover:text-white transition" />
-              </div>
+            <div className="w-8 h-8 rounded-lg bg-brand-primary/15 border border-brand-primary/30 flex items-center justify-center">
+              <Shield className="w-4 h-4 text-brand-primary" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base font-black tracking-wider uppercase text-white group-hover:text-[#84CEEB] transition font-display">
+                <span className="text-sm font-bold tracking-tight text-white group-hover:text-brand-accent transition">
                   CrimeNexus
                 </span>
-                <span className="text-[10px] font-mono font-bold tracking-widest px-2 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/35">
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-slate-300 border border-white/10">
                   SIH26189
                 </span>
               </div>
-              <p className="text-[11px] text-[#8e9cc2] font-medium">
-                Criminal Network Analysis Platform &bull; <span className="text-[#84CEEB]">Where Every Clue Connects</span>
+              <p className="text-[11px] text-dark-slate">
+                Criminal Network Intelligence
               </p>
             </div>
           </div>
 
-          {/* Primary View Navigation Buttons */}
-          <nav className="flex items-center gap-1.5 bg-[#080c18]/90 border border-[#5680E9]/30 p-1.5 rounded-2xl">
+          {/* Clean Minimalist Navigation */}
+          <nav className="flex items-center gap-1 bg-dark-bg border border-dark-border p-1 rounded-lg">
             <button
               onClick={() => setActiveView('home')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition ${
                 activeView === 'home'
-                  ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-md shadow-[#5680E9]/25'
-                  : 'text-[#8e9cc2] hover:text-white hover:bg-[#151f38]'
+                  ? 'bg-white/10 text-white'
+                  : 'text-brand-slate hover:text-white hover:bg-white/5'
               }`}
             >
               <Home className="w-3.5 h-3.5" />
@@ -80,10 +78,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveView('cases')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition ${
                 activeView === 'cases' || activeView === 'case_workspace'
-                  ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-md shadow-[#5680E9]/25'
-                  : 'text-[#8e9cc2] hover:text-white hover:bg-[#151f38]'
+                  ? 'bg-white/10 text-white'
+                  : 'text-brand-slate hover:text-white hover:bg-white/5'
               }`}
             >
               <FolderGit2 className="w-3.5 h-3.5" />
@@ -92,10 +90,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveView('intelligence')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition ${
                 activeView === 'intelligence'
-                  ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-md shadow-[#5680E9]/25'
-                  : 'text-[#8e9cc2] hover:text-white hover:bg-[#151f38]'
+                  ? 'bg-white/10 text-white'
+                  : 'text-brand-slate hover:text-white hover:bg-white/5'
               }`}
             >
               <GitBranch className="w-3.5 h-3.5" />
@@ -107,22 +105,22 @@ export default function App() {
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block text-xs">
               <div className="flex items-center justify-end gap-1.5">
-                <span className="font-semibold text-white">{session.officerName}</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#151f38] text-[#84CEEB] border border-[#5680E9]/30">
+                <span className="font-medium text-white">{session.officerName}</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-dark-subtle text-brand-slate border border-dark-border">
                   {session.badgeNumber}
                 </span>
               </div>
-              <span className="text-[11px] text-[#8e9cc2] block truncate max-w-[200px]">
-                {session.isSuperAdmin ? 'Super-Admin (Cross-Regional)' : session.regionName}
+              <span className="text-[11px] text-dark-slate block truncate max-w-[200px]">
+                {session.isSuperAdmin ? 'Super-Admin' : session.regionName}
               </span>
             </div>
 
             <button
               onClick={() => setSession(null)}
-              className="p-2.5 rounded-2xl bg-[#151f38] hover:bg-[#1c294a] border border-[#5680E9]/30 text-[#8e9cc2] hover:text-white transition flex items-center gap-1.5 text-xs font-semibold"
+              className="p-2 rounded-lg bg-dark-subtle hover:bg-dark-panel border border-dark-border text-brand-slate hover:text-white transition flex items-center gap-1.5 text-xs font-medium"
               title="Switch Jurisdiction or Log Out"
             >
-              <LogOut className="w-3.5 h-3.5 text-[#84CEEB]" />
+              <LogOut className="w-3.5 h-3.5" />
               <span className="hidden md:inline">Switch Region</span>
             </button>
           </div>
@@ -200,8 +198,8 @@ export default function App() {
       )}
 
       {/* Technical Footer */}
-      <footer className="border-t border-[#5680E9]/20 bg-[#080c18] py-4 text-center text-xs text-[#8e9cc2]">
-        CrimeNexus (SIH26189) &bull; AI-Powered Criminal Network Analysis Platform &bull; <span className="text-[#84CEEB]">Row-Level Security</span> &bull; <span className="text-[#8860D0]">SHA-256 Ledger Verified</span>
+      <footer className="border-t border-dark-border bg-dark-surface py-3 text-center text-xs text-dark-slate">
+        CrimeNexus (SIH26189) &bull; Criminal Network Analysis Platform &bull; Row-Level Security Enforced &bull; SHA-256 Ledger Verified
       </footer>
     </div>
   );

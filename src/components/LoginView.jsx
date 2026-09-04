@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Lock, UserCheck, KeyRound, Building2, ChevronRight, AlertCircle, Fingerprint, Sparkles } from 'lucide-react';
+import { Shield, Lock, UserCheck, KeyRound, ChevronRight, Fingerprint } from 'lucide-react';
 
 export default function LoginView({ onLogin }) {
   const [selectedRegion, setSelectedRegion] = useState('REG-NCR');
@@ -80,53 +80,47 @@ export default function LoginView({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#080c18] text-[#C1C8E4] flex flex-col justify-center items-center p-4 relative font-sans ethereal-aura-bg">
-      {/* Ambient ethereal orbs */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-[#5680E9]/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[250px] bg-[#8860D0]/12 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-dark-bg text-slate-300 flex flex-col justify-center items-center p-4 font-sans">
       {/* Terminal Container */}
-      <div className="w-full max-w-xl bg-[#0f1629]/95 border border-[#5680E9]/35 rounded-3xl shadow-2xl p-8 relative z-10 ethereal-glass">
+      <div className="w-full max-w-md bg-dark-surface border border-dark-border rounded-xl shadow-xl p-6 relative z-10 space-y-6">
         
         {/* Header Branding */}
-        <div className="flex items-center gap-3.5 mb-6 pb-6 border-b border-[#5680E9]/25">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#5680E9] to-[#8860D0] p-0.5 shadow-lg shadow-[#5680E9]/25 flex items-center justify-center text-white">
-            <div className="w-full h-full bg-[#080c18] rounded-[14px] flex items-center justify-center">
-              <Shield className="w-6 h-6 text-[#84CEEB]" />
-            </div>
+        <div className="flex items-center gap-3 border-b border-dark-border pb-5">
+          <div className="w-10 h-10 rounded-lg bg-brand-primary/15 border border-brand-primary/30 flex items-center justify-center text-brand-primary">
+            <Shield className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-black tracking-wider text-white uppercase font-display">
+              <h1 className="text-base font-bold text-white tracking-tight">
                 CrimeNexus
               </h1>
-              <span className="text-[10px] font-mono font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
-                SIH26189 // ACCESS TERMINAL
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-slate-300 border border-white/10">
+                GATEWAY
               </span>
             </div>
-            <p className="text-xs text-[#8e9cc2] mt-0.5">
-              AI-Powered Criminal Network Analysis Platform &bull; <span className="text-[#84CEEB]">Secure Gateway</span>
+            <p className="text-xs text-dark-slate">
+              Criminal Network Analysis Platform
             </p>
           </div>
         </div>
 
         {/* Security Advisory */}
-        <div className="mb-6 p-3.5 rounded-2xl bg-[#080c18] border border-[#5680E9]/25 flex items-start gap-2.5 text-xs text-[#C1C8E4]">
-          <Fingerprint className="w-4 h-4 text-[#84CEEB] shrink-0 mt-0.5" />
-          <span className="text-[11px] leading-relaxed text-[#8e9cc2]">
-            Restricted to authenticated law enforcement. Strict Row-Level Security (RLS) cryptographically confines access to authorized jurisdictions.
+        <div className="p-3 rounded-lg bg-dark-bg border border-dark-border flex items-start gap-2.5 text-xs">
+          <Fingerprint className="w-4 h-4 text-brand-accent shrink-0 mt-0.5" />
+          <span className="text-[11px] leading-relaxed text-brand-slate">
+            Authorized law-enforcement personnel only. Strict Row-Level Security (RLS) cryptographically enforces regional boundaries.
           </span>
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           {/* Jurisdiction Selection */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-white flex items-center justify-between">
-              <span>Select Jurisdiction / Police Station:</span>
-              <span className="text-[10px] text-[#84CEEB] font-mono">[ ENFORCED RLS ]</span>
+            <label className="text-xs font-medium text-white flex items-center justify-between">
+              <span>Jurisdiction:</span>
+              <span className="text-[10px] text-brand-accent font-mono">RLS ENFORCED</span>
             </label>
-            <div className="grid grid-cols-1 gap-2">
+            <div className="space-y-1.5">
               {jurisdictions.map((j) => {
                 const isSelected = selectedRegion === j.id;
                 return (
@@ -134,27 +128,22 @@ export default function LoginView({ onLogin }) {
                     type="button"
                     key={j.id}
                     onClick={() => handleRegionSelect(j.id)}
-                    className={`text-left p-3.5 rounded-2xl border transition flex items-center justify-between ${
+                    className={`w-full text-left p-2.5 rounded-lg border transition flex items-center justify-between ${
                       isSelected
-                        ? 'bg-[#5680E9]/15 border-[#5680E9] text-white shadow-md shadow-[#5680E9]/10'
-                        : 'bg-[#080c18]/60 border-[#5680E9]/20 text-[#8e9cc2] hover:border-[#5680E9]/40 hover:text-white'
+                        ? 'bg-brand-primary/10 border-brand-primary/50 text-white'
+                        : 'bg-dark-bg border-dark-border text-brand-slate hover:border-white/20 hover:text-white'
                     }`}
                   >
                     <div>
-                      <div className="text-xs font-semibold flex items-center gap-2">
-                        <span className={isSelected ? 'text-white' : 'text-[#C1C8E4]'}>{j.name}</span>
-                        {j.id === 'SUPER-ADMIN' && (
-                          <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/40">
-                            FULL SCOPE
-                          </span>
-                        )}
+                      <div className="text-xs font-medium flex items-center gap-2">
+                        <span>{j.name}</span>
                       </div>
-                      <div className="text-[11px] text-[#8e9cc2] mt-0.5 font-mono">
-                        Lead: <span className="text-[#84CEEB]">{j.officer}</span> &bull; {j.badge}
+                      <div className="text-[11px] text-dark-slate font-mono mt-0.5">
+                        {j.officer} &bull; {j.badge}
                       </div>
                     </div>
-                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                      isSelected ? 'border-[#84CEEB] bg-[#5680E9]' : 'border-[#5680E9]/30 bg-[#080c18]'
+                    <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                      isSelected ? 'border-brand-primary bg-brand-primary' : 'border-dark-border bg-dark-bg'
                     }`}>
                       {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                     </div>
@@ -165,31 +154,31 @@ export default function LoginView({ onLogin }) {
           </div>
 
           {/* Badge ID Input */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-white">Investigator Badge / Token ID:</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-white">Investigator Badge ID:</label>
             <div className="relative">
-              <UserCheck className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8e9cc2]" />
+              <UserCheck className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-dark-slate" />
               <input
                 type="text"
                 value={badgeId}
                 onChange={(e) => setBadgeId(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-2.5 bg-[#080c18] border border-[#5680E9]/35 rounded-2xl text-xs font-mono text-white focus:outline-none focus:border-[#84CEEB] focus:ring-1 focus:ring-[#84CEEB]"
+                className="w-full pl-9 pr-3 py-2 bg-dark-bg border border-dark-border rounded-lg text-xs font-mono text-white focus:outline-none focus:border-brand-primary"
               />
             </div>
           </div>
 
           {/* Passkey */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-white">Security Clearance Passkey:</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-white">Clearance Passkey:</label>
             <div className="relative">
-              <KeyRound className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8e9cc2]" />
+              <KeyRound className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-dark-slate" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-2.5 bg-[#080c18] border border-[#5680E9]/35 rounded-2xl text-xs text-white focus:outline-none focus:border-[#84CEEB] focus:ring-1 focus:ring-[#84CEEB]"
+                className="w-full pl-9 pr-3 py-2 bg-dark-bg border border-dark-border rounded-lg text-xs text-white focus:outline-none focus:border-brand-primary"
               />
             </div>
           </div>
@@ -197,42 +186,41 @@ export default function LoginView({ onLogin }) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white rounded-2xl text-xs font-bold tracking-widest uppercase shadow-lg shadow-[#5680E9]/25 transition active:scale-[0.99] flex items-center justify-center gap-2 mt-2"
+            className="w-full py-2.5 px-4 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg text-xs font-semibold tracking-wide transition flex items-center justify-center gap-1.5 mt-2 shadow-sm"
           >
             <Lock className="w-3.5 h-3.5" />
-            <span>AUTHENTICATE &amp; ENTER TERMINAL</span>
-            <ChevronRight className="w-4 h-4 ml-1" />
+            <span>Authenticate &amp; Enter</span>
+            <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
           </button>
         </form>
 
         {/* Demo Fast-Login Shortcuts */}
-        <div className="mt-6 pt-5 border-t border-[#5680E9]/25">
-          <div className="text-[11px] font-semibold text-[#8e9cc2] uppercase tracking-widest mb-2.5 text-center">
-            One-Click Demonstration Access
+        <div className="pt-4 border-t border-dark-border space-y-2">
+          <div className="text-[10px] font-medium text-dark-slate uppercase tracking-wider text-center">
+            Quick Demonstration Access
           </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => handleQuickLogin('REG-NCR')}
-              className="py-2.5 px-3.5 rounded-2xl bg-[#080c18] hover:bg-[#151f38] border border-[#5680E9]/30 text-[11px] text-[#C1C8E4] hover:text-white transition text-left flex items-center justify-between"
+              className="py-2 px-3 rounded-lg bg-dark-bg hover:bg-dark-subtle border border-dark-border text-[11px] text-brand-slate hover:text-white transition flex items-center justify-between"
             >
               <span>Region A (NCR)</span>
-              <span className="text-[10px] text-[#84CEEB] font-mono">INV-NCR-101</span>
+              <span className="text-[10px] text-brand-accent font-mono">INV-101</span>
             </button>
             <button
               onClick={() => handleQuickLogin('SUPER-ADMIN')}
-              className="py-2.5 px-3.5 rounded-2xl bg-[#080c18] hover:bg-[#151f38] border border-[#8860D0]/40 text-[11px] text-[#C1C8E4] hover:text-white transition text-left flex items-center justify-between"
+              className="py-2 px-3 rounded-lg bg-dark-bg hover:bg-dark-subtle border border-dark-border text-[11px] text-brand-slate hover:text-white transition flex items-center justify-between"
             >
               <span>Super-Admin</span>
-              <span className="text-[10px] text-[#8860D0] font-mono">ALL CASES</span>
+              <span className="text-[10px] text-brand-amber font-mono">ALL</span>
             </button>
           </div>
         </div>
 
       </div>
 
-      {/* Security notice footer */}
-      <div className="mt-6 text-center text-[11px] text-[#8e9cc2] font-mono tracking-wider">
-        CRIMENEXUS // ETHEREAL SECURITY ARCHITECTURE // SIH26189
+      <div className="mt-4 text-center text-[11px] text-dark-slate font-mono">
+        CRIMENEXUS &bull; SMART INDIA HACKATHON 2026
       </div>
     </div>
   );

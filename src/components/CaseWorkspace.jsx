@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  ArrowLeft, Calendar, ShieldCheck, FileText, User, CreditCard, Phone, 
-  Car, Laptop, MapPin, Play, Pause, RotateCcw, Volume2, VolumeX, 
+  ArrowLeft, ShieldCheck, FileText, User, CreditCard, Phone, 
+  Laptop, MapPin, Play, Pause, RotateCcw, Volume2, VolumeX, 
   ExternalLink, CheckCircle2, AlertTriangle, Scale, Sparkles, ChevronRight, X, Info,
-  Sliders, FastForward, Film
+  FastForward, Film, Building2, Globe, Send, Radio
 } from 'lucide-react';
 import { RAW_DATASET } from '../data/dataset';
 
@@ -20,11 +20,11 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  // Video Replay Reconstruction state
+  // Live Graph Video Reconstruction Player state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [voiceAudio, setVoiceAudio] = useState(true);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1); // 1x, 1.5x, 2x
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [progressPercent, setProgressPercent] = useState(0);
 
   // BSA Certificate Modal state
@@ -33,7 +33,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   // Network Map state
   const [selectedMapNode, setSelectedMapNode] = useState(null);
 
-  // Play audio chime using Web Audio API
+  // Play subtle sonic audio chime
   const playAudioChime = () => {
     if (!voiceAudio) return;
     try {
@@ -41,20 +41,20 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(580, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(780, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.3);
+      osc.stop(audioCtx.currentTime + 0.25);
     } catch (e) {
-      // Audio context might be restricted before user gesture
+      // AudioContext policy fallback
     }
   };
 
-  // Speak speech narration
+  // Speak narration
   const speakNarration = (text) => {
     if (!voiceAudio || !('speechSynthesis' in window)) return;
     try {
@@ -72,11 +72,11 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
   useEffect(() => {
     let timer = null;
     if (isPlaying) {
-      const durationPerStep = 5500 / playbackSpeed;
+      const durationPerStep = 6000 / playbackSpeed;
       const intervalMs = 100;
       let elapsed = 0;
 
-      // Initial trigger for current step
+      // Trigger narration and chime for current step
       playAudioChime();
       if (caseEvents[currentStep]) {
         speakNarration(caseEvents[currentStep].narration);
@@ -121,6 +121,15 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     setCurrentStep(0);
     setProgressPercent(0);
+  };
+
+  const handleScrub = (index) => {
+    setIsPlaying(false);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    setCurrentStep(index);
+    setProgressPercent(((index) / (caseEvents.length - 1)) * 100);
+    playAudioChime();
+    speakNarration(caseEvents[index].narration);
   };
 
   // Wikipedia hover helper dictionary
@@ -218,145 +227,6 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     setActiveTooltip(null);
   };
 
-  // Structured Point-Wise Investigation Narrative Points
-  const narrativePoints = [
-    {
-      step: '01',
-      time: '09-JUN-2026 11:15 IST',
-      title: 'Targeted Spear-Phishing Infiltration',
-      tag: 'CYBER VECTOR',
-      content: (
-        <span>
-          Corporate finance treasury received an executive spoofing email prompting urgent vendor clearance via duplicate portal{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'DOMAIN-AUTH')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#84CEEB] underline decoration-[#5680E9] font-mono font-semibold cursor-pointer px-1 py-0.5 rounded bg-[#5680E9]/15 border border-[#5680E9]/30"
-          >
-            secure-zenithcorp-auth.com
-          </span>
-          . Rogue 2FA token intercepted by IP 198.51.100.45.
-        </span>
-      )
-    },
-    {
-      step: '02',
-      time: '09-JUN-2026 14:10 IST',
-      title: 'Unauthorized Core Banking RTGS Debit',
-      tag: 'WIRE FRAUD',
-      content: (
-        <span>
-          Unauthorized RTGS debit of{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#84CEEB] font-bold underline decoration-[#5AB9EA] cursor-pointer px-1 py-0.5 rounded bg-[#5AB9EA]/15 border border-[#5AB9EA]/30"
-          >
-            ₹1,00,00,000 (One Crore INR)
-          </span>{' '}
-          executed from{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#C1C8E4] font-mono underline decoration-[#5680E9] cursor-pointer px-1 py-0.5 rounded bg-[#5680E9]/15 border border-[#5680E9]/30"
-          >
-            Zenith Corporate Account ACC-1001
-          </span>{' '}
-          into primary mule account{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'ACC-2201')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#84CEEB] font-mono underline decoration-[#84CEEB] cursor-pointer px-1 py-0.5 rounded bg-[#84CEEB]/15 border border-[#84CEEB]/30"
-          >
-            ACC-2201 (Suman Roy)
-          </span>
-          , registered under{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'EVD-001')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#8860D0] font-mono font-bold underline decoration-[#8860D0] cursor-pointer px-1 py-0.5 rounded bg-[#8860D0]/15 border border-[#8860D0]/30"
-          >
-            FIR 0018/2026 (EVD-001)
-          </span>
-          .
-        </span>
-      )
-    },
-    {
-      step: '03',
-      time: '09-JUN-2026 14:35 IST',
-      title: 'Multi-Tier Secondary Mule Dispersal',
-      tag: 'LAYERING',
-      content: (
-        <span>
-          Within 25 minutes, Account ACC-2201 split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
-        </span>
-      )
-    },
-    {
-      step: '04',
-      time: '11-JUN-2026 10:15 IST',
-      title: 'Consolidation to Strategic Broker Node',
-      tag: 'AGGREGATION',
-      content: (
-        <span>
-          Mule accounts funneled ₹70,00,000 into broker account ACC-7702 controlled by{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'PER-103')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#8860D0] font-bold underline decoration-[#8860D0] cursor-pointer px-1 py-0.5 rounded bg-[#8860D0]/20 border border-[#8860D0]/40"
-          >
-            Devrat Sharma (PER-103, alias Broker D)
-          </span>
-          . Cell Tower Dump{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'EVD-003')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#84CEEB] font-mono underline decoration-[#84CEEB] cursor-pointer px-1 py-0.5 rounded bg-[#84CEEB]/15 border border-[#84CEEB]/30"
-          >
-            T-4401 (EVD-003)
-          </span>{' '}
-          confirmed telephony coordination.
-        </span>
-      )
-    },
-    {
-      step: '05',
-      time: '07-AUG-2026 15:30 IST',
-      title: 'Cross-Case Inter-Jurisdiction Financial Bridge',
-      tag: 'SIGNATURE LINK',
-      content: (
-        <span>
-          Broker Devrat Sharma executed crucial transfer{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'TXN_552')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#84CEEB] font-mono font-bold underline decoration-[#84CEEB] cursor-pointer px-1 py-0.5 rounded bg-[#84CEEB]/20 border border-[#84CEEB]/40"
-          >
-            TXN_552 (₹50,00,000)
-          </span>{' '}
-          into Mumbai shell front company{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'ACC-7701')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#5AB9EA] font-mono font-semibold underline decoration-[#5AB9EA] cursor-pointer px-1 py-0.5 rounded bg-[#5AB9EA]/15 border border-[#5AB9EA]/30"
-          >
-            Apex Trade Solutions (ACC-7701)
-          </span>
-          , directly bridging Case #018 with Mumbai Operation ShadowLedge under{' '}
-          <span
-            onMouseEnter={(e) => handleWikiHover(e, 'EVD-002')}
-            onMouseLeave={handleWikiLeave}
-            className="text-[#8860D0] font-mono font-bold underline decoration-[#8860D0] cursor-pointer px-1 py-0.5 rounded bg-[#8860D0]/20 border border-[#8860D0]/40"
-          >
-            FIU Advisory STR-88912 (EVD-002)
-          </span>
-          .
-        </span>
-      )
-    }
-  ];
-
   // Prime suspects for this case
   const primeSuspects = RAW_DATASET.people.filter(p => 
     p.primary_case_id === caseId || (p.is_bridge && (caseId === 'CASE-018' || caseId === 'CASE-041'))
@@ -377,7 +247,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       section: 'Section 66D',
       title: 'Cheating by Personation using Computer Resource',
       penalty: 'Imprisonment up to 3 years and fine up to ₹1,00,000',
-      description: 'Cheating by personating executive management via spoofed email header (ceo-office@zenithcorp-internal.com) to induce corporate fund clearance.',
+      description: 'Cheating by personating executive management via spoofed email header to induce corporate fund clearance.',
       evidenceRef: 'EVD-001 (Spoofed email artifacts & IP 198.51.100.45)'
     },
     {
@@ -385,7 +255,7 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
       section: 'Section 318(4)',
       title: 'Cheating and Dishonestly Inducing Delivery of Property',
       penalty: 'Rigorous imprisonment up to 7 years and fine',
-      description: 'Dishonestly inducing Zenith Technologies to part with ₹1,00,00,000 RTGS fund transfer into mule accounts (formerly IPC Section 420).',
+      description: 'Dishonestly inducing Zenith Technologies to part with ₹1,00,00,000 RTGS fund transfer into mule accounts.',
       evidenceRef: 'EVD-001 & Core Banking Transaction TXN-1001'
     },
     {
@@ -406,278 +276,370 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
     }
   ];
 
-  // Interconnected 2D Graph Nodes with exact layout coordinates
-  const graphNodes = [
-    { id: 'PER-108', label: 'Vikramaditya (CFO)', type: 'person', x: 80, y: 190, icon: User, color: '#84CEEB', ring: '#5680E9' },
-    { id: 'ACC-1001', label: 'Zenith Tech A/C', type: 'account', x: 230, y: 190, icon: CreditCard, color: '#84CEEB', ring: '#5680E9' },
-    { id: 'ACC-2201', label: 'Suman Roy A/C', type: 'account', x: 390, y: 190, icon: CreditCard, color: '#5AB9EA', ring: '#5AB9EA' },
-    { id: 'PER-104', label: 'Suman Roy (Mule)', type: 'person', x: 390, y: 310, icon: User, color: '#5AB9EA', ring: '#5AB9EA' },
-    { id: 'LOC-101', label: 'Tower T-4401 Gurugram', type: 'location', x: 550, y: 70, icon: MapPin, color: '#C1C8E4', ring: '#5680E9' },
-    { id: 'PER-101', label: 'Rajesh Verma (Boss)', type: 'person', x: 410, y: 70, icon: User, color: '#8860D0', ring: '#8860D0' },
-    { id: 'PER-102', label: 'Kunal Shah (Coder)', type: 'person', x: 690, y: 70, icon: Laptop, color: '#84CEEB', ring: '#5AB9EA' },
-    { id: 'PER-103', label: 'Devrat Sharma (Broker)', type: 'person', x: 570, y: 190, icon: User, color: '#8860D0', ring: '#8860D0', isBridge: true },
-    { id: 'ACC-7701', label: 'Apex Trade Shell', type: 'account', x: 740, y: 190, icon: CreditCard, color: '#5AB9EA', ring: '#5AB9EA' },
-    { id: 'PER-105', label: 'Tariq Merchant (Hawala)', type: 'person', x: 890, y: 190, icon: User, color: '#8860D0', ring: '#8860D0' },
-    { id: 'ACC-7705', label: 'Dubai Bullion A/C', type: 'account', x: 890, y: 310, icon: CreditCard, color: '#84CEEB', ring: '#5680E9' }
+  // ==========================================
+  // ALL GRAPH NODES DEFINITION
+  // ==========================================
+  const allGraphNodes = [
+    { id: 'PER-108', label: 'Vikramaditya', sub: 'CFO (Victim)', type: 'person', x: 80, y: 150, icon: User, color: '#38BDF8', border: '#0284C7' },
+    { id: 'ACC-1001', label: 'Zenith Tech A/C', sub: 'Corporate ACC-1001', type: 'account', x: 210, y: 150, icon: CreditCard, color: '#38BDF8', border: '#0284C7' },
+    { id: 'ACC-2201', label: 'Suman Roy A/C', sub: 'Primary Mule ACC-2201', type: 'account', x: 350, y: 150, icon: CreditCard, color: '#F43F5E', border: '#BE123C' },
+    { id: 'PER-104', label: 'Suman Roy', sub: 'Mule Accountholder', type: 'person', x: 350, y: 250, icon: User, color: '#F43F5E', border: '#BE123C' },
+    { id: 'ACC-MULES', label: '5 Secondary Mules', sub: 'Layering Accounts', type: 'account', x: 490, y: 250, icon: CreditCard, color: '#F43F5E', border: '#BE123C' },
+    { id: 'PER-101', label: 'Rajesh Verma', sub: 'Syndicate Operator', type: 'person', x: 350, y: 50, icon: User, color: '#F43F5E', border: '#BE123C' },
+    { id: 'LOC-101', label: 'Tower T-4401', sub: 'Sec 44 Gurugram', type: 'location', x: 490, y: 50, icon: Radio, color: '#94A3B8', border: '#475569' },
+    { id: 'PER-102', label: 'Kunal Shah', sub: 'Technical Operator', type: 'person', x: 630, y: 50, icon: Laptop, color: '#38BDF8', border: '#0284C7' },
+    { id: 'PER-103', label: 'Devrat Sharma', sub: 'Bridge Money Broker', type: 'person', x: 520, y: 150, icon: User, color: '#F59E0B', border: '#D97706', isBridge: true },
+    { id: 'ACC-7701', label: 'Apex Trade Solutions', sub: 'Case 041 Shell Front', type: 'account', x: 690, y: 150, icon: Building2, color: '#F59E0B', border: '#D97706', isBridge: true },
+    { id: 'PER-105', label: 'Tariq Merchant', sub: 'Hawala Operator', type: 'person', x: 840, y: 150, icon: User, color: '#F43F5E', border: '#BE123C' },
+    { id: 'ACC-7705', label: 'Dubai Bullion A/C', sub: 'Offshore Account', type: 'account', x: 840, y: 250, icon: CreditCard, color: '#38BDF8', border: '#0284C7' }
   ];
 
-  // Interconnected Graph Connecting Lines (Edges)
-  const graphEdges = [
-    { from: 'PER-108', to: 'ACC-1001', label: 'SIGNATORY', color: '#5680E9' },
-    { from: 'ACC-1001', to: 'ACC-2201', label: '₹1.0 CR RTGS', color: '#84CEEB', strokeWidth: 3, animated: true },
-    { from: 'ACC-2201', to: 'PER-104', label: 'HOLDER', color: '#5AB9EA' },
-    { from: 'PER-101', to: 'LOC-101', label: 'CDR TOWER', color: '#C1C8E4' },
-    { from: 'PER-102', to: 'LOC-101', label: 'DEV LOGS', color: '#C1C8E4' },
-    { from: 'ACC-2201', to: 'PER-103', label: 'LAYERING ROUTE', color: '#5AB9EA', animated: true },
-    { from: 'PER-103', to: 'LOC-101', label: 'CALL CDR-1008', color: '#C1C8E4' },
-    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (₹50L BRIDGE)', color: '#8860D0', strokeWidth: 3, animated: true, isBridge: true },
-    { from: 'ACC-7701', to: 'PER-105', label: '₹45L DISSIPATION', color: '#5AB9EA' },
-    { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT WIRE DUBAI', color: '#8860D0', animated: true }
+  // ==========================================
+  // ALL GRAPH EDGES DEFINITION
+  // ==========================================
+  const allGraphEdges = [
+    { from: 'PER-108', to: 'ACC-1001', label: 'Signatory', color: '#38BDF8' },
+    { from: 'ACC-1001', to: 'ACC-2201', label: '₹1.00 Cr RTGS', color: '#F43F5E', strokeWidth: 2.2, animated: true },
+    { from: 'ACC-2201', to: 'PER-104', label: 'Registered To', color: '#94A3B8' },
+    { from: 'ACC-2201', to: 'ACC-MULES', label: '5x ₹20L Tranches', color: '#F43F5E', animated: true },
+    { from: 'PER-101', to: 'LOC-101', label: 'Tower Presence', color: '#94A3B8' },
+    { from: 'PER-102', to: 'LOC-101', label: 'IP / Dev Logs', color: '#94A3B8' },
+    { from: 'ACC-MULES', to: 'PER-103', label: '₹70L Aggregated', color: '#F59E0B', animated: true },
+    { from: 'LOC-101', to: 'PER-103', label: 'Voice Call', color: '#94A3B8' },
+    { from: 'PER-103', to: 'ACC-7701', label: 'TXN_552 (₹50L Bridge)', color: '#F59E0B', strokeWidth: 2.8, animated: true, isBridge: true },
+    { from: 'ACC-7701', to: 'PER-105', label: '₹45L Cash Out', color: '#F43F5E' },
+    { from: 'PER-105', to: 'ACC-7705', label: 'SWIFT Wire', color: '#38BDF8', animated: true }
   ];
+
+  // Graph step configuration for the Live Construction replay:
+  // Step 0: Vikramaditya -> Zenith Tech A/C
+  // Step 1: Zenith Tech A/C -> Suman Roy A/C -> Suman Roy (Mule)
+  // Step 2: Suman Roy A/C -> 5 Secondary Mules
+  // Step 3: Rajesh Verma, Kunal Shah, Tower T-4401
+  // Step 4: Devrat Sharma (Broker) + TXN_552 Bridge to Apex Trade Solutions (Mumbai)
+  // Step 5: Tariq Merchant (Hawala) + Dubai Bullion A/C
+  const stepNodes = [
+    ['PER-108', 'ACC-1001'],
+    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104'],
+    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES'],
+    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102'],
+    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102', 'PER-103', 'ACC-7701'],
+    ['PER-108', 'ACC-1001', 'ACC-2201', 'PER-104', 'ACC-MULES', 'LOC-101', 'PER-101', 'PER-102', 'PER-103', 'ACC-7701', 'PER-105', 'ACC-7705']
+  ];
+
+  const stepEdges = [
+    [{ from: 'PER-108', to: 'ACC-1001' }],
+    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }],
+    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }, { from: 'ACC-2201', to: 'ACC-MULES' }],
+    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }, { from: 'ACC-2201', to: 'ACC-MULES' }, { from: 'PER-101', to: 'LOC-101' }, { from: 'PER-102', to: 'LOC-101' }],
+    [{ from: 'PER-108', to: 'ACC-1001' }, { from: 'ACC-1001', to: 'ACC-2201' }, { from: 'ACC-2201', to: 'PER-104' }, { from: 'ACC-2201', to: 'ACC-MULES' }, { from: 'PER-101', to: 'LOC-101' }, { from: 'PER-102', to: 'LOC-101' }, { from: 'ACC-MULES', to: 'PER-103' }, { from: 'LOC-101', to: 'PER-103' }, { from: 'PER-103', to: 'ACC-7701' }],
+    allGraphEdges
+  ];
+
+  const activeReplayNodes = stepNodes[Math.min(currentStep, stepNodes.length - 1)] || [];
+  const activeReplayEdges = stepEdges[Math.min(currentStep, stepEdges.length - 1)] || [];
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 space-y-8 font-sans">
       
-      {/* Top Breadcrumbs & Case Header */}
-      <div className="bg-[#0f1629]/90 border border-[#5680E9]/30 rounded-3xl p-6 shadow-2xl space-y-4 ethereal-glass">
+      {/* Top Breadcrumb & Clean Header */}
+      <div className="panel rounded-xl p-5 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={onBack}
-              className="p-2.5 rounded-2xl bg-[#151f38] hover:bg-[#1c294a] border border-[#5680E9]/30 text-[#C1C8E4] hover:text-white transition flex items-center gap-1.5 text-xs font-semibold"
+              className="p-2 rounded-lg bg-dark-subtle hover:bg-dark-panel border border-dark-border text-brand-slate hover:text-white transition flex items-center gap-1.5 text-xs font-medium"
             >
-              <ArrowLeft className="w-4 h-4 text-[#84CEEB]" />
+              <ArrowLeft className="w-4 h-4 text-brand-accent" />
               <span>Back to Cases</span>
             </button>
-            <div className="h-5 w-px bg-[#5680E9]/30" />
-            <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
+            <div className="h-4 w-px bg-white/10" />
+            <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded bg-brand-primary/15 text-brand-primary border border-brand-primary/30">
               {caseData.case_id}
             </span>
-            <span className="text-xs font-mono text-[#C1C8E4]">
+            <span className="text-xs font-mono text-dark-slate">
               {caseData.case_number}
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => setIsBsaModalOpen(true)}
-              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-[#5680E9]/25"
+              className="px-3.5 py-2 rounded-lg bg-dark-subtle hover:bg-dark-panel border border-brand-emerald/30 text-emerald-400 text-xs font-medium transition flex items-center gap-1.5"
             >
-              <Scale className="w-3.5 h-3.5 text-white" />
-              <span>Generate Section 63B BSA Certificate</span>
+              <Scale className="w-3.5 h-3.5" />
+              <span>Section 63B BSA Certificate</span>
             </button>
 
             <button
               onClick={() => onAskCopilot(`Provide a complete executive summary of ${caseData.case_id}`)}
-              className="px-4 py-2.5 rounded-2xl bg-[#151f38] hover:bg-[#1c294a] border border-[#5680E9]/35 text-[#C1C8E4] text-xs font-semibold transition flex items-center gap-2"
+              className="px-3.5 py-2 rounded-lg bg-brand-primary hover:bg-brand-primary/90 text-white text-xs font-medium transition flex items-center gap-1.5 shadow-sm"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#84CEEB]" />
+              <Sparkles className="w-3.5 h-3.5" />
               <span>Ask Copilot</span>
             </button>
           </div>
         </div>
 
         <div>
-          <h1 className="text-2xl font-black text-white font-display tracking-wide">{caseData.title}</h1>
-          <p className="text-xs text-[#8e9cc2] mt-1">
-            Category: <strong className="text-white">{caseData.category}</strong> &bull; Jurisdiction: <strong className="text-[#84CEEB]">{caseData.region_name}</strong> &bull; Registered: <span className="font-mono text-[#C1C8E4]">{caseData.registration_date}</span>
+          <h1 className="text-xl font-bold text-white tracking-tight">{caseData.title}</h1>
+          <p className="text-xs text-brand-slate mt-1">
+            Category: <strong className="text-white">{caseData.category}</strong> &bull; Jurisdiction: <strong className="text-brand-accent">{caseData.region_name}</strong> &bull; Registered: <span className="font-mono text-brand-slate">{caseData.registration_date}</span>
           </p>
         </div>
 
-        {/* Quick Officer Metadata Pill */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[#5680E9]/20 text-xs">
-          <div className="bg-[#080c18]/60 p-3 rounded-2xl border border-[#5680E9]/20">
-            <span className="text-[#8e9cc2] block text-[10px] uppercase font-mono font-semibold">Lead Officer</span>
-            <span className="font-bold text-white mt-0.5 block">{caseData.investigator_name}</span>
+        {/* Minimal Officer Metadata Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-dark-border text-xs">
+          <div>
+            <span className="text-dark-slate block text-[11px]">Lead Officer</span>
+            <span className="font-semibold text-white mt-0.5 block">{caseData.investigator_name}</span>
           </div>
-          <div className="bg-[#080c18]/60 p-3 rounded-2xl border border-[#5680E9]/20">
-            <span className="text-[#8e9cc2] block text-[10px] uppercase font-mono font-semibold">Investigation Status</span>
-            <span className="font-bold text-[#84CEEB] mt-0.5 block">{caseData.status}</span>
+          <div>
+            <span className="text-dark-slate block text-[11px]">Investigation Status</span>
+            <span className="font-semibold text-brand-accent mt-0.5 block">{caseData.status}</span>
           </div>
-          <div className="bg-[#080c18]/60 p-3 rounded-2xl border border-[#5680E9]/20">
-            <span className="text-[#8e9cc2] block text-[10px] uppercase font-mono font-semibold">Registered Evidence</span>
-            <span className="font-bold text-[#5AB9EA] mt-0.5 block">{caseData.stats.evidence} Verified Files</span>
+          <div>
+            <span className="text-dark-slate block text-[11px]">Registered Evidence</span>
+            <span className="font-semibold text-brand-emerald mt-0.5 block">{caseData.stats.evidence} Verified Records</span>
           </div>
-          <div className="bg-[#080c18]/60 p-3 rounded-2xl border border-[#5680E9]/20">
-            <span className="text-[#8e9cc2] block text-[10px] uppercase font-mono font-semibold">Cross-Case Connection</span>
-            <span className="font-bold text-[#8860D0] mt-0.5 block">Bridge to CASE-041 (TXN_552)</span>
+          <div>
+            <span className="text-dark-slate block text-[11px]">Cross-Case Link</span>
+            <span className="font-semibold text-brand-amber mt-0.5 block">Bridge to CASE-041 (TXN_552)</span>
           </div>
         </div>
       </div>
 
-      {/* SECTION 1: Point-Wise Investigation Narrative (Easy to Understand) */}
-      <div className="bg-[#0f1629]/90 border border-[#5680E9]/30 rounded-3xl p-7 shadow-2xl space-y-5 ethereal-glass relative">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#5680E9]/20 border border-[#5680E9]/40 flex items-center justify-center text-[#84CEEB]">
-              <FileText className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-white font-display tracking-wide">Investigation Narrative (Point-Wise Briefing)</h2>
-              <p className="text-xs text-[#8e9cc2]">Chronological breakdown of criminal incident events with interactive evidentiary references.</p>
-            </div>
+      {/* ========================================================= */}
+      {/* SECTION 1: CLEAN INVESTIGATION SUMMARY (UNBOXED POINTS)    */}
+      {/* ========================================================= */}
+      <div className="panel rounded-xl p-6 shadow-sm space-y-4 relative">
+        <div className="flex items-center justify-between border-b border-dark-border pb-3">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-brand-accent" />
+            <h2 className="text-sm font-bold text-white uppercase tracking-wider">Investigation Summary</h2>
           </div>
-          <span className="text-[11px] text-[#84CEEB] font-mono flex items-center gap-1.5 bg-[#151f38] px-3 py-1.5 rounded-full border border-[#5680E9]/30">
-            <Info className="w-3.5 h-3.5 text-[#84CEEB]" />
-            Hover over highlighted tokens for instant evidence preview
+          <span className="text-[11px] text-brand-slate font-mono flex items-center gap-1.5">
+            <Info className="w-3.5 h-3.5 text-brand-accent" />
+            Hover over highlighted tokens for evidence preview
           </span>
         </div>
 
-        {/* Sequential Point-Wise Cards */}
-        <div className="space-y-3 pt-2">
-          {narrativePoints.map((point) => (
-            <div 
-              key={point.step}
-              className="bg-[#151f38]/70 border border-[#5680E9]/25 hover:border-[#5680E9]/60 rounded-2xl p-4.5 transition duration-200 flex flex-col md:flex-row md:items-start gap-4 group shadow-sm"
-            >
-              {/* Step indicator */}
-              <div className="shrink-0 flex md:flex-col items-center gap-2">
-                <span className="w-9 h-9 rounded-xl bg-[#5680E9]/15 border border-[#5680E9]/40 flex items-center justify-center text-xs font-mono font-bold text-[#84CEEB]">
-                  {point.step}
-                </span>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/30 whitespace-nowrap">
-                  {point.tag}
-                </span>
-              </div>
+        {/* Clean, Aesthetic Point-by-Point Narrative (NO NESTED BOXES) */}
+        <div className="space-y-3.5 text-xs text-brand-slate leading-relaxed pt-1">
+          <div className="flex items-start gap-3">
+            <span className="text-brand-accent font-mono text-sm leading-none mt-0.5">•</span>
+            <p>
+              Corporate finance treasury received an executive spoofing email prompting urgent vendor clearance via duplicate portal{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'DOMAIN-AUTH')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-accent hover:underline font-mono font-medium cursor-pointer border-b border-brand-accent/40"
+              >
+                secure-zenithcorp-auth.com
+              </span>
+              . Rogue 2FA token intercepted by IP 198.51.100.45.
+            </p>
+          </div>
 
-              {/* Point content */}
-              <div className="flex-1 space-y-1.5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h4 className="text-sm font-bold text-white group-hover:text-[#84CEEB] transition font-display">
-                    {point.title}
-                  </h4>
-                  <span className="text-xs font-mono text-[#8e9cc2] bg-[#080c18] px-2.5 py-0.5 rounded-lg border border-[#5680E9]/20">
-                    {point.time}
-                  </span>
-                </div>
-                <p className="text-xs text-[#C1C8E4] leading-relaxed">
-                  {point.content}
-                </p>
-              </div>
-            </div>
-          ))}
+          <div className="flex items-start gap-3">
+            <span className="text-brand-accent font-mono text-sm leading-none mt-0.5">•</span>
+            <p>
+              Unauthorized RTGS debit of{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
+                onMouseLeave={handleWikiLeave}
+                className="text-white font-semibold hover:underline cursor-pointer border-b border-white/40"
+              >
+                ₹1,00,00,000 (One Crore INR)
+              </span>{' '}
+              executed from{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'ACC-1001')}
+                onMouseLeave={handleWikiLeave}
+                className="text-white font-mono hover:underline cursor-pointer border-b border-white/40"
+              >
+                Zenith Corporate Account ACC-1001
+              </span>{' '}
+              into primary mule account{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'ACC-2201')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-rose font-mono hover:underline cursor-pointer border-b border-brand-rose/40"
+              >
+                ACC-2201 (Suman Roy)
+              </span>
+              , registered under{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'EVD-001')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-emerald font-mono font-medium hover:underline cursor-pointer border-b border-brand-emerald/40"
+              >
+                FIR 0018/2026 (EVD-001)
+              </span>
+              .
+            </p>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <span className="text-brand-accent font-mono text-sm leading-none mt-0.5">•</span>
+            <p>
+              Within 25 minutes, Account ACC-2201 split the ₹1.0 Cr across 5 secondary student and shell accounts (ACC-3301 through ACC-8809) in ₹20L tranches to prevent automated banking AML freezes.
+            </p>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <span className="text-brand-accent font-mono text-sm leading-none mt-0.5">•</span>
+            <p>
+              Mule accounts funneled ₹70,00,000 into broker account ACC-7702 controlled by{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'PER-103')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-amber font-semibold hover:underline cursor-pointer border-b border-brand-amber/40"
+              >
+                Devrat Sharma (PER-103, alias Broker D)
+              </span>
+              . Cell Tower Dump{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'EVD-003')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-emerald font-mono hover:underline cursor-pointer border-b border-brand-emerald/40"
+              >
+                T-4401 (EVD-003)
+              </span>{' '}
+              confirmed simultaneous telephony coordination with syndicate chief Rajesh Verma and technician Kunal Shah.
+            </p>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <span className="text-brand-accent font-mono text-sm leading-none mt-0.5">•</span>
+            <p>
+              Broker Devrat Sharma executed crucial transfer{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'TXN_552')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-amber font-mono font-semibold hover:underline cursor-pointer border-b border-brand-amber/40"
+              >
+                TXN_552 (₹50,00,000)
+              </span>{' '}
+              into Mumbai shell front company{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'ACC-7701')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-amber font-mono hover:underline cursor-pointer border-b border-brand-amber/40"
+              >
+                Apex Trade Solutions (ACC-7701)
+              </span>
+              , directly bridging Case #018 with Mumbai Operation ShadowLedge under{' '}
+              <span
+                onMouseEnter={(e) => handleWikiHover(e, 'EVD-002')}
+                onMouseLeave={handleWikiLeave}
+                className="text-brand-emerald font-mono font-medium hover:underline cursor-pointer border-b border-brand-emerald/40"
+              >
+                FIU Advisory STR-88912 (EVD-002)
+              </span>
+              .
+            </p>
+          </div>
         </div>
 
-        {/* Wikipedia Floating Popover Tooltip */}
+        {/* Minimal Wikipedia Popover Tooltip */}
         {activeTooltip && (
           <div 
             style={{ top: `${tooltipPos.y}px`, left: `${Math.min(tooltipPos.x, window.innerWidth - 380)}px` }}
-            className="fixed z-50 w-80 bg-[#0f1629] border border-[#5680E9] rounded-2xl p-4.5 shadow-2xl space-y-2.5 text-xs animate-in fade-in zoom-in-95 duration-150 pointer-events-none ethereal-glow"
+            className="fixed z-50 w-80 bg-dark-panel border border-white/20 rounded-lg p-4 shadow-xl space-y-2 text-xs animate-in fade-in duration-100 pointer-events-none"
           >
-            <div className="flex items-center justify-between border-b border-[#5680E9]/25 pb-2">
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/30">
+            <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+              <span className="text-[10px] font-mono font-semibold text-brand-accent">
                 {activeTooltip.type}
               </span>
-              <span className="text-[9px] font-mono text-[#84CEEB] flex items-center gap-1 font-semibold">
-                <CheckCircle2 className="w-3 h-3 text-[#84CEEB]" />
+              <span className="text-[10px] font-mono text-brand-emerald flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" />
                 {activeTooltip.status}
               </span>
             </div>
 
             <div>
-              <h4 className="font-bold text-white text-sm font-display">{activeTooltip.title}</h4>
-              <p className="text-[11px] text-[#84CEEB] font-mono mt-0.5">{activeTooltip.docId}</p>
+              <h4 className="font-semibold text-white text-sm">{activeTooltip.title}</h4>
+              <p className="text-[11px] text-brand-slate font-mono mt-0.5">{activeTooltip.docId}</p>
             </div>
 
-            <p className="text-[11px] text-[#C1C8E4] leading-snug bg-[#080c18] p-2.5 rounded-xl border border-[#5680E9]/25">
+            <p className="text-[11px] text-slate-300 leading-snug bg-dark-bg p-2 rounded border border-white/5">
               "{activeTooltip.snippet}"
             </p>
 
-            <div className="pt-1 text-[10px] font-mono text-[#8e9cc2] flex items-center justify-between">
-              <span>SHA-256 Digest:</span>
-              <span className="text-[#84CEEB] truncate max-w-[170px]">{activeTooltip.hash}</span>
+            <div className="pt-1 text-[10px] font-mono text-dark-slate flex items-center justify-between">
+              <span>SHA-256:</span>
+              <span className="text-brand-accent truncate max-w-[190px]">{activeTooltip.hash}</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* SECTION 2: ACTUAL Interconnected Network Graph (Lines, Nodes, Vectors) */}
-      <div className="bg-[#0f1629]/90 border border-[#5680E9]/30 rounded-3xl p-7 shadow-2xl space-y-4 ethereal-glass">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* ========================================================= */}
+      {/* SECTION 2: AESTHETIC KNOWLEDGE GRAPH (CLEAN NODES & LINES) */}
+      {/* ========================================================= */}
+      <div className="panel rounded-xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dark-border pb-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
-                TOPOLOGICAL GRAPH MAP
-              </span>
-              <h2 className="text-lg font-bold text-white font-display tracking-wide">Interconnected Case Knowledge Graph</h2>
+              <Radio className="w-4 h-4 text-brand-accent" />
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Case Network Map</h2>
             </div>
-            <p className="text-xs text-[#8e9cc2] mt-0.5">
-              Interactive structural topography with directional transaction vectors, telephony links, and cross-case bridge pathways.
+            <p className="text-xs text-brand-slate mt-0.5">
+              Topological knowledge graph with clean entities, transaction conduits, and cross-case bridge pathways.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono">
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
-              <span className="w-2 h-2 rounded-full bg-[#84CEEB]" /> Core Heist
+          <div className="flex items-center gap-3 text-xs font-mono">
+            <span className="flex items-center gap-1.5 text-brand-slate">
+              <span className="w-2 h-2 rounded-full bg-brand-accent" /> Core Incident
             </span>
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/40">
-              <span className="w-2 h-2 rounded-full bg-[#8860D0]" /> Cross-Case Bridge (TXN_552)
+            <span className="flex items-center gap-1.5 text-brand-slate">
+              <span className="w-2 h-2 rounded-full bg-brand-rose" /> Mule / Fraud
+            </span>
+            <span className="flex items-center gap-1.5 text-brand-amber font-semibold">
+              <span className="w-2 h-2 rounded-full bg-brand-amber" /> Cross-Case Bridge (TXN_552)
             </span>
           </div>
         </div>
 
-        {/* Actual Interconnected SVG Canvas Graph */}
-        <div className="bg-[#080c18] border border-[#5680E9]/30 rounded-2xl p-4 min-h-[420px] relative overflow-x-auto select-none">
-          <svg className="w-full min-w-[960px] h-[380px]" viewBox="0 0 980 380">
-            {/* SVG Arrow Marker Definitions */}
-            <defs>
-              <marker id="arrow-blue" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#5680E9" />
-              </marker>
-              <marker id="arrow-sky" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#84CEEB" />
-              </marker>
-              <marker id="arrow-purple" viewBox="0 0 10 10" refX="26" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#8860D0" />
-              </marker>
-            </defs>
-
-            {/* Render Connecting Vectors / Lines */}
-            {graphEdges.map((edge, i) => {
-              const srcNode = graphNodes.find(n => n.id === edge.from);
-              const tgtNode = graphNodes.find(n => n.id === edge.to);
+        {/* Clean, Aesthetic SVG Canvas */}
+        <div className="bg-[#08090D] border border-dark-border rounded-lg p-3 min-h-[380px] relative overflow-x-auto select-none">
+          <svg className="w-full min-w-[940px] h-[330px]" viewBox="0 0 940 330">
+            {/* Render Connecting Lines (Clean, no clunky badge boxes) */}
+            {allGraphEdges.map((edge, i) => {
+              const srcNode = allGraphNodes.find(n => n.id === edge.from);
+              const tgtNode = allGraphNodes.find(n => n.id === edge.to);
               if (!srcNode || !tgtNode) return null;
 
               const isHighlighted = selectedMapNode ? (selectedMapNode === srcNode.id || selectedMapNode === tgtNode.id) : true;
-              const opacity = isHighlighted ? 0.9 : 0.2;
-              const markerType = edge.isBridge ? 'url(#arrow-purple)' : edge.color === '#84CEEB' ? 'url(#arrow-sky)' : 'url(#arrow-blue)';
-
-              // Calculate midpoint for link label
+              const opacity = isHighlighted ? 1 : 0.2;
               const midX = (srcNode.x + tgtNode.x) / 2;
               const midY = (srcNode.y + tgtNode.y) / 2;
 
               return (
-                <g key={i} style={{ opacity, transition: 'opacity 0.3s' }}>
+                <g key={i} style={{ opacity, transition: 'opacity 0.2s' }}>
+                  {/* The Line */}
                   <line
                     x1={srcNode.x}
                     y1={srcNode.y}
                     x2={tgtNode.x}
                     y2={tgtNode.y}
                     stroke={edge.color}
-                    strokeWidth={edge.strokeWidth || 1.8}
-                    strokeOpacity={0.8}
-                    className={edge.animated ? 'animated-link' : ''}
-                    markerEnd={markerType}
+                    strokeWidth={edge.strokeWidth || 1.6}
+                    strokeOpacity={0.7}
+                    className={edge.animated ? 'animated-stream' : ''}
                   />
-                  {/* Link Label */}
-                  <rect
-                    x={midX - 38}
-                    y={midY - 9}
-                    width="76"
-                    height="18"
-                    rx="6"
-                    fill="#0f1629"
-                    stroke={edge.color}
-                    strokeWidth="0.8"
-                  />
+                  {/* Subtle Clean Label on the line */}
                   <text
                     x={midX}
-                    y={midY + 3}
+                    y={midY - 6}
                     textAnchor="middle"
                     fill={edge.color}
                     fontSize="9"
                     fontFamily="monospace"
-                    fontWeight="bold"
+                    fontWeight="500"
+                    opacity={0.85}
                   >
                     {edge.label}
                   </text>
@@ -685,65 +647,56 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
               );
             })}
 
-            {/* Render Nodes with Icons & Glowing Badges */}
-            {graphNodes.map((node) => {
+            {/* Render Clean Nodes */}
+            {allGraphNodes.map((node) => {
               const isSelected = selectedMapNode === node.id;
+              const NodeIcon = node.icon;
               return (
                 <g 
                   key={node.id}
                   transform={`translate(${node.x}, ${node.y})`}
                   onClick={() => {
                     setSelectedMapNode(selectedMapNode === node.id ? null : node.id);
-                    onSelectEntity({ person_id: node.id, name: node.label, role: node.type });
+                    onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge });
                   }}
                   className="cursor-pointer group"
                 >
-                  {/* Glowing Outer Ring */}
-                  <circle
-                    r={node.isBridge ? "28" : "24"}
-                    fill="#0f1629"
-                    stroke={node.isBridge ? "#8860D0" : isSelected ? "#84CEEB" : node.ring}
-                    strokeWidth={node.isBridge || isSelected ? "3" : "1.8"}
-                    className={node.isBridge ? "animate-pulse" : ""}
-                  />
-
-                  {/* Inner Accent Ring */}
+                  {/* Clean Node Circle */}
                   <circle
                     r={node.isBridge ? "22" : "18"}
-                    fill={node.isBridge ? "#8860D020" : "#5680E915"}
+                    fill="#11141D"
+                    stroke={isSelected ? "#FFFFFF" : node.color}
+                    strokeWidth={node.isBridge ? "2.5" : "1.8"}
                   />
 
-                  {/* Node ID / Type Text Icon */}
-                  <text
-                    textAnchor="middle"
-                    y="4"
-                    fill={node.color}
-                    fontSize="10"
-                    fontWeight="bold"
-                    fontFamily="monospace"
+                  {/* Icon */}
+                  <foreignObject 
+                    x={node.isBridge ? -10 : -8} 
+                    y={node.isBridge ? -10 : -8} 
+                    width={node.isBridge ? 20 : 16} 
+                    height={node.isBridge ? 20 : 16}
                   >
-                    {node.type === 'person' ? '👤' : node.type === 'account' ? '🏛️' : node.type === 'location' ? '📍' : '💻'}
-                  </text>
+                    <NodeIcon className="w-full h-full" style={{ color: node.color }} />
+                  </foreignObject>
 
-                  {/* Node Label Below */}
-                  <rect
-                    x="-65"
-                    y={node.isBridge ? "34" : "30"}
-                    width="130"
-                    height="20"
-                    rx="8"
-                    fill="#151f38"
-                    stroke={node.isBridge ? "#8860D0" : "#5680E930"}
-                    strokeWidth="1"
-                  />
+                  {/* Clean Text Label (NO BLACK BOX) */}
                   <text
                     textAnchor="middle"
-                    y={node.isBridge ? "47" : "43"}
+                    y={node.isBridge ? "34" : "30"}
                     fill="#FFFFFF"
-                    fontSize="10"
+                    fontSize="11"
                     fontWeight="600"
                   >
                     {node.label}
+                  </text>
+                  <text
+                    textAnchor="middle"
+                    y={node.isBridge ? "46" : "42"}
+                    fill="#94A3B8"
+                    fontSize="9"
+                    fontFamily="monospace"
+                  >
+                    {node.sub}
                   </text>
                 </g>
               );
@@ -752,63 +705,61 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
         </div>
       </div>
 
-      {/* SECTION 3: Live Investigation Reconstruction (Video Player with Real Audio & Continuous Graph Evolution) */}
-      <div className="bg-[#0f1629]/90 border border-[#5680E9]/30 rounded-3xl p-7 shadow-2xl space-y-6 ethereal-glass">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* ========================================================= */}
+      {/* SECTION 3: LIVE RECONSTRUCTION (ACTUAL DYNAMIC GRAPH GEN) */}
+      {/* ========================================================= */}
+      <div className="panel rounded-xl p-6 shadow-sm space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dark-border pb-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/40 flex items-center gap-1">
-                <Film className="w-3.5 h-3.5" />
-                AUTOMATED REPLAY
-              </span>
-              <h2 className="text-lg font-bold text-white font-display tracking-wide">Review Investigation (Live Documentary Video Experience)</h2>
+              <Film className="w-4 h-4 text-brand-primary" />
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Review Investigation (Live Graph Replay)</h2>
             </div>
-            <p className="text-xs text-[#8e9cc2] mt-0.5">
-              Continuous progressive documentary playback. Real audible voice narration triggers incremental graph node appearances and animated connection drawing.
+            <p className="text-xs text-brand-slate mt-0.5">
+              Live automated documentary reconstruction. Voice narrates each chronological event while nodes and connecting lines materialize on the canvas step-by-step.
             </p>
           </div>
 
-          {/* Video Player Controls Bar */}
-          <div className="flex items-center gap-3 bg-[#080c18] border border-[#5680E9]/30 p-2 rounded-2xl shadow-inner">
+          {/* Player Controls Bar */}
+          <div className="flex items-center gap-2 bg-dark-bg border border-dark-border p-1.5 rounded-lg">
             <button
               onClick={isPlaying ? () => setIsPlaying(false) : handleStartVideo}
-              className={`px-5 py-2 rounded-xl font-bold text-xs tracking-wider uppercase transition flex items-center gap-2 ${
+              className={`px-3.5 py-1.5 rounded-md font-semibold text-xs transition flex items-center gap-1.5 ${
                 isPlaying
-                  ? 'bg-[#84CEEB] text-[#080c18] shadow-lg shadow-[#84CEEB]/30'
-                  : 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white shadow-lg shadow-[#5680E9]/30'
+                  ? 'bg-brand-accent text-dark-bg'
+                  : 'bg-brand-primary text-white'
               }`}
             >
-              {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-              <span>{isPlaying ? 'PAUSE' : currentStep === 0 ? 'PLAY VIDEO RECONSTRUCTION' : 'RESUME'}</span>
+              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+              <span>{isPlaying ? 'Pause' : currentStep === 0 ? 'Play Investigation' : 'Resume'}</span>
             </button>
 
             <button
               onClick={handleResetVideo}
-              className="p-2 rounded-xl bg-[#151f38] hover:bg-[#1c294a] text-[#C1C8E4] border border-[#5680E9]/30 transition"
-              title="Reset to Start"
+              className="p-1.5 rounded-md bg-dark-subtle hover:bg-dark-panel text-brand-slate hover:text-white transition"
+              title="Reset"
             >
-              <RotateCcw className="w-4 h-4" />
+              <RotateCcw className="w-3.5 h-3.5" />
             </button>
 
             <button
               onClick={() => setVoiceAudio(!voiceAudio)}
-              className={`p-2 rounded-xl border transition flex items-center gap-1.5 text-xs font-mono ${
-                voiceAudio ? 'bg-[#5680E9]/20 text-[#84CEEB] border-[#5680E9]/40' : 'bg-[#151f38] text-[#8e9cc2] border-[#5680E9]/20'
+              className={`p-1.5 rounded-md border text-xs font-mono transition flex items-center gap-1 ${
+                voiceAudio ? 'bg-brand-primary/15 text-brand-primary border-brand-primary/30' : 'bg-dark-subtle text-dark-slate border-dark-border'
               }`}
-              title="Toggle Audible Speech"
+              title="Toggle Voice"
             >
-              {voiceAudio ? <Volume2 className="w-4 h-4 text-[#84CEEB]" /> : <VolumeX className="w-4 h-4" />}
-              <span className="hidden sm:inline">{voiceAudio ? 'VOICE ON' : 'MUTED'}</span>
+              {voiceAudio ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline text-[11px]">{voiceAudio ? 'Voice ON' : 'Muted'}</span>
             </button>
 
-            {/* Playback Speed Chip */}
-            <div className="flex items-center gap-1 bg-[#151f38] px-2.5 py-1 rounded-xl border border-[#5680E9]/30 text-xs font-mono">
+            <div className="flex items-center gap-1 px-1 text-xs font-mono">
               {[1, 1.5, 2].map((s) => (
                 <button
                   key={s}
                   onClick={() => setPlaybackSpeed(s)}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                    playbackSpeed === s ? 'bg-[#5680E9] text-white' : 'text-[#8e9cc2] hover:text-white'
+                  className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                    playbackSpeed === s ? 'bg-white/10 text-white' : 'text-dark-slate hover:text-white'
                   }`}
                 >
                   {s}x
@@ -818,246 +769,217 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
           </div>
         </div>
 
-        {/* Video Scrubber & Equalizer Bar */}
-        <div className="space-y-2">
-          <div className="w-full bg-[#080c18] h-2.5 rounded-full overflow-hidden border border-[#5680E9]/30 relative cursor-pointer">
-            <div 
-              className="h-full bg-gradient-to-r from-[#5680E9] via-[#84CEEB] to-[#8860D0] transition-all duration-150 rounded-full"
-              style={{ width: `${progressPercent}%` }}
-            />
+        {/* Timeline Progress Scrubber */}
+        <div className="space-y-1.5">
+          <div className="grid grid-cols-6 gap-1.5">
+            {caseEvents.map((evt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleScrub(idx)}
+                className={`h-1.5 rounded-full transition-all duration-200 ${
+                  idx <= currentStep ? 'bg-brand-primary' : 'bg-dark-subtle hover:bg-white/20'
+                }`}
+                title={`Event ${idx + 1}: ${evt.timestamp}`}
+              />
+            ))}
           </div>
-          <div className="flex items-center justify-between text-[11px] font-mono text-[#8e9cc2]">
-            <span>Event {currentStep + 1} of {caseEvents.length}</span>
-            <span>{Math.round(progressPercent)}% Video Completed</span>
+          <div className="flex items-center justify-between text-[11px] font-mono text-dark-slate">
+            <span>Event {currentStep + 1} of {caseEvents.length}: {caseEvents[currentStep]?.timestamp}</span>
+            <span>Source: <strong className="text-brand-slate">{caseEvents[currentStep]?.evidence_reference}</strong></span>
           </div>
         </div>
 
-        {/* Live Audio Narration Subtitle Box with Waveform Equalizer */}
-        <div className="bg-[#080c18] border border-[#5680E9]/35 p-5 rounded-2xl space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {/* Equalizer animation when playing */}
-              {isPlaying && voiceAudio ? (
-                <div className="flex items-center gap-1 h-5">
-                  <span className="w-1 bg-[#84CEEB] rounded-full wave-bar" />
-                  <span className="w-1 bg-[#5680E9] rounded-full wave-bar" />
-                  <span className="w-1 bg-[#8860D0] rounded-full wave-bar" />
-                  <span className="w-1 bg-[#84CEEB] rounded-full wave-bar" />
-                  <span className="w-1 bg-[#5680E9] rounded-full wave-bar" />
-                </div>
-              ) : (
-                <span className="w-2.5 h-2.5 rounded-full bg-[#84CEEB]" />
-              )}
-              <span className="font-mono text-xs font-bold text-[#84CEEB]">
-                EVENT // {caseEvents[currentStep]?.timestamp}
-              </span>
-            </div>
-            <span className="text-xs font-mono text-[#8e9cc2]">
-              Source: <strong className="text-[#C1C8E4]">{caseEvents[currentStep]?.evidence_reference}</strong>
-            </span>
+        {/* Narration Subtitle Box */}
+        <div className="bg-dark-bg border border-dark-border p-4 rounded-lg flex items-start gap-3">
+          <div className="mt-0.5 shrink-0">
+            {isPlaying && voiceAudio ? (
+              <div className="flex items-center gap-0.5 h-4">
+                <span className="w-0.5 bg-brand-primary rounded-full wave-bar" />
+                <span className="w-0.5 bg-brand-accent rounded-full wave-bar" />
+                <span className="w-0.5 bg-brand-emerald rounded-full wave-bar" />
+                <span className="w-0.5 bg-brand-amber rounded-full wave-bar" />
+              </div>
+            ) : (
+              <span className="w-2 h-2 rounded-full bg-brand-primary block" />
+            )}
           </div>
-
-          <p className="text-base font-medium text-white leading-relaxed font-display">
+          <p className="text-sm font-medium text-white leading-relaxed">
             "{caseEvents[currentStep]?.narration}"
           </p>
         </div>
 
-        {/* Continuous Dynamic Graph Stage */}
-        <div className="bg-[#080c18] border border-[#5680E9]/30 rounded-2xl p-6 min-h-[260px] flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-mono font-bold text-[#84CEEB] uppercase tracking-wider">
-              Real-Time Dynamic Graph Stage:
-            </span>
-            <span className="text-xs font-mono text-[#8860D0]">
-              Nodes and vectors appear continuously as investigation progresses
-            </span>
+        {/* LIVE GRAPH RECONSTRUCTION CANVAS: Nodes and Lines Appear One by One */}
+        <div className="bg-[#08090D] border border-dark-border rounded-lg p-3 min-h-[360px] relative overflow-x-auto select-none">
+          <div className="absolute top-3 right-3 text-[10px] font-mono text-brand-slate bg-dark-bg/80 px-2 py-1 rounded border border-white/5 z-10">
+            Live Knowledge Graph: {activeReplayNodes.length} Entities &bull; {activeReplayEdges.length} Links Active
           </div>
 
-          {/* Cards generated by the reconstruction */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-            {/* Step 0 */}
-            <div 
-              onClick={() => onSelectEntity({ name: 'Vikramaditya Rathore', role: 'Victim CFO' })}
-              className="p-3.5 rounded-2xl bg-[#151f38] border border-[#5680E9]/40 text-center cursor-pointer hover:border-[#84CEEB] transition"
-            >
-              <User className="w-5 h-5 text-[#84CEEB] mx-auto mb-1.5" />
-              <span className="text-xs font-bold text-white block truncate">V. Rathore (CFO)</span>
-              <span className="text-[10px] text-[#8e9cc2] font-mono">PER-108</span>
-            </div>
+          <svg className="w-full min-w-[940px] h-[330px]" viewBox="0 0 940 330">
+            {/* Render Active Edges that have been created so far */}
+            {allGraphEdges.map((edge, i) => {
+              const isActive = activeReplayEdges.some(e => e.from === edge.from && e.to === edge.to);
+              if (!isActive) return null;
 
-            <div 
-              onClick={() => onSelectEntity({ name: 'ACC-1001', role: 'Zenith Corporate Bank' })}
-              className="p-3.5 rounded-2xl bg-[#151f38] border border-[#5680E9]/40 text-center cursor-pointer hover:border-[#84CEEB] transition"
-            >
-              <CreditCard className="w-5 h-5 text-[#5AB9EA] mx-auto mb-1.5" />
-              <span className="text-xs font-bold text-white block truncate">Zenith ACC-1001</span>
-              <span className="text-[10px] text-[#84CEEB] font-mono">₹1.0 Cr Debited</span>
-            </div>
+              const srcNode = allGraphNodes.find(n => n.id === edge.from);
+              const tgtNode = allGraphNodes.find(n => n.id === edge.to);
+              if (!srcNode || !tgtNode) return null;
 
-            {/* Revealed at Step 1 */}
-            {currentStep >= 0 && (
-              <div 
-                onClick={() => onSelectEntity({ name: 'Suman Roy', role: 'Primary Mule Account' })}
-                className="p-3.5 rounded-2xl bg-[#151f38] border border-[#84CEEB]/50 text-center cursor-pointer hover:scale-105 transition animate-in fade-in zoom-in-95 duration-200"
-              >
-                <CreditCard className="w-5 h-5 text-[#84CEEB] mx-auto mb-1.5" />
-                <span className="text-xs font-bold text-white block truncate">Suman Roy A/C</span>
-                <span className="text-[10px] text-[#84CEEB] font-mono">ACC-2201 (Mule)</span>
-              </div>
-            )}
+              const midX = (srcNode.x + tgtNode.x) / 2;
+              const midY = (srcNode.y + tgtNode.y) / 2;
 
-            {/* Revealed at Step 2 */}
-            {currentStep >= 1 && (
-              <div 
-                onClick={() => onSelectEntity({ name: 'Secondary Mules', role: 'Layering Accounts' })}
-                className="p-3.5 rounded-2xl bg-[#151f38] border border-[#5680E9]/40 text-center cursor-pointer hover:border-[#84CEEB] transition animate-in fade-in zoom-in-95 duration-200"
-              >
-                <CreditCard className="w-5 h-5 text-[#C1C8E4] mx-auto mb-1.5" />
-                <span className="text-xs font-bold text-white block truncate">5 Secondary A/Cs</span>
-                <span className="text-[10px] text-[#8e9cc2] font-mono">ACC-3301..8809</span>
-              </div>
-            )}
+              return (
+                <g key={i}>
+                  <line
+                    x1={srcNode.x}
+                    y1={srcNode.y}
+                    x2={tgtNode.x}
+                    y2={tgtNode.y}
+                    stroke={edge.color}
+                    strokeWidth={edge.strokeWidth || 1.8}
+                    strokeOpacity={0.8}
+                    className="line-draw-anim"
+                  />
+                  <text
+                    x={midX}
+                    y={midY - 6}
+                    textAnchor="middle"
+                    fill={edge.color}
+                    fontSize="9"
+                    fontFamily="monospace"
+                    fontWeight="500"
+                    className="animate-in fade-in duration-300"
+                  >
+                    {edge.label}
+                  </text>
+                </g>
+              );
+            })}
 
-            {/* Revealed at Step 3 */}
-            {currentStep >= 2 && (
-              <div 
-                onClick={() => onSelectEntity({ name: 'Devrat Sharma', role: 'Strategic Money Broker', is_bridge: true })}
-                className="p-3.5 rounded-2xl bg-[#151f38] border-2 border-[#8860D0] text-center cursor-pointer hover:scale-105 transition animate-in fade-in zoom-in-95 duration-200 shadow-lg shadow-[#8860D0]/20"
-              >
-                <User className="w-5 h-5 text-[#8860D0] mx-auto mb-1.5" />
-                <span className="text-xs font-bold text-white block truncate">Devrat Sharma</span>
-                <span className="text-[10px] text-[#8860D0] font-bold font-mono">BROKER D (ACC-7702)</span>
-              </div>
-            )}
+            {/* Render Active Nodes that have appeared so far */}
+            {allGraphNodes.map((node) => {
+              const isVisible = activeReplayNodes.includes(node.id);
+              if (!isVisible) return null;
 
-            {/* Revealed at Step 4/5 */}
-            {currentStep >= 4 && (
-              <div 
-                onClick={() => onSelectEntity({ name: 'Apex Trade Solutions', role: 'Mumbai Shell Front Company' })}
-                className="p-3.5 rounded-2xl bg-[#151f38] border-2 border-[#84CEEB] text-center cursor-pointer hover:scale-105 transition animate-in fade-in zoom-in-95 duration-200 shadow-lg shadow-[#84CEEB]/25"
-              >
-                <CreditCard className="w-5 h-5 text-[#84CEEB] mx-auto mb-1.5" />
-                <span className="text-xs font-bold text-white block truncate">Apex Trade ACC-7701</span>
-                <span className="text-[10px] text-[#84CEEB] font-bold font-mono">CROSS-CASE BRIDGE</span>
-              </div>
-            )}
-          </div>
+              const NodeIcon = node.icon;
+              return (
+                <g 
+                  key={node.id}
+                  transform={`translate(${node.x}, ${node.y})`}
+                  className="node-pop cursor-pointer"
+                  onClick={() => onSelectEntity({ person_id: node.id, name: node.label, role: node.sub, is_bridge: node.isBridge })}
+                >
+                  <circle
+                    r={node.isBridge ? "22" : "18"}
+                    fill="#11141D"
+                    stroke={node.color}
+                    strokeWidth={node.isBridge ? "2.5" : "1.8"}
+                  />
 
-          {/* Animated Connecting Vector Path Display */}
-          <div className="mt-6 pt-4 border-t border-[#5680E9]/20 flex items-center justify-between text-xs font-mono">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#84CEEB] animate-ping" />
-              <span className="text-[#8e9cc2]">Live Animated Vector:</span>
-              <strong className="text-white">
-                {currentStep === 0 && "ACC-1001 ──[ ₹1.0 Cr RTGS ]──► ACC-2201 (Suman Roy)"}
-                {currentStep === 1 && "ACC-2201 ──[ 5 IMPS tranches ]──► Secondary Mules (ACC-3301..8809)"}
-                {currentStep === 2 && "Secondary Mules ──[ Aggregation ]──► Devrat Sharma (ACC-7702)"}
-                {currentStep === 3 && "Devrat Sharma PH-1003 ──[ Voice Call ]──► Tariq Merchant PH-1005 (Mumbai)"}
-                {currentStep >= 4 && "Devrat Sharma ──[ TXN_552 (₹50 Lakhs) ]──► Apex Trade Solutions (CASE-041 Bridge)"}
-              </strong>
-            </div>
-          </div>
+                  <foreignObject 
+                    x={node.isBridge ? -10 : -8} 
+                    y={node.isBridge ? -10 : -8} 
+                    width={node.isBridge ? 20 : 16} 
+                    height={node.isBridge ? 20 : 16}
+                  >
+                    <NodeIcon className="w-full h-full" style={{ color: node.color }} />
+                  </foreignObject>
+
+                  <text
+                    textAnchor="middle"
+                    y={node.isBridge ? "34" : "30"}
+                    fill="#FFFFFF"
+                    fontSize="11"
+                    fontWeight="600"
+                  >
+                    {node.label}
+                  </text>
+                  <text
+                    textAnchor="middle"
+                    y={node.isBridge ? "46" : "42"}
+                    fill="#94A3B8"
+                    fontSize="9"
+                    fontFamily="monospace"
+                  >
+                    {node.sub}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
         </div>
       </div>
 
-      {/* SECTION 4: Structured Suspect Roster (Clean List / Table Format) */}
-      <div className="bg-[#0f1629]/90 border border-[#5680E9]/30 rounded-3xl p-7 shadow-2xl space-y-4 ethereal-glass">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#5680E9]/20 border border-[#5680E9]/40 flex items-center justify-center text-[#84CEEB]">
-              <User className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-white font-display tracking-wide">Prime Suspects Roster (List View)</h2>
-              <p className="text-xs text-[#8e9cc2]">Persons of interest arranged systematically with identity metrics, telephony tags, and risk index.</p>
-            </div>
+      {/* ========================================================= */}
+      {/* SECTION 4: SUSPECTS ROSTER (CLEAN MINIMAL LIST TABLE)      */}
+      {/* ========================================================= */}
+      <div className="panel rounded-xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-dark-border pb-3">
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4 text-brand-accent" />
+            <h2 className="text-sm font-bold text-white uppercase tracking-wider">Prime Suspects Roster</h2>
           </div>
-          <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
-            {primeSuspects.length} Suspects Roster
+          <span className="text-xs font-mono text-dark-slate">
+            {primeSuspects.length} Identified Persons of Interest
           </span>
         </div>
 
-        {/* High-Density Clean Suspect Table */}
-        <div className="overflow-x-auto rounded-2xl border border-[#5680E9]/25 bg-[#080c18]">
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#151f38] text-[#8e9cc2] font-mono border-b border-[#5680E9]/25">
-                <th className="p-3.5 pl-4">Suspect Name &amp; Alias</th>
-                <th className="p-3.5">Operational Role</th>
-                <th className="p-3.5">Network Position</th>
-                <th className="p-3.5">Phone &amp; Location</th>
-                <th className="p-3.5">PAN / Aadhaar</th>
-                <th className="p-3.5">Risk Score</th>
-                <th className="p-3.5 pr-4 text-right">Action</th>
+              <tr className="border-b border-dark-border text-dark-slate font-mono text-[11px]">
+                <th className="py-2.5 px-3">Suspect Name</th>
+                <th className="py-2.5 px-3">Alias</th>
+                <th className="py-2.5 px-3">Operational Role</th>
+                <th className="py-2.5 px-3">Phone &amp; Location</th>
+                <th className="py-2.5 px-3">PAN</th>
+                <th className="py-2.5 px-3">Risk Level</th>
+                <th className="py-2.5 px-3 text-right">Dossier</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#5680E9]/15 text-[#C1C8E4]">
+            <tbody className="divide-y divide-dark-border text-brand-slate">
               {primeSuspects.map((suspect) => (
-                <tr key={suspect.person_id} className="hover:bg-[#151f38]/60 transition">
-                  {/* Name & Avatar */}
-                  <td className="p-3.5 pl-4 flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs ${
-                      suspect.is_bridge ? 'bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/50' : 'bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40'
-                    }`}>
-                      {suspect.name.charAt(0)}
-                    </div>
-                    <div>
-                      <span className="font-bold text-white block">{suspect.name}</span>
-                      <span className="text-[11px] text-[#84CEEB] font-mono">"{suspect.alias}"</span>
-                    </div>
+                <tr key={suspect.person_id} className="hover:bg-dark-subtle/50 transition">
+                  <td className="py-3 px-3 font-semibold text-white">
+                    {suspect.name}
                   </td>
-
-                  {/* Role */}
-                  <td className="p-3.5 font-medium text-white">{suspect.role}</td>
-
-                  {/* Network Position */}
-                  <td className="p-3.5 font-mono text-[11px]">
+                  <td className="py-3 px-3 font-mono text-brand-accent">
+                    "{suspect.alias}"
+                  </td>
+                  <td className="py-3 px-3">
                     {suspect.is_bridge ? (
-                      <span className="px-2 py-0.5 rounded-full bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/40 font-bold">
-                        BRIDGE BROKER
+                      <span className="text-brand-amber font-semibold font-mono">
+                        {suspect.role} (Bridge Broker)
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/30">
-                        {suspect.primary_case_id}
-                      </span>
+                      suspect.role
                     )}
                   </td>
-
-                  {/* Phone & Location */}
-                  <td className="p-3.5 font-mono text-[11px]">
-                    <span className="block text-[#84CEEB]">{suspect.phone}</span>
-                    <span className="text-[#8e9cc2] text-[10px]">{suspect.location}</span>
+                  <td className="py-3 px-3 font-mono text-[11px]">
+                    <span className="text-slate-300 block">{suspect.phone}</span>
+                    <span className="text-dark-slate">{suspect.location}</span>
                   </td>
-
-                  {/* PAN ID */}
-                  <td className="p-3.5 font-mono text-[11px] text-[#C1C8E4]">{suspect.pan || 'N/A'}</td>
-
-                  {/* Risk Score */}
-                  <td className="p-3.5">
-                    <div className="space-y-1 w-24">
-                      <div className="flex items-center justify-between text-[10px] font-mono font-bold">
-                        <span className={suspect.risk_score >= 90 ? 'text-[#8860D0]' : 'text-[#84CEEB]'}>
-                          {suspect.risk_score}%
-                        </span>
-                      </div>
-                      <div className="w-full bg-[#151f38] h-1.5 rounded-full overflow-hidden border border-[#5680E9]/20">
+                  <td className="py-3 px-3 font-mono text-[11px]">
+                    {suspect.pan || 'N/A'}
+                  </td>
+                  <td className="py-3 px-3">
+                    <div className="flex items-center gap-2">
+                      <span className={`font-mono font-semibold ${suspect.risk_score >= 90 ? 'text-brand-rose' : 'text-brand-accent'}`}>
+                        {suspect.risk_score}%
+                      </span>
+                      <div className="w-16 bg-dark-bg h-1.5 rounded-full overflow-hidden border border-white/5">
                         <div 
-                          className={`h-full rounded-full ${
-                            suspect.risk_score >= 90 ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0]' : 'bg-[#84CEEB]'
-                          }`}
+                          className={`h-full rounded-full ${suspect.risk_score >= 90 ? 'bg-brand-rose' : 'bg-brand-accent'}`}
                           style={{ width: `${suspect.risk_score}%` }}
                         />
                       </div>
                     </div>
                   </td>
-
-                  {/* Action */}
-                  <td className="p-3.5 pr-4 text-right">
+                  <td className="py-3 px-3 text-right">
                     <button
                       onClick={() => onSelectEntity(suspect)}
-                      className="px-3 py-1.5 rounded-xl bg-[#151f38] hover:bg-[#5680E9] text-white text-[11px] font-semibold transition border border-[#5680E9]/30"
+                      className="px-2.5 py-1 rounded bg-dark-subtle hover:bg-dark-panel border border-dark-border text-white text-[11px] font-medium transition"
                     >
-                      Inspect Dossier
+                      Inspect
                     </button>
                   </td>
                 </tr>
@@ -1067,147 +989,119 @@ export default function CaseWorkspace({ caseId, onBack, onSelectEntity, onAskCop
         </div>
       </div>
 
-      {/* SECTION 5: Laws Broken (Statutory Criminal Offences Violated) */}
-      <div className="bg-[#0f1629]/90 border border-[#5680E9]/30 rounded-3xl p-7 shadow-2xl space-y-4 ethereal-glass">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#5680E9]/20 border border-[#5680E9]/40 flex items-center justify-center text-[#84CEEB]">
-              <Scale className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-white font-display tracking-wide">Statutory Criminal Offences &amp; Laws Broken</h2>
-              <p className="text-xs text-[#8e9cc2]">Provisions under IT Act 2000, Bharatiya Nyaya Sanhita 2023, and PMLA 2002 substantiated by evidence.</p>
-            </div>
+      {/* ========================================================= */}
+      {/* SECTION 5: STATUTORY VIOLATIONS & LAWS BROKEN             */}
+      {/* ========================================================= */}
+      <div className="panel rounded-xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-dark-border pb-3">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-brand-emerald" />
+            <h2 className="text-sm font-bold text-white uppercase tracking-wider">Statutory Criminal Law Violations</h2>
           </div>
-          <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#8860D0]/20 text-[#8860D0] border border-[#8860D0]/40">
-            {lawsBroken.length} Statutorily Mapped Violations
+          <span className="text-xs font-mono text-emerald-400 font-semibold">
+            {lawsBroken.length} Substantiated Sections
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
           {lawsBroken.map((law, idx) => (
             <div
               key={idx}
-              className="bg-[#151f38]/80 border border-[#5680E9]/25 hover:border-[#5680E9]/60 rounded-2xl p-5 space-y-2.5 shadow-md transition"
+              className="bg-dark-bg border border-dark-border rounded-lg p-4 space-y-2 text-xs"
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/30">
-                    {law.act}
-                  </span>
-                  <h4 className="text-sm font-bold text-white mt-1.5 font-display">{law.section}: {law.title}</h4>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-brand-primary/15 text-brand-primary border border-brand-primary/20">
+                  {law.act}
+                </span>
+                <span className="text-[10px] font-mono text-brand-emerald">
+                  {law.penalty}
+                </span>
               </div>
-
-              <p className="text-xs text-[#C1C8E4] leading-relaxed bg-[#080c18] p-3 rounded-xl border border-[#5680E9]/20">
-                {law.description}
+              <h4 className="font-semibold text-white">{law.section}: {law.title}</h4>
+              <p className="text-brand-slate leading-relaxed">{law.description}</p>
+              <p className="text-[11px] font-mono text-dark-slate pt-1 border-t border-dark-border">
+                Proof: <strong className="text-slate-300">{law.evidenceRef}</strong>
               </p>
-
-              <div className="text-[11px] space-y-1 pt-1 font-mono">
-                <div className="flex items-center justify-between text-[#8e9cc2]">
-                  <span>Prescribed Penalty:</span>
-                  <strong className="text-[#84CEEB]">{law.penalty}</strong>
-                </div>
-                <div className="flex items-center justify-between text-[#8e9cc2]">
-                  <span>Supporting Evidentiary Link:</span>
-                  <span className="text-[#8860D0]">{law.evidenceRef}</span>
-                </div>
-              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* SECTION 6: BSA Evidence Certificate Modal */}
+      {/* ========================================================= */}
+      {/* SECTION 63B BSA CERTIFICATE MODAL                         */}
+      {/* ========================================================= */}
       {isBsaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-[#0f1629] border border-[#5680E9]/60 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col ethereal-glow">
-            <div className="bg-[#151f38] border-b border-[#5680E9]/30 p-5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40 flex items-center justify-center font-bold">
-                  <Scale className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white font-display">Section 63B BSA Electronic Evidence Certificate</h3>
-                  <p className="text-xs text-[#8e9cc2]">Bharatiya Sakshya Adhiniyam, 2023 (Admissibility of Electronic Records)</p>
-                </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#11141D] border border-white/20 w-full max-w-2xl rounded-xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto text-xs">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Scale className="w-5 h-5 text-emerald-400" />
+                <h3 className="text-base font-bold text-white">Section 63B Bharatiya Sakshya Adhiniyam Certificate</h3>
               </div>
-
-              <button
+              <button 
                 onClick={() => setIsBsaModalOpen(false)}
-                className="p-1.5 rounded-xl bg-[#080c18] hover:bg-[#1c294a] text-[#8e9cc2] hover:text-white transition border border-[#5680E9]/30"
+                className="p-1 rounded bg-dark-bg hover:bg-dark-subtle text-brand-slate hover:text-white"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto space-y-6 text-xs bg-[#080c18] font-sans">
-              <div className="border border-[#5680E9]/40 p-8 rounded-2xl space-y-5 bg-[#0f1629]">
-                <div className="text-center border-b border-[#5680E9]/30 pb-4 space-y-1">
-                  <h2 className="text-base font-black tracking-widest text-white uppercase font-display">
-                    CERTIFICATE UNDER SECTION 63B BHARATIYA SAKSHYA ADHINIYAM, 2023
-                  </h2>
-                  <p className="text-[11px] text-[#8e9cc2]">
-                    (In replacement of Section 65B of the Indian Evidence Act, 1872)
-                  </p>
-                  <p className="text-[10px] font-mono text-[#84CEEB]">
-                    Certificate ID: BSA-63B-2026-NCR-018
-                  </p>
-                </div>
-
-                <p className="text-[#C1C8E4] leading-relaxed text-justify">
-                  I, <strong>{caseData.investigator_name}</strong>, Lead Case Investigating Officer, Cyber Crime Police Station (Region Code: {caseData.jurisdiction}), do hereby certify that the electronic records, log extractions, transaction datasets, and cell tower dump files associated with <strong>{caseData.title} ({caseData.case_number})</strong> were retrieved from lawful computer systems in the ordinary course of investigative inquiry.
-                </p>
-
-                {/* Evidence Hashes Table */}
-                <div className="space-y-2">
-                  <span className="font-bold text-white block uppercase font-mono">Cryptographically Certified Artifacts:</span>
-                  <table className="w-full border-collapse border border-[#5680E9]/30 text-[11px] font-mono">
-                    <thead>
-                      <tr className="bg-[#151f38] text-[#84CEEB]">
-                        <th className="p-2.5 border border-[#5680E9]/20 text-left">Evidence ID</th>
-                        <th className="p-2.5 border border-[#5680E9]/20 text-left">Filename &amp; Source</th>
-                        <th className="p-2.5 border border-[#5680E9]/20 text-left">SHA-256 Digest</th>
-                        <th className="p-2.5 border border-[#5680E9]/20 text-left">Integrity Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#5680E9]/15 text-[#C1C8E4]">
-                      {RAW_DATASET.evidence.map(ev => (
-                        <tr key={ev.evidence_id}>
-                          <td className="p-2.5 border border-[#5680E9]/15 text-[#84CEEB] font-bold">{ev.evidence_id}</td>
-                          <td className="p-2.5 border border-[#5680E9]/15">{ev.file_name}</td>
-                          <td className="p-2.5 border border-[#5680E9]/15 text-[10px] break-all">{ev.sha256_hash.slice(0, 24)}...</td>
-                          <td className="p-2.5 border border-[#5680E9]/15 text-[#84CEEB] font-bold">MATCH (VERIFIED)</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Statutory Sign-off */}
-                <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[#5680E9]/30">
-                  <div>
-                    <span className="text-[#8e9cc2] block text-[10px] font-mono">VERIFICATION DATE &amp; PLACE</span>
-                    <span className="font-semibold text-white">04-SEP-2026 &bull; Gurugram PS</span>
-                    <span className="text-[10px] text-[#84CEEB] block font-mono">Fabric Ledger Block: #10402</span>
+            <div className="space-y-3 text-slate-300 leading-relaxed font-serif text-[13px] bg-dark-bg p-5 rounded border border-white/10">
+              <p className="text-center font-bold text-white uppercase tracking-wider text-sm">
+                IN THE COURT OF THE PRINCIPAL DISTRICT & SESSIONS JUDGE<br />
+                CYBER JURISDICTION & COMMERCIAL OFFENCES
+              </p>
+              <p className="text-center text-xs text-brand-slate font-mono">
+                CERTIFICATE UNDER SECTION 63B OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023
+              </p>
+              <hr className="border-white/10 my-3" />
+              <p>
+                I, <strong className="text-white">{caseData.investigator_name}</strong>, holding Badge ID <strong className="text-white">{caseData.investigator_badge}</strong>, Lead Investigating Officer at <strong className="text-white">{caseData.region_name}</strong>, hereby certify under Section 63B of the Bharatiya Sakshya Adhiniyam, 2023 that:
+              </p>
+              <ol className="list-decimal pl-5 space-y-2">
+                <li>
+                  The digital evidence records associated with <strong className="text-white">{caseData.case_id} ({caseData.title})</strong> were lawfully extracted, cryptographically hashed at the time of seizure, and preserved on the Hyperledger immutable evidence registry.
+                </li>
+                <li>
+                  The computer systems and cloud capture gateways were operating normally during the extraction window and no unauthorized alterations occurred.
+                </li>
+                <li>
+                  Hash verification check against SHA-256 baseline confirmed zero tampering:
+                  <div className="bg-dark-panel p-2.5 rounded font-mono text-[10px] mt-1 text-emerald-400">
+                    EVD-001 (FIR 0018/2026): d4c56ad10356cf2cc8ddfdc26fd4c04f... [MATCH]<br />
+                    EVD-002 (STR-88912): afeb4ed06feb8f55c8a7028172dec410... [MATCH]<br />
+                    EVD-003 (CDR Tower T-4401): ccfb08874fc7038d541678894b70eee7... [MATCH]
                   </div>
-                  <div className="text-right">
-                    <span className="text-[#8e9cc2] block text-[10px] font-mono">AUTHORIZED SIGNATORY</span>
-                    <span className="font-bold text-white">{caseData.investigator_name}</span>
-                    <span className="text-[10px] text-[#84CEEB] block font-mono">Lead Case Officer ({caseData.investigator_id})</span>
-                  </div>
+                </li>
+              </ol>
+              <p className="pt-2">
+                Executed under my hand and digital signature on this 5th day of September, 2026.
+              </p>
+              <div className="flex justify-between pt-4 border-t border-white/10 font-sans text-xs">
+                <div>
+                  <span className="text-dark-slate block text-[10px]">VERIFIED REGISTRY DIGEST</span>
+                  <span className="font-mono text-brand-accent">FABRIC-BLOCK-992144</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-white font-bold block">{caseData.investigator_name}</span>
+                  <span className="text-dark-slate text-[10px]">Lead Cyber Investigator, NCR Cyber PS</span>
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  onClick={() => window.print()}
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white rounded-2xl text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-[#5680E9]/25"
-                >
-                  <FileText className="w-3.5 h-3.5 text-white" />
-                  <span>Print / Save Legal Certificate (PDF)</span>
-                </button>
-              </div>
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                onClick={() => window.print()}
+                className="px-3.5 py-1.5 bg-dark-subtle hover:bg-dark-panel text-white rounded text-xs font-medium border border-dark-border"
+              >
+                Print Official Certificate
+              </button>
+              <button
+                onClick={() => setIsBsaModalOpen(false)}
+                className="px-3.5 py-1.5 bg-brand-primary text-white rounded text-xs font-medium"
+              >
+                Done
+              </button>
             </div>
           </div>
         </div>

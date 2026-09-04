@@ -4,61 +4,49 @@
 
 @layer base {
   body {
-    background-color: #080c18;
-    color: #C1C8E4;
-    font-family: 'Inter', system-ui, sans-serif;
-    letter-spacing: -0.01em;
+    background-color: #0B0D13;
+    color: #94A3B8;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.012em;
     overflow-x: hidden;
   }
 
   ::selection {
-    background-color: #5680E9;
+    background-color: #6366F1;
     color: #FFFFFF;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Minimal Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #080c18;
+  background: #0B0D13;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1c294a;
-  border-radius: 4px;
-  border: 1px solid rgba(86, 128, 233, 0.3);
+  background: #1F2637;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #5680E9;
+  background: #333D56;
 }
 
-/* Ethereal Frosted Glass Panels */
-.ethereal-glass {
-  background: rgba(15, 22, 41, 0.82);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(86, 128, 233, 0.22);
-  box-shadow: 0 10px 30px -10px rgba(86, 128, 233, 0.15);
+/* Clean Panel Surface */
+.panel {
+  background: #11141D;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.ethereal-glass:hover {
-  border-color: rgba(90, 185, 234, 0.45);
-  box-shadow: 0 12px 36px -8px rgba(86, 128, 233, 0.25);
-}
-
-.ethereal-glow {
-  box-shadow: 0 0 30px -5px rgba(86, 128, 233, 0.35);
-}
-
-.ethereal-border {
-  border-color: rgba(86, 128, 233, 0.25);
+.panel-hover:hover {
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Audio Waveform Animation */
 @keyframes wave {
-  0%, 100% { height: 6px; }
-  50% { height: 22px; }
+  0%, 100% { height: 4px; }
+  50% { height: 18px; }
 }
 
 .wave-bar {
@@ -68,26 +56,51 @@
 .wave-bar:nth-child(3) { animation-delay: 0.3s; }
 .wave-bar:nth-child(4) { animation-delay: 0.45s; }
 .wave-bar:nth-child(5) { animation-delay: 0.6s; }
-.wave-bar:nth-child(6) { animation-delay: 0.2s; }
 
-/* Dynamic Flowing Beam */
-@keyframes dash {
+/* Subtle Animated Flowing Stream on Network Line */
+@keyframes streamDash {
   to {
-    stroke-dashoffset: -40;
+    stroke-dashoffset: -30;
   }
 }
 
-.animated-link {
-  stroke-dasharray: 6, 6;
-  animation: dash 1.2s linear infinite;
+.animated-stream {
+  stroke-dasharray: 5, 5;
+  animation: streamDash 1.2s linear infinite;
 }
 
-/* Luminous circular ambient backdrop */
-.ethereal-aura-bg {
-  background-image: 
-    radial-gradient(circle at 50% 20%, rgba(86, 128, 233, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(136, 96, 208, 0.1) 0%, transparent 40%),
-    linear-gradient(to right, rgba(86, 128, 233, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(86, 128, 233, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+/* Drawing Animation for Knowledge Graph Live Construction */
+@keyframes lineDraw {
+  from {
+    stroke-dashoffset: 400;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.line-draw-anim {
+  stroke-dasharray: 400;
+  animation: lineDraw 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Node Pop-in Animation */
+@keyframes nodePop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.node-pop {
+  animation: nodePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: center;
 }

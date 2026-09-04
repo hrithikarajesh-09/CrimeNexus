@@ -141,11 +141,10 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
             setIsOpen(true);
             setIsMinimized(false);
           }}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white rounded-full shadow-2xl shadow-[#5680E9]/40 transition-all duration-200 active:scale-95 group font-sans border border-[#84CEEB]/40"
+          className="fixed bottom-5 right-5 z-50 flex items-center gap-2 px-3.5 py-2.5 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-full shadow-lg border border-white/20 transition-all duration-150 active:scale-95 text-xs font-semibold"
         >
-          <div className="w-2 h-2 rounded-full bg-[#84CEEB] animate-ping" />
-          <Sparkles className="w-4 h-4 text-white" />
-          <span className="text-xs font-bold tracking-wider uppercase font-display">AI Copilot</span>
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>AI Copilot</span>
         </button>
       )}
 
@@ -156,40 +155,35 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
             position: 'fixed',
             left: `${position.x}px`,
             top: `${position.y}px`,
-            width: '410px',
+            width: '390px',
             zIndex: 60
           }}
-          className={`bg-[#0f1629] border border-[#5680E9]/50 rounded-3xl shadow-2xl flex flex-col font-sans transition-shadow ethereal-glow ${
-            isDragging ? 'shadow-[#5680E9]/40' : ''
-          }`}
+          className="bg-dark-surface border border-dark-border rounded-xl shadow-2xl flex flex-col font-sans overflow-hidden"
         >
           {/* Draggable Header Bar */}
           <div
             onMouseDown={handleMouseDown}
-            className="p-4 bg-[#151f38] border-b border-[#5680E9]/25 rounded-t-3xl flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
+            className="p-3 bg-dark-panel border-b border-dark-border flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
           >
             <div className="flex items-center gap-2">
-              <Move className="w-3.5 h-3.5 text-[#8e9cc2]" />
+              <Move className="w-3.5 h-3.5 text-dark-slate" />
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-[#84CEEB]" />
-                <span className="text-xs font-bold text-white font-display tracking-wider">Investigation Copilot</span>
+                <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
+                <span className="text-xs font-semibold text-white">Investigation Copilot</span>
               </div>
-              <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#5680E9]/20 text-[#84CEEB] border border-[#5680E9]/40">
-                ACTIVE
-              </span>
             </div>
 
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
-                className="p-1.5 rounded-xl text-[#8e9cc2] hover:text-white hover:bg-[#1c294a] transition"
+                className="p-1 rounded text-dark-slate hover:text-white hover:bg-dark-subtle transition"
                 title={isMinimized ? "Expand" : "Minimize"}
               >
                 <Minus className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-xl text-[#8e9cc2] hover:text-white hover:bg-[#1c294a] transition"
+                className="p-1 rounded text-dark-slate hover:text-white hover:bg-dark-subtle transition"
                 title="Close"
               >
                 <X className="w-3.5 h-3.5" />
@@ -199,15 +193,15 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
 
           {/* Window Body (collapsible if minimized) */}
           {!isMinimized && (
-            <div className="flex flex-col h-[490px]">
+            <div className="flex flex-col h-[460px]">
               {/* Context indicator */}
-              <div className="px-4 py-1.5 bg-[#080c18] border-b border-[#5680E9]/20 text-[10px] text-[#8e9cc2] flex items-center justify-between font-mono">
+              <div className="px-3 py-1 bg-dark-bg border-b border-dark-border text-[10px] text-dark-slate flex items-center justify-between font-mono">
                 <span>Scope: <strong className="text-white">{activeCaseId || 'CASE-018'}</strong></span>
-                <span className="text-[#84CEEB]">● Cypher Engine Online</span>
+                <span className="text-brand-accent">● Cypher Engine Online</span>
               </div>
 
               {/* Chat Message Scrollable Area */}
-              <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-[#080c18]/95">
+              <div className="flex-1 p-3 overflow-y-auto space-y-2.5 text-xs bg-dark-bg">
                 {chatHistory.map((msg) => (
                   <div
                     key={msg.id}
@@ -216,27 +210,27 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
                     }`}
                   >
                     <div
-                      className={`max-w-[88%] p-3.5 rounded-2xl leading-relaxed ${
+                      className={`max-w-[88%] p-3 rounded-lg leading-relaxed ${
                         msg.sender === 'user'
-                          ? 'bg-gradient-to-r from-[#5680E9] to-[#8860D0] text-white font-medium rounded-tr-none'
-                          : 'bg-[#151f38] border border-[#5680E9]/30 text-[#C1C8E4] rounded-tl-none shadow-sm'
+                          ? 'bg-brand-primary text-white font-medium rounded-tr-none'
+                          : 'bg-dark-panel border border-dark-border text-slate-300 rounded-tl-none'
                       }`}
                     >
                       <p className="text-xs">{msg.text}</p>
 
                       {/* Visual Graph Path if available */}
                       {msg.graphPath && (
-                        <div className="mt-2.5 pt-2 border-t border-[#5680E9]/25 space-y-1 font-mono text-[10px]">
-                          <span className="text-[#84CEEB] flex items-center gap-1 font-bold">
-                            <GitBranch className="w-3 h-3 text-[#84CEEB]" /> Evidence Path:
+                        <div className="mt-2 pt-1.5 border-t border-dark-border space-y-1 font-mono text-[10px]">
+                          <span className="text-brand-accent flex items-center gap-1 font-semibold">
+                            <GitBranch className="w-3 h-3" /> Path:
                           </span>
-                          <div className="flex flex-wrap items-center gap-1 text-[#84CEEB]">
+                          <div className="flex flex-wrap items-center gap-1 text-slate-300">
                             {msg.graphPath.map((node, i) => (
                               <React.Fragment key={i}>
-                                <span className="bg-[#080c18] px-2 py-0.5 rounded-lg border border-[#5680E9]/30">
+                                <span className="bg-dark-bg px-1.5 py-0.2 rounded border border-dark-border">
                                   {node}
                                 </span>
-                                {i < msg.graphPath.length - 1 && <span className="text-[#8e9cc2]">&rarr;</span>}
+                                {i < msg.graphPath.length - 1 && <span className="text-dark-slate">&rarr;</span>}
                               </React.Fragment>
                             ))}
                           </div>
@@ -245,11 +239,11 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
 
                       {/* Evidence Citations if available */}
                       {msg.citations && msg.citations.length > 0 && (
-                        <div className="mt-2 text-[10px] text-[#8e9cc2] space-y-0.5">
-                          <span className="font-semibold block text-[#84CEEB]">Verified Evidence Citations:</span>
+                        <div className="mt-1.5 text-[10px] text-dark-slate space-y-0.5">
+                          <span className="font-semibold block text-brand-emerald">Verified Citations:</span>
                           {msg.citations.map((cite, i) => (
-                            <div key={i} className="flex items-center gap-1 text-white font-mono">
-                              <CheckCircle2 className="w-2.5 h-2.5 text-[#84CEEB]" />
+                            <div key={i} className="flex items-center gap-1 text-slate-300 font-mono">
+                              <CheckCircle2 className="w-2.5 h-2.5 text-brand-emerald" />
                               <span>{cite}</span>
                             </div>
                           ))}
@@ -260,8 +254,8 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
                 ))}
 
                 {isTyping && (
-                  <div className="flex items-center gap-1.5 text-xs text-[#8e9cc2] bg-[#151f38] p-2.5 rounded-2xl border border-[#5680E9]/30 w-fit">
-                    <Bot className="w-3.5 h-3.5 text-[#84CEEB]" />
+                  <div className="flex items-center gap-1.5 text-xs text-dark-slate bg-dark-panel p-2 rounded-lg border border-dark-border w-fit">
+                    <Bot className="w-3.5 h-3.5 text-brand-accent" />
                     <span>Analyzing knowledge graph...</span>
                   </div>
                 )}
@@ -269,12 +263,12 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
               </div>
 
               {/* Quick Preset Prompts */}
-              <div className="p-2.5 bg-[#0f1629] border-t border-[#5680E9]/20 flex gap-1.5 overflow-x-auto no-scrollbar">
+              <div className="p-2 bg-dark-panel border-t border-dark-border flex gap-1.5 overflow-x-auto">
                 {presetQuestions.map((q, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(q)}
-                    className="whitespace-nowrap px-3 py-1 rounded-full bg-[#151f38] hover:bg-[#1c294a] border border-[#5680E9]/25 text-[10px] text-[#84CEEB] hover:text-white transition font-mono"
+                    className="whitespace-nowrap px-2.5 py-1 rounded bg-dark-bg hover:bg-dark-subtle border border-dark-border text-[10px] text-brand-accent transition font-mono"
                   >
                     {q}
                   </button>
@@ -282,18 +276,18 @@ export default function FloatingAICopilot({ activeCaseId, onSelectEntity, onOpen
               </div>
 
               {/* Input Area */}
-              <div className="p-3.5 bg-[#151f38] border-t border-[#5680E9]/30 flex items-center gap-2">
+              <div className="p-2.5 bg-dark-panel border-t border-dark-border flex items-center gap-2">
                 <input
                   type="text"
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Ask a question about this case..."
-                  className="flex-1 px-4 py-2.5 bg-[#080c18] border border-[#5680E9]/35 rounded-2xl text-xs text-white placeholder-[#8e9cc2] focus:outline-none focus:border-[#84CEEB]"
+                  placeholder="Ask copilot about this case..."
+                  className="flex-1 px-3 py-1.5 bg-dark-bg border border-dark-border rounded-lg text-xs text-white placeholder-dark-slate focus:outline-none focus:border-brand-primary"
                 />
                 <button
                   onClick={() => handleSend()}
-                  className="p-2.5 bg-gradient-to-r from-[#5680E9] to-[#8860D0] hover:opacity-95 text-white rounded-2xl transition disabled:opacity-50 shadow-md shadow-[#5680E9]/25"
+                  className="p-2 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg transition disabled:opacity-40"
                   disabled={!inputQuery.trim()}
                 >
                   <Send className="w-3.5 h-3.5" />
